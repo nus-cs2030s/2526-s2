@@ -2,14 +2,26 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
+    After this unit, students should be able to:
 
-    - understand what accessor and mutator are used for, and why not to use them
-    - understand the principle of "Tell, Don't Ask"
+    - explain the role of accessors and mutators, and why they are not always desirable in object-oriented design
+    - identify how accessors and mutators can increase coupling and leak implementation details
+    - apply the Tell, Don’t Ask principle to redesign client–class interactions
+    - refactor client code that relies on getters into object-oriented method calls
+    - reason about encapsulation trade-offs when deciding whether to expose object state
+
+## Introduction
+
+In earlier units, we learned how to define classes with private fields and public methods, and how encapsulation helps protect an object’s internal state.
+
+In this unit, we examine a common but subtle design mistake: exposing an object’s internal state through accessors and mutators, and pushing logic into client code. Although getters and setters may seem harmless—or even “good practice”—they can quietly weaken encapsulation and increase coupling.
+
+We introduce the Tell, Don’t Ask principle, which encourages clients to tell objects what to do, rather than asking for their internal data and operating on it externally. This shift helps us design objects that are more robust, flexible, and easier to change.
 
 ## Accessors and Mutators
 
 Similar to providing constructors, a class can also provide methods to retrieve or modify the properties of the object.  These methods are called the _accessor_ (or _getter_) or _mutator_ (or _setter_).
+While accessors and mutators are common, using them indiscriminately can undermine encapsulation and lead to fragile designs.
 
 The example below shows a `Circle` class with accessor and mutator methods for its fields.
 
@@ -191,9 +203,10 @@ sequenceDiagram
 
 This better approach involves writing a few more lines of code to implement the method, but it keeps the encapsulation intact, leading to less _coupling_ between the client and the class.  The client does not need to know the internal representation of the `Circle` class, and the `Circle` class can change its internal structure (e.g., the type of the fields) without affecting the client.
 
-In general, _a task that is performed only on the fields of a class should be implemented in the class itself._
+In general, _a task that is performed only on the fields of a class should be implemented in the class itself._  As a rule of thumb, if client code
+calls two or more accessors on the same object and combines those values to compute a result, then that computation likely belongs inside the object.
 
-While there are situations where we cannot avoid using an accessor or a mutator in a class, for beginner OO programmers like yourself, it is better to not define classes with any accessor and modifier to the private fields and force yourselves to think in the OO way &mdash; to tell an object what task to perform as a client, and then implement this task within the class as a method as the implementer.
+While there are situations where we cannot avoid using an accessor or a mutator in a class, for beginner OO programmers like yourself, relying on accessors and mutators as defaults indiscrminately can hinder the development of good OO design instinct.  As such, you are encouraged to avoid defining accessors and modifiers to private fields, and instead focus on designing methods within the class that tell an object what task to perform, and allowing clients to simply request those tasks. 
 
 ## Further Reading
 
