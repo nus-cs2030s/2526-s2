@@ -2,14 +2,28 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should
-    
-    - appreciate the concept of variables as an abstraction
-    - understand the concept of types and subtypes
-    - contrast between statically typed language vs. dynamically typed language
-    - contrast between strongly typed language vs. weakly typed language
-    - be familiar with Java variables and primitive types
-    - understand widening type conversion in the context of variable assignments and how subtyping dictates whether the type conversion is allowed.
+    After this unit, students should be able to:
+
+    - explain how variables and types act as abstractions over memory and data, and why they are necessary for writing meaningful programs.
+    - distinguish between static vs. dynamic typing and strong vs. weak typing, and reason about their consequences for error detection and program safety.
+    - identify and apply Java’s primitive types, including their sizes, literal forms, and value semantics.
+    - reason about subtyping among Java primitive types and determine whether an assignment or parameter passing is allowed.
+    - apply the widening conversion rule ($S <: T$) to predict and explain compile-time type errors in Java programs.
+
+## Introduction
+As programs grow in size and complexity, programmers must manage an increasing number of data values and the operations performed on them. Writing correct programs is not just about syntax—it is about ensuring that operations on data are meaningful and safe.
+
+This unit is organised around a central question:
+
+> How does a programming language help prevent meaningless programs involving data?
+
+We begin with variables, which provide an abstraction over memory locations, allowing programmers to name and manipulate data without worrying about where it is stored. 
+
+A key goal of a programming language is _safety_, i.e., preventing programs from performing meaningless or invalid operations on variables during execution.  This goal can be achieved through tagging each variable with a _type_ that describes the kind of data it holds and the operations that can be performed on it.  A type-safe language ensures that operations are only applied to values for which they are meaningful.
+
+Programming languages differ in how and when they enforce these restrictions. In this unit, we contrast static vs. dynamic typing and strong vs. weak typing, focusing on how Java’s static and strong typing enables the compiler to detect certain errors before a program is run.
+
+We then examine Java’s primitive types and the concept of subtyping, which allows limited flexibility while preserving safety. Subtyping explains why some assignments are allowed and others are rejected, leading to the rule of widening type conversion used by the Java compiler.
 
 ## Data Abstraction: Variable
 
@@ -50,7 +64,7 @@ Python and JavaScript are examples of _dynamically typed_ programming languages.
     i = "5"      // ok, i is now a string
     ```
 
-Java, on the other hand, is a _statically typed_ language.  We need to _declare_ every variable we use in the program and specify its type.  A variable can only hold values of the same type as the type of the variable (or its subtype, as you will see later) so we can't assign, for instance, a string to a variable of type `int`.  Once a variable is _declared_ with a particular, the type of the variable cannot be changed.  In other words, the variable can only hold values of that declared type.
+Java, on the other hand, is a _statically typed_ language.  We need to _declare_ every variable we use in the program and specify its type.  A variable can only hold values of the same type as the type of the variable (or its subtype, as you will see later) so we can't assign, for instance, a string to a variable of type `int`.  Once a variable is _declared_ with a particular type, the type of the variable cannot be changed.  In other words, the variable can only hold values of that declared type.
 
 ```Java
 int i;   // declare a variable of type int
@@ -58,7 +72,11 @@ i = 4;   // ok because 4 is of type int
 i = "5"; // error, cannot assign a string to an `int`
 ```
 
-The type that a variable is assigned when we declare the variable is also known as the _compile-time type_.  During the compilation, this is the only type that the compiler is aware of.  The compiler will check if the compile-time type matches when it parses the variables, expressions, values, and function calls, and throw an error if there is a type mismatch.  This type-checking step helps to catch errors in the code early.
+The type that a variable is assigned when we declare the variable is also known as the _compile-time type_, or CTT for short.  We sometimes use the notation $CTT(v)$ to denote the compile-time type of a variable $v$.
+
+During the compilation, the compile-time type is the only type that the compiler is aware of.  The compiler will reason and check if the compile-time types match when it parses the variables, expressions, values, and function calls, and throw an error if there is a type mismatch.  This type-checking step helps to catch errors in the code early.
+
+Note that the compiler does not execute the programs it compiles, and thus it cannot reason using the runtime values held by the variables.
 
 ### Strong Typing vs. Weak Typing
 
@@ -106,9 +124,9 @@ while (i < 10):
 print("i is " + i)
 ```
 
-Since Python does not allow adding a string to an integer, there is a type mismatch error on Line 5.  The type mismatch error is only caught when Line 5 is executed after the program is run for a long time.  Since the type of the variable `i` can change during run time, Python (and generally, dynamically typed languages) cannot tell if Line 5 will lead to an error until it is evaluated during run time.
+Since Python does not allow adding a string to an integer, there is a type mismatch error on Line 5.  The type mismatch error is only caught when Line 5 is executed after the program executes for a long time.  Since the type of the variable `i` can change during run time, Python (and generally, dynamically typed languages) cannot tell if Line 5 will lead to an error until it is evaluated during run time.
 
-In contrast, statically typed language like Java can detect type mismatch during compile time since the compile-time type of a variable is fixed.  As you will see later, Java allows "addition" or string and integer, {++but not++} multiplication of a string and an integer.  If we have the following code, Java can confidently produce compilation errors without even running a program: 
+In contrast, statically typed language like Java can detect type mismatch during compile time since the compile-time type of a variable is fixed.  As you will see later, Java allows "addition" or string and integer, but not multiplication of a string and an integer.  If we have the following code, Java can confidently produce compilation errors without even running a program: 
 
 ```Java
 int i = 0
@@ -209,6 +227,8 @@ Graphically, we can draw the subtyping relationship as an arrow from subtype to 
     float x = 3.4e+38f;
     long y = add(x); // error: incompatible types: possible lossy conversion from float to long
     ```
+
+    Subtyping is about whether a piece of code written for one type can also be used for another type safely.  It is not about the size (in bits) of the types.
     
 Valid subtype relationship is part of what the Java compiler checks for when it compiles.  Consider the following example:
 
@@ -227,11 +247,11 @@ Line 4 above would lead to an error:
 
 but Line 3 is OK.
 
-To understand why, let's consider the compile-type of `d` and `i`. The compile-time type of the variable `d` is `double` because that is what we declared it as.  Similarly, the compile-time type of the variable `i` is `int`.  `double` can hold a larger range of values than `int`, thus all values that can be represented by `i` can be represented by `d` (with possible loss of precision).  Using the terminology that you just learned, `double` is a supertype of `int`.  
+To understand why, let's consider the compile-time type of `d` and `i`. The compile-time type of the variable `d` is `double` because that is what we declared it as.  Similarly, the compile-time type of the variable `i` is `int`.  `double` can hold a larger range of values than `int`, thus all values that can be represented by `i` can be represented by `d` (with possible loss of precision).  Using the terminology that you just learned, `double` is a supertype of `int`.  
 
 On Line 3, the Java compiler allows the value stored inside `i` to be copied to `d`.  The worst that could happen is that we lose a bit of precision.  On Line 4, however, we try to copy the value stored in `d` to `i`.  Since `d` is a `double`, it can store a value outside the range supported by `i` and can have order of magnitudes difference between them.  This would be a problem if the code is allowed to execute!
 
-This example shows how subtyping applies to type checking.  _Java allows a variable of type $T$ to hold a value from a variable of type $S$ only if $S <: T$_.  This step is called _widening type conversion_.  Such conversion can happen during assignment or parameter passing.
+This example shows how subtyping applies to type checking.  _Java allows a variable of type $T$ to hold a value from a variable of type $S$ only if $S <: T$_.  This step is called _widening type conversion_.  Such widening type conversion can happen during assignment or parameter passing.
 
 The term "widening" is easy to see for primitive types --  the subtype has a narrower range of values than the supertype. The opposite conversion is called _narrowing_ because the size is narrower.
 

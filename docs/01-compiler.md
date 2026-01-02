@@ -4,10 +4,22 @@
 !!! abstract "Learning Objectives"
 
     After this unit, students should
-    
-    - recap some fundamental programming concepts, including the concept of a program, a programming language, a compiler, and an interpreter.
-    - be aware of two modes of running a Java program (compiled vs. interpreted).
-    - be aware that compile-time errors are better than run-time errors, but the compiler cannot always detect errors during compile time.
+
+    - explain what a program is and why programs written in high-level languages must be translated before execution;
+    - distinguish between compilation and interpretation as execution strategies, and describe how modern systems (including Java) combine both;
+    - explain how Java programs are compiled and executed using javac, java, bytecode, and the Java Virtual Machine (JVM);
+    - interpret tombstone (T-) diagrams to reason about how programs, compilers, interpreters, and machines interact;
+    - distinguish between compile-time and run-time errors, and explain the role and limitations of the compiler in detecting errors.
+
+## Introduction
+
+n this course, we will spend a lot of time learning how to design programs so that errors are caught as early as possible, ideally before the program ever runs. Many of the programming constructs you will encounter in CS2030/S, such as strong static typing, generics, immutability, and functional-style programming, exist precisely to help the compiler detect mistakes early and reliably.
+
+To understand why these ideas matter, it is important to first understand how programs are executed. A computer’s hardware can only understand instructions written in machine code, yet programmers write programs in high-level languages such as Java. Bridging this gap requires translation, and this translation process—whether done by a compiler, an interpreter, or a combination of both—fundamentally shapes how programs behave, how errors arise, and what kinds of mistakes can be detected automatically.
+
+This unit introduces the basic concepts of programs, programming languages, compilers, and interpreters, using Java as the primary example. We will examine how Java programs are compiled and executed, how different execution models can be represented using diagrams, and why the distinction between compile-time and run-time errors is so important in practice.
+
+By the end of this unit, you should have a clear mental model of how your Java programs move from source code to execution, and why the compiler plays such a central role in helping programmers write correct and reliable software. This mental model will serve as a foundation for everything else you learn in CS2030/S.
 
 
 ## Software Program
@@ -19,9 +31,11 @@ A programming language is a formal language that helps programmers specify _prec
 
 ## Compiled vs. Interpreted Programs
 
-The processing unit of a computer can only accept and understand instructions written in machine code.  A program, written in a higher-level programming language, therefore needs to be translated into machine code before execution.  There are different approaches to how such translations can be done.  The first approach uses a _compiler_ &mdash; a software tool that reads the entire program written in a higher-level programming language and translates it into machine code.  The machine code is then saved into an executable file, which can be executed later.  `clang`, a C/C++ compiler, is an example.  The second approach uses an _interpreter_ &mdash; software that reads in the program one statement at a time interprets what the statement means, and executes it directly.   This is how Python and JavaScript programs are executed. 
+The processing unit of a computer can only accept and understand instructions written in machine code.  A program, written in a higher-level programming language, therefore needs to be translated into machine code before execution.  There are different approaches to how such translations can be done.  The first approach uses a _compiler_ &mdash; a software tool that reads the entire program written in a higher-level programming language and translates it into machine code.  The machine code is then saved into an executable file, which can be executed later.  `clang`, a C/C++ compiler, is an example.  The second approach uses an _interpreter_ &mdash; software that reads in the program one statement at a time interprets what the statement means, and executes it directly.  This is how Python and JavaScript programs are usually executed.  
 
-Modern programming systems for executing programs are, however, more sophisticated.  V8, for instance, is an open-source engine that executes JavaScript, and it contains both an interpreter that first interprets a JavaScript program into _bytecode_ (an intermediate, low-level representation) and its execution engine. A just-in-time compiler then reads in the bytecode and generates machine code dynamically at runtime with optimized performance. 
+Note that whether a program is compiled or interpreted depends on how the program is executed, and not on the programming language used.  For example, Python is usually interpreted, but there are Python compilers that can compile Python programs into machine code.  Similarly, C/C++ is usually compiled, but there are C/C++ interpreters as well.
+
+Furthermore, modern programming systems for executing programs are more sophisticated.  V8, for instance, is an open-source engine that executes JavaScript, and it contains both an interpreter that first interprets a JavaScript program into _bytecode_ (an intermediate, low-level representation) and its execution engine. A just-in-time compiler then reads in the bytecode and generates machine code dynamically at runtime with optimized performance. 
 
 Java programs, on the other hand, can be executed in two ways:
 
@@ -85,7 +99,7 @@ Suppose we have a Java program called `Hello.java`.  To compile the program, we 
 $ javac Hello.java
 ```
 
-into the command line.  `javac` is the Java compiler.  This step will either lead to the bytecode called `Hello.class` being created or generate some errors.  This process can be seen in the figure below, where the `Hello.java` program is compiled from Java to the JVM language (_bytecode_). The Java compiler `javac` in this diagram is implemented in the x86-64 machine language.
+into the command line.  `javac` is the Java compiler.  This step will either lead to the bytecode called `Hello.class` being created or generate some errors.  This process can be seen in the figure below, where the `Hello.java` program is compiled from Java to the JVM language (_bytecode_). The Java compiler `javac` in this diagram is implemented in the x86-64 machine code.
 
 <figure markdown="span">
 <br>
@@ -101,7 +115,7 @@ Assuming that there is no error in compilation, we can now run
 $ java Hello
 ```
 
-to invoke the JVM `java` and execute the bytecode contained in the file `Hello.class`. This can be seen in the figure below, where the `Hello.class` program is interpreted from JVM language (_bytecode_) to the x86-64 machine language.
+to invoke the JVM `java` and execute the bytecode contained in the file `Hello.class`. This can be seen in the figure below, where the `Hello.class` program is interpreted from JVM language (_bytecode_) to the x86-64 machine code.
 
 !!! warning "Passing in filename instead of class name"
 
@@ -127,8 +141,10 @@ to invoke the JVM `java` and execute the bytecode contained in the file `Hello.c
 
 [^1]: The `$` represents the command prompt in a shell and you do not need to type this.
 
-Beginners tend to confuse between `javac` and `java`, and whether to add the extension `.java` or `.class` when compiling and executing a Java program.  Do take note and refer back here if needed.
+Beginners tend to confuse between `javac` and `java`, and whether to add the extension `.java` or `.class` when compiling and executing a Java program.  Remember: 
 
+- `javac` compiles; `java` runs.
+- `javac` always takes `.java`; `java` never takes `.class`.
 
 !!! note "java Hello.java"
     
@@ -141,9 +157,10 @@ Beginners tend to confuse between `javac` and `java`, and whether to add the ext
     
     We won't do this in CS2030/S (i) to avoid confusion and (ii) to show you the steps explicitly.
 
+
 ### Interpreting a Java program
 
-Java (version 8 or later) comes with an interpreter called `jshell` that can read Java statements, evaluate them, and print the results[^3]. `jshell` is useful for learning and experimenting with Java.   This can be seen in the figure below, where the `Hello.java` program is interpreted from Java directly to the x86-64 machine language. 
+Java (version 8 or later) comes with an interpreter called `jshell` that can read Java statements, evaluate them, and print the results[^3]. `jshell` is useful for learning and experimenting with Java.   This can be seen in the figure below, where the `Hello.java` program is interpreted from Java directly to the x86-64 machine code. 
 
 <figure markdown="span">
 <br>
@@ -183,6 +200,7 @@ While `jshell` is a convenient way to test things out and play with new Java con
 !!! note "jsh vs java"
     Files intended to be run on `jshell` typically uses `.jsh` extension while files intended to be compiled and run use `.java` extension.  However, this difference is merely a convention.  You can still interpret `.java` program on `jshell`.
 
+
 ## Compiler
 
 !!! quote
@@ -192,8 +210,10 @@ While `jshell` is a convenient way to test things out and play with new Java con
 
 The compiler does more than just translate source code into machine code or bytecode.  The compiler also needs to parse the source code written and check if it follows the precise specification of the programming language (called _grammar_) used, and produces a _syntax error_ if the grammar is violated.  It therefore can detect any syntax error before the program is run.
 
-It is much better for a programmer to detect any error in its code during compilation &mdash; since this is the phase when the program is still being developed and under the control of the programmer.  Runtime error, on the other hand, might occur when the customers are running the program, and so are much less desirable.  As such, we try to detect errors as much as possible during compilation.  The compiler is a powerful friend for any programmer if used properly.
+It is much better for a programmer to detect any error in its code during compilation &mdash; since this is the phase when the program is still being developed and under the control of the programmer.  Runtime error, on the other hand, might occur when the customers are running the program, and so are much less desirable.  As such, we __try to detect errors as much as possible during compilation__.  The compiler is a powerful friend for any programmer if used properly.  This guiding principle underlies much of the concepts that we will encounter in this course.
 
 The power of the compiler, however, is limited.  A compiler can only read and analyze the source code without actually running it.  Without running the program, the compiler cannot always tell if a particular statement in the source code will ever be executed; it cannot always tell what values a variable will take.
 
-To deal with this, the compiler can either be _conservative_, and report an error as long as _there is a possibility_ that a particular statement is incorrect; or, the compiler can be more _permissive_, reporting an error only if _there is no possibility_ that a particular statement is correct.  If there is a possibility that a particular statement is correct, it does not throw an error but relies on the programmer to do the right thing.  We will further contrast these two behaviors later in this module.
+To deal with this, the compiler can either be _conservative_, and report an error as long as _there is a possibility_ that a particular statement is incorrect; or, the compiler can be more _permissive_, reporting an error only if _there is no possibility_ that a particular statement is correct.  If there is a possibility that a particular statement is correct, it does not throw an error but relies on the programmer to do the right thing.  
+
+Many Java design choices favor conservative compilation to catch errors early, even if it occasionally rejects code that "might work."  We will further contrast these two behaviors later in this course.

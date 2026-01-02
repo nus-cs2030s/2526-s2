@@ -2,36 +2,43 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should
-    - understand how the key concepts covered in CS2030/S are related to each other.
+    After this unit, students should be able to:
 
-## What is This Module About?
+    - explain the purpose and scope of CS2030/S within the NUS computing curriculum.
+    - describe the kinds of software complexity the course focuses on and why they matter.
+    - identify the key abstraction mechanisms—functions, objects, types, and higher-order computation—used to manage evolving software.
+    - explain how object-oriented and functional programming principles are used to support extensible, maintainable code.
+    - articulate how type systems and immutability help prevent bugs and reduce human reasoning cost.
 
-CS2030/S is designed for students who have gone through a typical basic programming module and have learned about problem-solving with simple programming constructs such as loops, conditions, and functions.  In a typical introductory programming module, such as CS1010 and its variants at NUS, students tend to write small programs (in the order of tens or hundreds of lines of code) to solve a programming homework problem, work alone on their code, and move on to solve the next problem once the homework is done.
+## What is This Course About?
+
+CS2030/S is designed for students who have gone through a typical basic programming course and have learned about problem-solving with simple programming constructs such as loops, conditions, and functions.  In a typical introductory programming course, such as CS1010 and its variants at NUS, students tend to write small programs (in the order of tens or hundreds of lines of code) to solve a programming homework problem, work alone on their code, and move on to solve the next problem once the homework is done.
 
 The first aim of CS2030/S is to change the students' mindset and to make them learn to write software that will continue to evolve as software requirements change and to write software that will be read and modified by other programmers (including their future selves).
 
 The second aim of CS2030/S is to level up the complexity of programs that the students write, from the order of hundreds of lines to thousands of lines.  CS2030/S bridges the
-students between writing toy programs to solve specific problems in CS1010 and writing larger real-world software in their later modules, such as CS2103 Software Engineering.
+students between writing toy programs to solve specific problems in CS1010 and writing larger real-world software in their later courses, such as CS2103 Software Engineering.
 
 A programming language is a medium in which programmers can express their intentions and construct software and thus is critical to supporting the aims above.  With the appropriate features and tools, one can tame the complexity of software, make the code written friendlier to other programmers, and easier to evolve.  The third aim of CS2030/S is thus to expand the students' minds on different ways one can construct software and the principles behind some of the programming language constructs.  In particular, CS2030/S focuses on *objects*, *types*, and *functions*, as three key constructs for building programmer-friendly software.  It covers both object-oriented and functional paradigms as two different approaches to constructing software, with a strong emphasis on type safety.
 
-The final aim of CS2030/S is to introduce students to programming language concepts and to bridge them from introductory programming to advanced modules such as programming language design and implementation.  Part of CS2030/S introduces students to the design decisions behind some of the constraints and the workings behind the programming language compilation and execution, giving them a glimpse inside the programming system that so far has been mostly treated as a black box in introductory modules.
+The final aim of CS2030/S is to introduce students to programming language concepts and to bridge them from introductory programming to advanced courses such as programming language design and implementation.  Part of CS2030/S introduces students to the design decisions behind some of the constraints and the workings behind the programming language compilation and execution, giving them a glimpse inside the programming system that so far has been mostly treated as a black box in introductory courses.
 
+If what you read so far feels abstract now, that is normal.  These ideas, along with many terms that you will read later in this unit, will be explained in detail in the subsequent units of this course.  When you re-read this unit as a recap after going through the course, everything will make sense.
 
 ## The Choice of Java
 
-We decided to use one programming language throughout the module.  This decision means that we need to pick a language that is strongly typed with static typing and supports both object-oriented and functional programming.  Considering multiple factors, we decided to choose Java for CS2030/S, for its popularity, syntax familiarity, and smoother transitions to later modules in the NUS computing curriculum.
+The course is taught using a single programming language to provide continuity and focus. This requires a language that is strongly and statically typed, and that supports both object-oriented and functional programming. Java was chosen for CS2030/S because of its widespread adoption, familiar syntax, and its alignment with subsequent courses in the NUS computing curriculum.
 
-While Java is not the most elegant programming language when expressing programs in a functional style, we hope that students can still learn the principles of functional programming and apply them in other programming languages.  This choice is a trade-off between having to switch to a different language in the middle of a module.  
+While Java is not the most elegant programming language when expressing programs in a functional style, we hope that students can still learn the principles of functional programming and apply them in other programming languages.  This choice is a trade-off between having to switch to a different language in the middle of a course.  
 
-## What This Module is Not About
+## What This Course is Not About
 
-This is not a module on Java programming.  We will not comprehensively cover Java syntax and features, except those relevant to the concepts we teach.  In fact, we will avoid and even ban students from using certain Java features (such as `var`) for pedagogical purposes.
+This is not a course on the Java language.  Instead, CS2030/S uses Java as a concrete medium to teach programming principles and constructs.
+We will not comprehensively cover Java syntax and features, except those relevant to the concepts we teach.  Some Java features (such as `var`) are intentionally restricted so that you can clearly see the underlying ideas, rather than relying on shortcuts.
 
-This is not a module on software engineering either.  Software engineering is a broad discipline on its own and deserves another module.  Rather, this module is about the programming principles and constructs on top of which programmers can design better software.  To motivate the importance of these principles and constructs and see how they can be used, we will inevitably cover some of the software engineering design principles, such as Liskov Substitution Principle (the L in SOLID), Tell-Don't-Ask, Composition over Inheritance, etc.  However, we will not comprehensively cover object-oriented design or software design in general (e.g., we will not cover S, O, I, and D in SOLID).
+This is not a course on software engineering either.  Rather, this course is about the programming principles and constructs on top of which programmers can design better software.  To motivate the importance of these principles and constructs and see how they can be used, we will inevitably cover some of the software engineering design principles, such as Liskov Substitution Principle (the L in SOLID), Tell-Don't-Ask, Composition over Inheritance, etc.  However, we will not comprehensively cover object-oriented design or software design in general (e.g., we will not cover S, O, I, and D in SOLID).  Software engineering is a broad discipline on its own and deserves another course.  
 
-Finally, CS2030/S is not a module that focuses on computational efficiency.  We have CS2040/S for that.  In CS2030/S, although reducing computational cost still plays a role, this is not the only cost that matters.  CS2030/S is also concerned with the _human cost_ of debugging or maintaining software.  In striving for simpler software that is easier to maintain and extend, we may have to sacrifice computational efficiency.
+Finally, CS2030/S is not a course that focuses on computational efficiency (we have CS2040/C/S for that).  Instead, it focuses on correctness, clarity, and long-term maintainability of software.  In CS2030/S, although reducing computational cost still plays a role, this is not the only cost that matters.  CS2030/S is also concerned with the _human cost_ of debugging or maintaining software.  In striving for simpler software that is easier to maintain and extend, we may have to sacrifice computational efficiency.
 
 ## Taming Complexity in Software Development
 
@@ -39,15 +46,15 @@ An underlying theme of CS2030/S is taming complexity in software development.  T
 
 Let's start by considering a simplified view of what a software program is.  One can view a software program as a collection of data variables and instructions on how to modify these variables.  A program is generally written to meet a given requirement: given one or more input variables, the program should perform the computation to produce the output variables, in a way that meets the requirement.  Often, the program stores information in the intermediate variables while performing the computation.
 
-As a student who has gone through an introductory programming module such as CS1010 and its variants, you should be familiar with the view above, and you should have some experience writing a program to solve a given computational problem.  The programs you have written for these introductory modules are mostly small "toy" programs &mdash; they consist of only a few hundred lines and tens of variables, at most.
+As a student who has gone through an introductory programming course such as CS1010 and its variants, you should be familiar with the view above, and you should have some experience writing a program to solve a given computational problem.  The programs you have written for these introductory courses are mostly small "toy" programs &mdash; they consist of only a few hundred lines and tens of variables, at most.
 
 Software development in the real world, however, is far more complex than what you have experienced.  A software program rarely solves a well-defined computational problem only.  It often requires multiple components, such as user interface, data storage, and business rules, intricately interacting with each other to attain a set of functionalities.  
 
 As the requirement of the software becomes more complex, the number of variables that need to be kept track of increases; the logic of the computation the programmer needs to maintain the variables becomes more complicated.  Further, it is often that the variables are interdependent.  For instance, updating a variable might require updating another; how a variable should be updated might depend on another variable.  As the number of variables increases, so is the number of relationships between the variables that the programmer has to keep track of.  Failure to correctly maintain the variables and the relationship between them most likely will lead to bugs.
 
-Further, real-world software rarely remains static.  This property is again different from what you have experienced in your introductory programming module, where once the instructors release a programming assignment, they rarely go back and change the requirements.  In the real world, software evolves &mdash; new features are added, business rules change, and better algorithms are deployed.  The code needs to be updated accordingly &mdash; adding new variables and new computation; changing how variables are updated or are dependent on each other.  Updating the code of an already-complex software program to keep up with the requirement, if not managed properly, can lead to bugs.
+Further, real-world software rarely remains static.  This property is again different from what you have experienced in your introductory programming course, where once the instructors release a programming assignment, they rarely go back and change the requirements.  In the real world, software evolves &mdash; new features are added, business rules change, and better algorithms are deployed.  The code needs to be updated accordingly &mdash; adding new variables and new computation; changing how variables are updated or are dependent on each other.  Updating the code of an already-complex software program to keep up with the requirement, if not managed properly, can lead to bugs.
 
-Real-world software is often the product of teamwork from multiple programmers, where the software development process is unlike what you have experienced in your introductory programming module, where you solve your homework individually.  When multiple programmers work together, the interdependency between the states needs to be communicated and handled properly and consistently across the programmers.  One programmer's modification to the code should not introduce bugs into another programmer's code.  
+Real-world software is often the product of teamwork from multiple programmers, where the software development process is unlike what you have experienced in your introductory programming course, where you solve your homework individually.  When multiple programmers work together, the interdependency between the states needs to be communicated and handled properly and consistently across the programmers.  One programmer's modification to the code should not introduce bugs into another programmer's code.  
 
 Since software evolves, the notion of "multiple programmers" actually applies even to software developed by a single lone programmer across time.  Changing one's code should not introduce new bugs to other parts of the code that were written some time ago.  
 
@@ -55,7 +62,7 @@ Since software evolves, the notion of "multiple programmers" actually applies ev
 
 ### Good Software Development Practices
 
-If you are taught properly in your introductory programming modules, you should already be familiar with good programming practices that help to tame the complexity and reduce the chances of bugs.  These practices include
+Through your introductory programming courses, you are already be familiar with good programming practices that help to tame the complexity and reduce the chances of bugs.  These practices include
 
 * __Commenting your code:__ Commenting your code provides _in situ_ communication between you and other programmers on the team, as well as between you and your future self, on the non-obvious purpose of the states and the relationships between the states.  Such comments help to enhance the understanding of what the code is doing and to remind whoever is updating to code to modify appropriately when the requirement changes.
 

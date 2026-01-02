@@ -2,14 +2,20 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should
+    After this unit, students should be able to:
 
-    - understand composite data type as an even higher level abstraction over variables.
-    - understand encapsulation as an object-oriented (OO) principle.
-    - understand the meaning of class, object, fields, and methods, in the context of OO programming.
-    - be able to define a class and instantiate one as an object in Java.
-    - appreciate OO as a natural way to model the real world in programs.
-    - understand reference types in Java and their differences from the primitive types.
+    - explain encapsulation as the bundling of data with the methods that operate on that data, and its role in maintaining an abstraction barrier.
+    - define simple Java classes and objects, identifying the roles of fields and methods.
+    - model simple problem domains using classes, and justify basic design choices (e.g., class vs primitive or `String`).
+    - explain and predict the behavior of reference types in Java, including aliasing and shared mutable state.
+    - recognize and avoid common errors involving references, including uninitialized (`null`) references.
+
+## Introduction
+
+This unit introduces **encapsulation**, a key abstraction mechanism in object-oriented programming.  Encapsulation builds on composite data types by bundling data together with the operations that manipulate that data, forming a clear abstraction barrier between implementation and usage.
+
+In Java, encapsulation is realized through **classes and objects**, which also introduce reference semantics. Understanding encapsulation is essential not only for writing correct programs, but also for reasoning about program design, modularity, and later concepts such as immutability
+and interfaces.
 
 ## Abstraction: Composite Data Type
 
@@ -121,6 +127,8 @@ class Circle {
 
 The method `factorial` is irrelevant to the class `Circle`.   It is not associated with and does not utilize the fields in the class.  Furthermore, `factorial` is a useful method that can be used in a general context, not specific to the `Circle` class.  This is a bad example of encapsulation.
 
+As a rule of thumb, a method belongs in a class if it conceptually operates on or is responsible for the state represented by that class.
+
 ## Object-Oriented Programming
 
 A program written in an _object-oriented language_ such as Java consists of classes, with one main class as the entry point.  One can view a running object-oriented (or OO) program as something that instantiates objects of different classes and orchestrates their interactions with each other by calling each other's methods.
@@ -210,7 +218,9 @@ The behavior above is due to the variables `c1` and `c2` referencing to the same
 
 ## Special Reference Value: `null`
 
-Any reference variable that is not initialized will have the special reference value `null`.  A common error for beginners is to declare a reference variable and try to use it without instantiating an object:
+Any reference variable that is not initialized will have the special reference value `null`.  A `null` reference means “this variable does not refer to any object”.  Attempting to access fields or methods through `null` fails because there is no object to operate on.
+
+A common error for beginners is to declare a reference variable and try to use it without instantiating an object:
 
 ```Java
 Circle c1;
