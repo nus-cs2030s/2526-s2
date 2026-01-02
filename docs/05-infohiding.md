@@ -2,18 +2,26 @@
 
 !!! abstract "Learning Objectives"
 
-    After taking this unit, students should:
+    After taking this unit, students should be able to:
 
-    - understand the drawback of breaking the abstraction barrier.
-    - understand the concept of information hiding to enforce the abstraction barrier.
-    - understand how Java uses access modifiers to enforce information hiding.
-    - understand what is a constructor and how to write one in Java.
+    - explain how breaking the abstraction barrier creates fragile code.
+    - apply information hiding using `private` and `public` in Java classes.
+    - distinguish client code from implementation code using access modifiers.
+    - construct objects safely using constructors instead of direct field access.
+    - use `this` to disambiguate fields from parameters.
+
+
+## Introduction
+
+In Unit 3, we learned how abstraction allows us to separate what a component does from how it does it, enabling clients to use a data type without understanding its internal details. In Unit 4, we saw how encapsulation groups data and related operations into a class, establishing an abstraction barrier between clients and implementers. However, abstraction and encapsulation alone are not enough: unless the programming language actively prevents clients from accessing internal representation, this barrier can be accidentally or intentionally broken.
+
+In this unit, we introduce information hiding, the mechanism that enforces the abstraction barrier in practice. We will see how Java uses access modifiers to control visibility, ensuring that clients interact with a class only through its public interface. Once internal representation is hidden, we will also examine how constructors provide the only safe way to create and initialize objects, and how the this keyword helps clarify the distinction between object state and local variables. Together, these ideas show how abstraction is not just a design principle, but a property enforced by the language and the compiler.
 
 ## Breaking the Abstraction Barrier
 
 In the ideal case, the code above the abstraction barrier would just call the provided interface to use the composite data type.  There, however, may be cases where a programmer may intentionally or accidentally break the abstraction barrier.  
 
-Consider the case of `Circle` in Unit 4, where we modify the radius `r` directly with `c.r = 10`.  In doing so, we, as the client to `Circle`, make an explicit assumption of how `Circle` implements a circle.  The implementation details have been leaked outside the abstraction barrier.   Now, if the implementer wishes to change the representation of the `Circle`, to say, store the diameter, instead. 
+Consider the case of `Circle` in Unit 4, where we modify the radius `r` directly with `c.r = 10`.  In doing so, we, as the client to `Circle`, make an explicit assumption of how `Circle` implements a circle.  The implementation details have been leaked outside the abstraction barrier.  Assessing `c.r` turns the client into a partial implementer.  Now, if the implementer wishes to change the representation of the `Circle`, to say, store the diameter, instead. 
 
 ```Java title="Circle v0.1.2 with Diameter"
 class Circle {
@@ -65,7 +73,9 @@ In summary, the two access modifiers are shown below:
 
 ## Constructors
 
-With data hiding, we completely isolate the internal representation of a class using an abstraction barrier.  But, with no way for the client of the class to modify the fields directly, how can the client initialize the fields in a class?  To get around this, it is common for a class to provide methods to initialize these internal fields.
+With data hiding, we completely isolate the internal representation of a class using an abstraction barrier.  But, with no way for the client of the class to modify the fields directly, how can the client initialize the fields in a class?  
+
+Since fields are hidden, it is often necessary for a class to provide methods to initialize these internal fields, allowing clients to create valid objects.
 
 A method that initializes an object is called a _constructor_.
 
@@ -106,11 +116,12 @@ Circle() {
 }
 ```
 
-Notice the condition "_if no constructor is given at all_".  If at least one constructor is provided, Java will not add the default constructor automatically.
-
+Notice the condition "_if no constructor is given at all_".  If at least one constructor is provided, Java will not provide the default constructor.
 
 ## The `this` Keyword
 
 The code above also introduces the `this` keyword.  `this` is a reference variable that refers back to the calling object itself.    It can be used to distinguish between two variables of the same name.  In the example above, `this.x = x` means we want to set the field `x` of this object to the parameter `x` passed into the constructor.
 
 Now that you have been introduced to `this`, we have also updated the method body of `getArea` and replaced `r` with `this.r`.  Although there is nothing syntactically wrong with using just `r`, sticking to the idiom of referring to members through the `this` reference makes the code easier to understand for readers.  The `this` reference makes it explicit that the expression is referring to a field in the class, rather than a local variable or a parameter.
+
+As a rule of thumb, use `this` whenever you refer to a field.
