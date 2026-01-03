@@ -39,8 +39,6 @@ Recall that the same variable names can exist in the program as long as they are
 
 Like a "stack of books" where we can only take the book at the top and can only put more books at the top, the stack frames in the stack can only be added or removed from the top.  This behavior is also called Last-In First-Out (LIFO).  In other words, the last element that is inserted (i.e., Last-In) is the first element to be removed (i.e., First-Out).
 
-![SH001](figures/SH/001.png){ width=500px }
-
 ### Heap
 
 The heap stores dynamically allocated objects.  To put it simply, whenever you use the keyword `new`, a new object is created in the heap.
@@ -53,7 +51,9 @@ An object in the heap contains the following information:
 - Instance fields and the respective values.
 - Captured variables (more on this in later units).
 
-![SH002](figures/SH/002.png){ width=150px }
+<p>
+--8<-- "docs/figures/SH/002.svg"
+</p>
 
 ## Examples
 
@@ -78,27 +78,27 @@ Although we mentioned that `this` is a keyword, it behaves mostly like a variabl
 [^1]: It can also behave like a function/method in the sense that it can be invoked (_e.g.,_ `this(..)`).  In this case, the keyword `this` represents the constructor of the current class.  We will illustrate more of this on the topic of overloading.
 
 === "After Line 1"
-    ![003a](figures/SH/003a.png)
+--8<-- "docs/figures/SH/003a.svg"
 
     ---
 
 === "Allocate Memory"
-    ![003b](figures/SH/003b.png)
+--8<-- "docs/figures/SH/003b.svg"
 
     ---
 
 === "Invoke Constructor"
-    ![003c](figures/SH/003c.png)
+--8<-- "docs/figures/SH/003c.svg"
 
     ---
 
 === "End of Constructor"
-    ![003d](figures/SH/003d.png)
+--8<-- "docs/figures/SH/003d.svg"
 
     ---
 
 === "Return from Constructor"
-    ![003e](figures/SH/003e.png)
+--8<-- "docs/figures/SH/003e.svg"
 
     ---
 
@@ -117,7 +117,9 @@ c = new Circle(new Point(1, 2), 3);
 
 In this case, the `new Point(1, 2)` is evaluated first to create an object in the heap.  Then, we evaluate `new Circle(.., 3)`.  The reference to this object is then assigned to the variable `c`.  The final effect is shown below.  Note that the field `c` in the class `Circle` is an arrow to the point object in the heap.
 
-![004](figures/SH/004.png)
+<p>
+--8<-- "docs/figures/SH/004.svg"
+</p>
 
 ### Aliasing
 
@@ -138,17 +140,17 @@ In this example, we have three variables, `c`, `center`, and `radius`.  Lines 1-
 Recall that object references are initialized to `null`.  Primitive type variables (e.g., `radius`) are initialized to 0.0 because it is of type `double`.  If it is an `int`, then it will be initialized to 0 instead.
 
 === "After Lines 1-3"
-    ![005a](figures/SH/005a.png)
+    --8<-- "docs/figures/SH/005a.svg"
 
     ---
 
 === "After Lines 4-6"
-    ![005b](figures/SH/005b.png)
+    --8<-- "docs/figures/SH/005b.svg"
 
     ---
 
 === "After Line 7"
-    ![005c](figures/SH/005c.png)
+    --8<-- "docs/figures/SH/005c.svg"
 
     ---
 
@@ -188,14 +190,18 @@ p1.distanceTo(p2);
 
 After declaring `p1` and `p2` and creating both objects, we have:
 
-![006a](figures/SH/006a.png)
+<p>
+--8<-- "docs/figures/SH/006a.svg"
+</p>
 
 When `distanceTo` is called, the JVM creates a _stack frame_ for this instance method call.  This stack frame is a region of memory that tentatively contains (i) the `this` reference, (ii) the method arguments, and (iii) local variables within the method, among other things[^2][^3].  When a class method is called, the stack frame does not contain the `this` reference.
 
 [^2]: This is not that different from how an OS handles function calls in a machine code, as you will see in CS2100/CS2106.
 [^3]: The other things are JVM implementation independent and not relevant to our discussion here.
 
-![006b](figures/SH/006b.png)
+<p>
+--8<-- "docs/figures/SH/006b.svg"
+</p>
 
 You can see that the _references_ to the objects `p1` and `p2` are copied onto the stack frame. `p1` and `this` point to the same object, and `p2` and `q` point to the same object.
 Within the method, any modification done to `this` would change the object referenced to by `p1`, and any change made to `q` would change the object referenced to by `p2` as well.
@@ -231,22 +237,22 @@ p1.move(x, y);
 Again, we create a stack frame, copy the reference to object `p1` into `this`, copy `x` from the calling method to `x` the argument within the method, and copy `y` from the calling method to `y` the argument within the method.
 
 === "After Lines 1-2"
-    ![007a](figures/SH/007a.png)
+    --8<-- "docs/figures/SH/006c.svg"
 
     ---
 
 === "After Lines 3-4"
-    ![007b](figures/SH/007b.png)
+    --8<-- "docs/figures/SH/006d.svg"
 
     ---
 
 === "Method Invocation at Line 5"
-    ![007c](figures/SH/007c.png)
+    --8<-- "docs/figures/SH/006e.svg"
 
     ---
 
 === "After Line 5"
-    ![007d](figures/SH/007d.png)
+    --8<-- "docs/figures/SH/006f.svg"
 
     ---
 

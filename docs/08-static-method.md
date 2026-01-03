@@ -2,13 +2,13 @@
 
 !!! abstract "Learning Objectives"
 
-After this unit, students should be able to:
+    After this unit, students should be able to:
 
-- distinguish clearly between instance methods and class (static) methods.
-- explain why class methods cannot access instance fields or use this.
-- define and invoke class methods correctly using the class name.
-- describe the role of the main method as the entry point of a Java program.
-- identify the required modifiers, return type, and parameters of a valid main method.
+    - distinguish clearly between instance methods and class (static) methods.
+    - explain why class methods cannot access instance fields or use this.
+    - define and invoke class methods correctly using the class name.
+    - describe the role of the main method as the entry point of a Java program.
+    - identify the required modifiers, return type, and parameters of a valid main method.
 
 ## Introduction
 

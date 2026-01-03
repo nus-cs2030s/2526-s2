@@ -2,13 +2,13 @@
 
 !!! abstract "Learning Objectives"
 
-After completing this unit, students should be able to:
+     After completing this unit, students should be able to:
 
-- explain functions as an abstraction mechanism that separates what a computation does from how it is implemented.
-- define and use functions in Java with appropriate parameters and return types, including void, to structure computation.
-- reason about programs using the abstraction barrier, distinguishing the responsibilities of a client from those of an implementer.
-- use functions to reduce code complexity through locality, information hiding, and reuse.
-- identify violations of the abstraction barrier and explain why they lead to brittle or error-prone code.
+     - explain functions as an abstraction mechanism that separates what a computation does from how it is implemented.
+     - define and use functions in Java with appropriate parameters and return types, including void, to structure computation.
+     - reason about programs using the abstraction barrier, distinguishing the responsibilities of a client from those of an implementer.
+     - use functions to reduce code complexity through locality, information hiding, and reuse.
+     - identify violations of the abstraction barrier and explain why they lead to brittle or error-prone code.
 
 ## Introduction
 
