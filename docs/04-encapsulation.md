@@ -21,7 +21,7 @@ and interfaces.
 
 Just like functions allow programmers to group instructions, give it a name, and refer to it later, a _composite data type_ allows programmers to group _primitive types_ together, give it a name to become a new type, and refer to it later.  This is another powerful abstraction in programming languages that helps us to think at a higher conceptual level without worrying about the details.   Commonly used examples are mathematical objects such as complex numbers, 2D data points, multi-dimensional vectors, circles, etc, or everyday objects such as a person, a product, etc.
 
-Defining composite data type allows programmers to abstract away and be separated from the concern of how a complex data type is represented.
+Defining a composite data type allows programmers to abstract away from  concerns about how a complex data type is represented.
 
 For instance, a circle on a 2D plane can be represented by the center (_i.e.,_ `x`, `y`) and its radius `r`, or it can be represented by the top left corner (_i.e.,_ `x`,`y`) and the width `w` of the bounding square.
 
@@ -43,7 +43,7 @@ bool   circle_overlaps(circle c1, circle c2) { ... };
   :
 ```
 
-Implementing these functions requires knowledge of how a circle is represented.  The implementation will be different if we have a different representation of `circle` (_e.g.,_ `x` and `y` may represent the center of the circle or the top left corner of the bounding square).  But once the set of functions that operates on and manipulates circles is available, we can use the _circle_ type without worrying about the internal representation.  Of course, this assumes that we will only use the functions specifically written to work on circle type.
+Implementing these functions requires knowledge of how a circle is represented.  The implementation will be different if we have a different representation of `circle` (_e.g.,_ `x` and `y` may represent the center of the circle or the top left corner of the bounding square).  But once the set of functions that operates on it is available, we can use the _circle_ type without worrying about the internal representation.  Of course, this assumes that we will only use the functions specifically written to work on circle type.
 
 Additionally, the example on `circle_overlap` highlights another advantage of having a composite data type.  To see the advantage, imagine that you do not have the data type `circle`.  Then the function to check if two circles overlap would require 6 parameters.
 
@@ -61,7 +61,7 @@ bool circle_overlaps(double x1, double x2,
   :
 ```
 
-Even worse, lazy programmers may even omit the suffix and make the entire code unreadable.  So the use of composite data type is like a "glue" that binds relevant data together.  That way, we know that all the elements that make up a circle will always be together.
+Even worse, less careful programmers may even omit the suffix and make the entire code unreadable.  So the use of composite data type is like a "glue" that binds relevant data together.  That way, we know that all the elements that make up a circle will always be together.
 
 If we decide to change the representation of a circle, then only the set of functions that operate on a circle type need to be changed, but not the code that uses circles to do other things.  In other words, the representation of the circle and the set of functions that operate on and manipulate circles, should fall on the same implementer side of the abstraction barrier.
 
@@ -105,6 +105,8 @@ c.getArea(); // return 314.1592653589793
 
 To access the fields and the methods, we use the `.` notation.  For example, `object.field` or `object.method(..)`.  This can be seen in Line 2 and Line 3 of the example above.  {++We refer to `object` as the _target_ of the method call.++}
 
+A class is responsible for maintaining the consistency of its own data.  For instance, if the radius of a circle changes, its area should change accordingly.  Encapsulation helps to maintain this consistency by bundling the data and the methods that operate on the data together.
+
 ### A Bad Example
 
 Let us take a moment to appreciate the example `Circle` v0.1 above.  This is a reasonable example as the method `getArea` is computing the area of the circle with the radius as specified in the field `r`.  So, we can clearly see that the method is associated with the data.  Let's now add another method `factorial` to `Circle`:
@@ -127,7 +129,7 @@ class Circle {
 
 The method `factorial` is irrelevant to the class `Circle`.   It is not associated with and does not utilize the fields in the class.  Furthermore, `factorial` is a useful method that can be used in a general context, not specific to the `Circle` class.  This is a bad example of encapsulation.
 
-As a rule of thumb, a method belongs in a class if it conceptually operates on or is responsible for the state represented by that class.
+As a rule of thumb, a method belongs in a class if it conceptually operates on or is responsible for the state represented by that class.  
 
 ## Object-Oriented Programming
 
@@ -202,7 +204,7 @@ However, if we want to leave open the possibility that we may need to store more
 
 ## Reference Types in Java
 
-We mentioned in [Unit 2](02-type.md) that there are two kinds of types in Java.  You have been introduced to the primitive types.  Everything else in Java is a reference type.
+We mentioned in [Unit 2](02-type.md) that there are two kinds of types in Java.  You have been introduced to the primitive types.  Everything else in Java (i.e., all objects) is a reference type.
 
 The `Circle` class is an example of a reference type.  Unlike primitive variables, which never share the value, a reference variable stores only the reference to the value, and therefore two reference variables can share the same value.  For instance,
 
@@ -214,7 +216,9 @@ c1.r = 10.0;
 System.out.println(c2.r); // print 10.0
 ```
 
-The behavior above is due to the variables `c1` and `c2` referencing to the same `Circle` object in the memory.  Therefore, changing the field `r` of `c1` causes the field `r` of `c2` to change as well.
+The behavior above is due to the variables `c1` and `c2` referencing the same `Circle` object in the memory.  Therefore, changing the field `r` of `c1` causes the field `r` of `c2` to change as well.
+
+Sharing objects through references can lead to unintended side effects, and is a major source of bugs in object-oriented programs.
 
 ## Special Reference Value: `null`
 

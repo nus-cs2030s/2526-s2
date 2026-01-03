@@ -16,8 +16,7 @@ CS2030/S is designed for students who have gone through a typical basic programm
 
 The first aim of CS2030/S is to change the students' mindset and to make them learn to write software that will continue to evolve as software requirements change and to write software that will be read and modified by other programmers (including their future selves).
 
-The second aim of CS2030/S is to level up the complexity of programs that the students write, from the order of hundreds of lines to thousands of lines.  CS2030/S bridges the
-students between writing toy programs to solve specific problems in CS1010 and writing larger real-world software in their later courses, such as CS2103 Software Engineering.
+The second aim of CS2030/S is to level up the complexity of programs that the students write, from the order of hundreds of lines to thousands of lines.  CS2030/S bridges students from writing toy programs to solve specific problems in CS1010 and writing larger real-world software in their later courses, such as CS2103 Software Engineering.
 
 A programming language is a medium in which programmers can express their intentions and construct software and thus is critical to supporting the aims above.  With the appropriate features and tools, one can tame the complexity of software, make the code written friendlier to other programmers, and easier to evolve.  The third aim of CS2030/S is thus to expand the students' minds on different ways one can construct software and the principles behind some of the programming language constructs.  In particular, CS2030/S focuses on *objects*, *types*, and *functions*, as three key constructs for building programmer-friendly software.  It covers both object-oriented and functional paradigms as two different approaches to constructing software, with a strong emphasis on type safety.
 
@@ -62,7 +61,7 @@ Since software evolves, the notion of "multiple programmers" actually applies ev
 
 ### Good Software Development Practices
 
-Through your introductory programming courses, you are already be familiar with good programming practices that help to tame the complexity and reduce the chances of bugs.  These practices include
+Through your introductory programming courses, you are already be familiar with good programming practices that help to tame the complexity and reduce the likelihood of bugs.  These practices include
 
 * __Commenting your code:__ Commenting your code provides _in situ_ communication between you and other programmers on the team, as well as between you and your future self, on the non-obvious purpose of the states and the relationships between the states.  Such comments help to enhance the understanding of what the code is doing and to remind whoever is updating to code to modify appropriately when the requirement changes.
 
@@ -112,7 +111,7 @@ Second, we will introduce _closure_, an abstraction to computation and its envir
 
 ### Types
 
-Allowing a programmer to change the behavior of the existing code without changing the code could lead to more bugs, if not managed properly.  To prevent this, both the programming language system and the programmers, have to adhere to certain rules when extending or modifying the behavior of the existing code.  Java and many other typed languages have _type systems_ &mdash; a set of rules that governs how variables, expressions, and functions interact with each other.  You will learn about subtyping and the Liskov Substitution Principle, two notions that are important to constraining how inheritance and polymorphism should be used to avoid bugs.
+Allowing a programmer to change the behavior of the existing code without changing the code could lead to more bugs, if not managed properly.  To prevent this, both the programming language system and the programmers, have to adhere to certain rules when extending or modifying the behavior of the existing code.  Java and many other typed languages have _type systems_ &mdash; a set of rules that govern how variables, expressions, and functions interact with each other.  You will learn about subtyping and the Liskov Substitution Principle, two notions that are important to constraining how inheritance and polymorphism should be used to avoid bugs.
 
 A type system is also an important tool to reduce the complexity of software development.  Constraining the interactions among the variables, expressions, and functions, reduces the possible interdependence between these programming constructs.  Furthermore, any attempt by programmers to break the constraint can be caught automatically by the compiler.  By utilizing the type system properly, we can detect potential bugs before they manifest themselves.
 
@@ -120,6 +119,6 @@ A reason CS2030/S chooses to use Java is due to its type system.  CS2030/S will 
 
 ### Eliminating Side Effects
 
-We have discussed how functions can compartmentalize computations and limit their complexity within their body.  For this approach to be effective, the function must not have any side effects &mdash; such as updating a variable that is not within the function.  Such functions is called _pure functions_.  Being side-effect-free is one of the key principles of the functional programming paradigm and is something that we will explore to kick off the section on functional paradigm in CS2030/S.
+We have discussed how functions can compartmentalize computations and limit their complexity within their body.  For this approach to be effective, the function must not have any side effects &mdash; such as updating a variable that is not within the function.  Such functions are called _pure functions_.  Being side-effect-free is one of the key principles of the functional programming paradigm and is something that we will explore to kick off the section on functional paradigm in CS2030/S.
 
 A related idea in object-oriented programming we will cover in CS2030/S is _immutability_ &mdash; once we create an object, the object cannot be changed.  In order to update an object, we need to create a new one.  With immutability and pure functions, we can guarantee that the same function invoked on the same objects will always return the same value.  This certainty can help in understanding and reasoning about the code behavior.

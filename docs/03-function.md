@@ -14,20 +14,21 @@ After completing this unit, students should be able to:
 
 As programs grow larger, complexity becomes the primary challenge.  One of the most fundamental tools for managing this complexity is the function.
 
-At first glance, a function may seem like nothing more than a convenient way to group statements and give them a name. But in CS2030/S, we are interested in a deeper role that functions play: functions are an abstraction over computation. They allow us to separate what a piece of code is supposed to do from how it does it.
+At first glance, a function may seem like nothing more than a convenient way to group statements and give them a name. But in CS2030/S, we are interested in a deeper role that functions play: functions are an abstraction over computation. They allow us to _separate what a piece of code is supposed to do from how it does it_.  
 
-This separation is crucial for two reasons. First, it allows us to reason about programs at a higher level, without being overwhelmed by low-level details. Second, it enables collaboration and change. In real software systems, different programmers often work on different parts of a program. Some implement functionality, while others use it. Functions provide a clear boundary—an abstraction barrier—that allows these roles to be separated cleanly.
+This separation is crucial for two reasons. First, it allows us to reason about programs at a higher level without being overwhelmed by low-level details. Second, it enables collaboration and change. In real software systems, different programmers often work on different parts of a program. Some implement functionality, while others use it. Functions provide a clear boundary that allows these roles to be separated cleanly.
 
 In this unit, we will study functions as a design tool. You will learn how functions reduce complexity, enable code reuse, and support information hiding.  You will see that a function is not just a way to reuse code, but it is a promise that enables independent reasoning, change, and collaboration.  More importantly, you will begin to think explicitly in terms of two roles: the implementer, who defines how a function works, and the client, who relies only on what the function promises to do.  This way of thinking will form the foundation for later abstractions in the course. 
 
-
 ## Function as an Abstraction over Computation
 
-Another important abstraction provided by a programming language is _function_ (also known as _method_ or _procedure_).  This abstraction allows programmers to group a set of instructions and give it a name.  The named set of instructions may take one or more variables as input parameters, and return zero or one values.
+An important abstraction provided by a programming language is the _function_ (also known as _method_ or _procedure_).  This abstraction allows programmers to group a set of instructions and give the group a name.  The named set of instructions may take one or more variables as input parameters, and return zero or one value.
 
 Like all other abstractions, defining functions allows us to think at a higher conceptual level.  By composing functions at increasingly higher levels of abstraction, we can build programs with increasing levels of complexity.
 
-In Java, a function is a typed abstraction.  This means that both the input parameters and the return value of a function have types associated with them.  This typing defines how the rest of the program may interact with the function.  
+Every function can be understood in terms of a specification: a description of what the function is supposed to do, expressed in terms of its parameters and return value.  In Java, a function is a typed abstraction.  This means that both the input parameters and the return value of a function have types associated with them.  This typing defines how the rest of the program may interact with the function.  
+
+Abstraction also makes programs easier to test and reason about. Because a function interacts with the rest of the program only through its parameters and return value, it can be tested independently of the rest of the system.
 
 ### Defining a Function in Java 
 
@@ -60,13 +61,15 @@ Note that, unlike Python, Java does not allow returning more than one value.
 
 [^1]: `void` in Java is like a true nothingness (unlike Python's `None` or JavaScript's `undefined`).  If a function is declared as returning a type `void`, it cannot even be used in an assignment!
 
+Note that the type `int` alone does not capture all assumptions about valid inputs. For example, factorial is typically defined only for non-negative integers. Such assumptions form part of the function's specification and must be respected by the client.
+
 ## Reducing Code Complexity With Function
 
 Functions help us deal with complexity in a few ways.
 
 * Functions allow programmers to compartmentalize computation and its effects.  We can isolate the complexity within its body: the intermediate variables exist only as local variables that have no effect outside of the function.  A function only interacts with the rest of the code through its parameters and return value, and so, reduces the dependencies between variables to these well-defined interactions.  Such compartmentalization reduces the complexity of code.
 
-* Functions allow programmers to hide _how_ a task is performed.  The caller of the function only needs to worry about _what_ the function does.  By hiding the details of _how_, we gain two weapons against code complexity.  First, we reduce the amount of information that we need to communicate among programmers.  A fellow programmer only needs to read the documentation to understand what the parameters are for, and what the return values are.  There is no need for a fellow programmer to know about the intermediate variables or the internal computation used to implement the functions.  Second, as the design and requirements evolve, the implementation of a function may change.  But, as long as the parameters and the return value of a function remain the same, the caller of the function does not have to update the code accordingly.  Reducing the need to change as the software evolves reduces the chances of introducing bugs accordingly.
+* Functions allow programmers to hide _how_ a task is performed.  The caller of the function only needs to worry about _what_ the function does.  By hiding the details of _how_, we gain two powerful tools against code complexity.  First, we reduce the amount of information that we need to communicate among programmers.  A fellow programmer only needs to read the documentation to understand what the parameters are for, and what the return values are.  There is no need for a fellow programmer to know about the intermediate variables or the internal computation used to implement the functions.  Second, as the design and requirements evolve, the implementation of a function may change.  But, as long as the parameters and the return value of a function remain the same, the caller of the function does not have to update the code accordingly.  Reducing the need to change as the software evolves reduces the chances of introducing bugs accordingly.
 
 * Functions allow us to reduce repetition in our code through _code reuse_.  If we have the same computation that we need to perform repeatedly on different _values_, we can construct these computations as functions by replacing the values with parameters and passing in the values as arguments to the function.  This approach reduces the amount of boiler-plate code and has two major benefits in reducing code complexity and bugs.  First, it makes the code more succinct, and therefore easier to read and understand.  Second, it reduces the number of places in our code that we need to modify as the software evolves, and therefore, decreases the chance of introducing new bugs.
 
@@ -96,4 +99,4 @@ The abstraction barrier thus enforces a _separation of concerns_ between the two
 
 In Java, the abstraction barrier of a function is enforced primarily through its parameter types and return type, which restrict how clients may use the function and how implementers may define it.
 
-The concept of abstraction barrier applies not only to a function but it applies to other abstractions in this course, such as classes and packages.  We will see how it is used for a higher level of abstraction, classes, in the next unit.
+The same ideas: abstraction barriers, specifications, and separation of roles, will reappear throughout the rest of the course in increasingly powerful forms.  We will see how it is used for a higher level of abstraction, classes, in the next unit.

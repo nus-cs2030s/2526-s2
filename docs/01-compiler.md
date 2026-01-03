@@ -13,7 +13,7 @@
 
 ## Introduction
 
-n this course, we will spend a lot of time learning how to design programs so that errors are caught as early as possible, ideally before the program ever runs. Many of the programming constructs you will encounter in CS2030/S, such as strong static typing, generics, immutability, and functional-style programming, exist precisely to help the compiler detect mistakes early and reliably.
+In this course, we will spend a lot of time learning how to design programs so that errors are caught as early as possible, ideally before the program ever runs. Many of the programming constructs you will encounter in CS2030/S, such as strong static typing, generics, immutability, and functional-style programming, exist precisely to help the compiler detect mistakes early and reliably.
 
 To understand why these ideas matter, it is important to first understand how programs are executed. A computer’s hardware can only understand instructions written in machine code, yet programmers write programs in high-level languages such as Java. Bridging this gap requires translation, and this translation process—whether done by a compiler, an interpreter, or a combination of both—fundamentally shapes how programs behave, how errors arise, and what kinds of mistakes can be detected automatically.
 
@@ -31,7 +31,7 @@ A programming language is a formal language that helps programmers specify _prec
 
 ## Compiled vs. Interpreted Programs
 
-The processing unit of a computer can only accept and understand instructions written in machine code.  A program, written in a higher-level programming language, therefore needs to be translated into machine code before execution.  There are different approaches to how such translations can be done.  The first approach uses a _compiler_ &mdash; a software tool that reads the entire program written in a higher-level programming language and translates it into machine code.  The machine code is then saved into an executable file, which can be executed later.  `clang`, a C/C++ compiler, is an example.  The second approach uses an _interpreter_ &mdash; software that reads in the program one statement at a time interprets what the statement means, and executes it directly.  This is how Python and JavaScript programs are usually executed.  
+The processing unit of a computer can only accept and understand instructions written in machine code.  A program, written in a higher-level programming language, therefore needs to be translated into machine code before execution.  There are different approaches to how such translations can be done.  The first approach uses a _compiler_ &mdash; a software tool that reads the entire program written in a higher-level programming language and translates it into machine code.  The machine code is then saved into an executable file, which can be executed later.  `clang`, a C/C++ compiler, is an example.  The second approach uses an _interpreter_ &mdash; software that reads in the program one statement at a time, interprets what the statement means, and executes it directly.  This is how Python and JavaScript programs are usually executed.  
 
 Note that whether a program is compiled or interpreted depends on how the program is executed, and not on the programming language used.  For example, Python is usually interpreted, but there are Python compilers that can compile Python programs into machine code.  Similarly, C/C++ is usually compiled, but there are C/C++ interpreters as well.
 
@@ -45,10 +45,11 @@ Java programs, on the other hand, can be executed in two ways:
 To better understand this distinction, we will introduce a visual aid to describe the relationships between programs, compilers, interpreters, and machines.
 
 ### Tombstone Diagrams (T-Diagrams)
+
 Tombstone Diagrams or T-diagrams consist of combinations of the following four components: 
 
 - *Programs* which are implemented in a particular language (_i.e.,_ `Java`, `Python`, `C/C++`)
-- Language **A** *Interpreters* implemented in language **B**
+- Language **A** *interpreters* implemented in language **B**
 - Language **A** to language **B** *Compilers* which are implemented in a language **C**
 - Physical *Machines* implementing a particular language (_i.e._, x86-64, ARM-64)
 
@@ -89,17 +90,49 @@ We can treat these components like "puzzle pieces" and build diagrams to describ
 <br>
 </figure>
 
-Since CS2030/S uses Java, we will now look at the two approaches to execute a Java program in more detail (without worrying about how to write a single line of Java first).
+T-diagrams give us a precise way to reason about where translation happens and what language each component understands, which helps avoid confusion when working with multiple tools and platforms.
+
+## Compiler
+
+The compiler does more than just translate source code into machine code or bytecode.  The compiler also needs to parse the source code written and check if it follows the precise specification (i.e., the _grammar_) of the programming language used, and produces a _syntax error_ if the grammar is violated.  It therefore can detect any syntax error before the program is run.
+
+The compiler, however, can also perform more sophisticated checks on the source code to detect other types of errors.  Much of the information a compiler uses to detect errors comes from types, which describe what kind of values variables and expressions can take.  We will vist types in the next unit.  These errors are called _semantic errors_.  A type error, for example, occurs when a programmer tries to perform an operation on a variable that is not allowed according to the variable's type.  For example, trying to multiply a number and a string would result in a type error in Java.
+
+It is much better for a programmer to detect any error in its code during compilation &mdash; since this is the phase when the program is still being developed and under the control of the programmer.  Such errors is called _compile-time errors_.  A _runtime error_, on the other hand, might occur when the customers are running the program, and so are much less desirable.  As such, we __try to detect errors as much as possible during compilation__.  The compiler is a powerful friend for any programmer if used properly.  This guiding principle underlies much of the concepts that we will encounter in this course.
+
+For instance, in Java, the statement
+
+```Java
+x <- 0
+```
+
+would lead to a compile-time error, since the assignment operator in Java is `=` and not `<-`.  The compiler can easily detect this syntax error without running the program.
+
+The power of the compiler, however, is limited.  A compiler can only read and analyze the source code without actually running it.  Without running the program, the compiler cannot always tell if a particular statement in the source code will ever be executed; it cannot always tell what values a variable will take.
+
+The following statement in Java, however, follows the correct syntax and would not cause a compile-time error:
+
+```Java
+int x = a / b;
+```
+
+However, if the value of `b` is zero at runtime, this statement would lead to a runtime error (division by zero).  The compiler cannot always determine whether `b` can be zero or not without actually running the program.
+
+To deal with this, the compiler can either be _conservative_, and report an error as long as _there is a possibility_ that a particular statement is incorrect; or the compiler can be more _permissive_, reporting an error only if _there is no possibility_ that a particular statement is correct.  If there is a possibility that a particular statement is correct, it does not throw an error but relies on the programmer to do the right thing.    Sometimes, the compiler may generate a _compilation warning_, indicating that there is a potential problem, but it does not prevent the program from being compiled.
+
+As you will see in CS2030/S, many Java design choices favor conservative compilation to catch errors early, even if it occasionally rejects code that "might work."  We will further contrast these two behaviors later in this course.
+
+We will now look at the two approaches to execute a Java program in more detail (without worrying about how to write a single line of Java first).
 
 ### Compiling and Running Java Programs
 
-Suppose we have a Java program called `Hello.java`.  To compile the program, we type[^1]
+Suppose we have a Java program called `Hello.java`.  Before we run the program, we first need to compile it.  To compile the program, we type[^1]
 
 ```
 $ javac Hello.java
 ```
 
-into the command line.  `javac` is the Java compiler.  This step will either lead to the bytecode called `Hello.class` being created or generate some errors.  This process can be seen in the figure below, where the `Hello.java` program is compiled from Java to the JVM language (_bytecode_). The Java compiler `javac` in this diagram is implemented in the x86-64 machine code.
+into the command line.  `javac` is the Java compiler.  This step will either lead to the bytecode called `Hello.class` being created or generate some errors.  This process can be seen in the figure below, where the `Hello.java` program is compiled from Java to the JVM bytecode. The Java compiler `javac` in this diagram is implemented in the x86-64 machine code.
 
 <figure markdown="span">
 <br>
@@ -108,7 +141,7 @@ into the command line.  `javac` is the Java compiler.  This step will either lea
 <br>
 </figure>
 
-
+We can run the Java program only after it has been successfully compiled without any errors. 
 Assuming that there is no error in compilation, we can now run
 
 ```
@@ -201,19 +234,3 @@ While `jshell` is a convenient way to test things out and play with new Java con
     Files intended to be run on `jshell` typically uses `.jsh` extension while files intended to be compiled and run use `.java` extension.  However, this difference is merely a convention.  You can still interpret `.java` program on `jshell`.
 
 
-## Compiler
-
-!!! quote
-    _"One man's program is another program's data."_
-
-    -- Olivier Danvy
-
-The compiler does more than just translate source code into machine code or bytecode.  The compiler also needs to parse the source code written and check if it follows the precise specification of the programming language (called _grammar_) used, and produces a _syntax error_ if the grammar is violated.  It therefore can detect any syntax error before the program is run.
-
-It is much better for a programmer to detect any error in its code during compilation &mdash; since this is the phase when the program is still being developed and under the control of the programmer.  Runtime error, on the other hand, might occur when the customers are running the program, and so are much less desirable.  As such, we __try to detect errors as much as possible during compilation__.  The compiler is a powerful friend for any programmer if used properly.  This guiding principle underlies much of the concepts that we will encounter in this course.
-
-The power of the compiler, however, is limited.  A compiler can only read and analyze the source code without actually running it.  Without running the program, the compiler cannot always tell if a particular statement in the source code will ever be executed; it cannot always tell what values a variable will take.
-
-To deal with this, the compiler can either be _conservative_, and report an error as long as _there is a possibility_ that a particular statement is incorrect; or, the compiler can be more _permissive_, reporting an error only if _there is no possibility_ that a particular statement is correct.  If there is a possibility that a particular statement is correct, it does not throw an error but relies on the programmer to do the right thing.  
-
-Many Java design choices favor conservative compilation to catch errors early, even if it occasionally rejects code that "might work."  We will further contrast these two behaviors later in this course.

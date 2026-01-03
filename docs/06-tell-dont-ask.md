@@ -88,14 +88,14 @@ public void setR(double r) {
   if (r > 0) {
     this.r = r;
   } else {
-    // handle error
+    // Handle error here.  Code ommitted for simplicity.
   }
 }
 ```
 
 ### How Accessor/Mutator Can Be Harmful
 
-Since having accessors/mutators is better than having public fields, does it mean that we should always provide an accessor and a mutator for every private field?
+Since having accessors and mutators is better than having public fields, does it mean that we should always provide an accessor and a mutator for every private field?
 
 Let's consider a slightly different version of `Circle` where the center coordinate and radius are integers, perhaps because the implementer does not have the foresight that they need to be floating-point numbers.
 
@@ -141,7 +141,7 @@ class Circle {
 }
 ```
 
-Suppose a client of the class wishes to check if, given a point (x,y), does it fall within the circle `c`?  One approach would be:
+Suppose a client of the class wishes to check if, given a point (x,y), does it lie within the circle `c`?  One approach would be:
 
 ```Java title="Client Code v1"
 int cX = c.getX();
@@ -152,7 +152,7 @@ boolean isInCircle = ((x - cX) * (x - cX) + (y - cY) * (y - cY)) <= r * r;
 
 One day, the implementer realized that the coordinates and radius should be floating-point numbers and changed the fields to `double`, and revised the `Circle` implementation to v0.4 shown earlier.  The client code above will break!  Since the accessors now return `double` values, but the client assigned the returned values to `int`. 
 
-Thus, having accessors/mutators in a class inevitably can leak some information about the internal details of the class to the client.  This is a form of _coupling_ between the client and the class.  In the example above, the client code depends on the fact that the center coordinates and radius are represented as `int`.  Any change to the internal structure will break the client code.
+Thus, having accessors and mutators in a class can inevitably leak some information about the class's internal representation to the client.  This is a form of _coupling_ between the client and the class.  In the example above, the client code depends on the fact that the center coordinates and radius are represented as `int`.  Any change to the internal structure will break the client code.
 
 Thus, we should think carefully if an accessor or a mutator is really needed for a field, i.e., does the client really need to access or modify something that is internal to the class? 
 
@@ -206,7 +206,7 @@ This better approach involves writing a few more lines of code to implement the 
 In general, _a task that is performed only on the fields of a class should be implemented in the class itself._  As a rule of thumb, if client code
 calls two or more accessors on the same object and combines those values to compute a result, then that computation likely belongs inside the object.
 
-While there are situations where we cannot avoid using an accessor or a mutator in a class, for beginner OO programmers like yourself, relying on accessors and mutators as defaults indiscrminately can hinder the development of good OO design instinct.  As such, you are encouraged to avoid defining accessors and modifiers to private fields, and instead focus on designing methods within the class that tell an object what task to perform, and allowing clients to simply request those tasks. 
+While there are situations where we cannot avoid using an accessor or a mutator in a class, for beginner OO programmers like yourselves, relying on accessors and mutators as defaults indiscrminately can hinder the development of good OO design instinct.  Using accessors and mutators heavily often turns objects into passive data holders, shifting logic into client code. This style resembles procedural programming more than object-oriented design.  As such, you are encouraged to avoid defining accessors and modifiers to private fields, and instead focus on designing methods within the class that tell an object what task to perform, and allowing clients to simply request those tasks. 
 
 ## Further Reading
 

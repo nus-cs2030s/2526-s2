@@ -1,5 +1,4 @@
 # Unit 2: Variable and Type
-
 !!! abstract "Learning Objectives"
 
     After this unit, students should be able to:
@@ -44,7 +43,7 @@ Python.  Suppose we have two variables `x` and `y`, storing the values `4` and `
 
 In the last instance above, you see that assigning a type to each variable helps to keep the program meaningful, as the operation `+` is not defined over an integer and a string in Python.
 
-Java and JavaScript, however,  would happily convert `4` into a string for you, and return `45`.
+Java and JavaScript, however,  will implicitly convert `4` into a string and return `45`.
 
 ### Dynamic vs. Static Type
 
@@ -73,10 +72,11 @@ i = "5"; // error, cannot assign a string to an `int`
 ```
 
 The type that a variable is assigned when we declare the variable is also known as the _compile-time type_, or CTT for short.  We sometimes use the notation $CTT(v)$ to denote the compile-time type of a variable $v$.
+The value stored in the variable has a _runtime type_.  We use the abbreviation RTT to denote runtime type, and use the notation $RTT(v)$ to denote the runtime type of a variable $v$.
 
 During the compilation, the compile-time type is the only type that the compiler is aware of.  The compiler will reason and check if the compile-time types match when it parses the variables, expressions, values, and function calls, and throw an error if there is a type mismatch.  This type-checking step helps to catch errors in the code early.
 
-Note that the compiler does not execute the programs it compiles, and thus it cannot reason using the runtime values held by the variables.
+Note that the compiler does not execute the programs it compiles, and thus it cannot reason using the runtime types of the variables.
 
 ### Strong Typing vs. Weak Typing
 
@@ -84,11 +84,11 @@ A _type system_ of a programming language is a set of rules that governs how the
 
 A programming language can be strongly typed or weakly typed.  There are no formal definitions of "strong" vs. "weak" typing of a programming language, and there is a spectrum of "strength" between the typing discipline of a language.
 
-Generally, a _strongly typed_ programming language enforces strict rules in its type system, to ensure _type safety_, i.e., to ensure that if there are any problems with the program, it is not due to the type.  For instance, catching an attempt at multiplying two strings.  One way to ensure type safety is to catch type errors during compile time rather than leaving it to run time.
+Generally, a _strongly typed_ programming language enforces strict rules in its type system, to ensure _type safety_, i.e., to guarantee that operations are only applied to values of appropriate types, preventing certain classes of runtime errors.  For instance, catching an attempt at multiplying two strings.  One way to ensure type safety is to catch type errors during compile time rather than leaving it to run time.
 
 On the other hand, a _weakly typed_ (or loosely typed) programming language is more permissive in terms of typing checking.  C is an example of a static, weakly typed language.  In C, the following is possible:
 
-```Java
+```C
 int i;        // declare a variable of type int
 i = 4;        // ok because 4 is of type int
 i = (int)"5"; // you want to treat a string as an int? ok, as you wish!   
@@ -158,7 +158,7 @@ i = i + 1;
 
 | Kinds | Types | Sizes (in bits) |
 |-------|-------|-------|
-| Boolean | `boolean` | 1 |
+| Boolean | `boolean` | 1[^1] |
 | Character | `char` | 16 |
 | Integral | `byte` | 8 | 
 |          | `short` | 16 | 
@@ -166,6 +166,8 @@ i = i + 1;
 |          | `long` | 64 |
 | Floating-Point | `float` | 32 |
 |                | `double` | 64 |
+
+^1: While a boolean conceptually represents a single bit of information, its storage size typically varies in practice due to hardware efficiency considerations.  Java specification leaves it unspecified and up to the JVM implementation.
 
 !!! info "Long and Float Constant"
      By default, an integer literal (e.g., `888`) is assigned an `int` type. To differentiate between a `long` and an `int` constant, you can use the suffix `L` to denote that the value is expected to be of `long` type (e.g., `888L` is a `long`).  This is important for large values beyond the range of `int`.  On the other hand, if the constant is a floating-point constant, by default it is treated as type `double`.  You need to add the suffix `f` to indicate that the value is to be treated as a `float` type.

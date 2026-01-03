@@ -19,9 +19,9 @@ In this unit, we introduce information hiding, the mechanism that enforces the a
 
 ## Breaking the Abstraction Barrier
 
-In the ideal case, the code above the abstraction barrier would just call the provided interface to use the composite data type.  There, however, may be cases where a programmer may intentionally or accidentally break the abstraction barrier.  
+In the ideal case, the code above the abstraction barrier would just call the provided interface to use the composite data type.  There may, however, be cases where a programmer intentionally or accidentally break the abstraction barrier.  
 
-Consider the case of `Circle` in Unit 4, where we modify the radius `r` directly with `c.r = 10`.  In doing so, we, as the client to `Circle`, make an explicit assumption of how `Circle` implements a circle.  The implementation details have been leaked outside the abstraction barrier.  Assessing `c.r` turns the client into a partial implementer.  Now, if the implementer wishes to change the representation of the `Circle`, to say, store the diameter, instead. 
+Consider the case of `Circle` in Unit 4, where we modify the radius `r` directly with `c.r = 10`.  In doing so, we, as the client to `Circle`, make an explicit assumption of how `Circle` implements a circle.  The implementation details have been leaked outside the abstraction barrier.  Assessing `c.r` turns the client into a partial implementer.  Now, if the implementer wishes to change the representation of the `Circle`, for example, to store the diameter, instead. 
 
 ```Java title="Circle v0.1.2 with Diameter"
 class Circle {
@@ -41,7 +41,7 @@ This small implementation change would invalidate the code that the client has w
 
 Many OO languages allow programmers to explicitly specify if a field or a method can be accessed from outside the abstraction barrier.  Java, for instance, supports `private` and `public` access modifiers.  A field or a method that is declared as `private` cannot be accessed from outside the class, and can only be accessed within the class.  On the other hand, as you can guess, a `public` field or method can be accessed, modified, or invoked from outside the class.  
 
-Such a mechanism to protect the abstraction barrier from being broken is called _data hiding_ or _information hiding_.  This protection is enforced by the _compiler_ at compile time.
+Such a mechanism for protecting the abstraction barrier is called _data hiding_ or _information hiding_.  This protection is enforced by the _compiler_ at compile time.
 
 In our original `Circle` class (v0.1) in [Unit 4](04-encapsulation.md), we did not specify any access modifier &mdash; this amounts to using the _default_ modifier, the meaning of which is not our concern right now[^1]  For a start, we will explicitly indicate `private` or `public` for all our methods and fields.
 
@@ -66,7 +66,7 @@ Now the fields `x`, `y`, and `r` are hidden behind the abstraction barrier of th
 
 In summary, the two access modifiers are shown below:
 
-| Acessed from | `private` | `public` |
+| Accessed from | `private` | `public` |
 |--------------|-----------|----------|
 | _Inside the class_ | :material-check: | :material-check: |
 | _Outside the class_ | :material-close: | :material-check: |
