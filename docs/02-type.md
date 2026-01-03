@@ -167,7 +167,7 @@ i = i + 1;
 | Floating-Point | `float` | 32 |
 |                | `double` | 64 |
 
-^1: While a boolean conceptually represents a single bit of information, its storage size typically varies in practice due to hardware efficiency considerations.  Java specification leaves it unspecified and up to the JVM implementation.
+[^1]: While a boolean conceptually represents a single bit of information, its storage size typically varies in practice due to hardware efficiency considerations.  Java specification leaves it unspecified and up to the JVM implementation.
 
 !!! info "Long and Float Constant"
      By default, an integer literal (e.g., `888`) is assigned an `int` type. To differentiate between a `long` and an `int` constant, you can use the suffix `L` to denote that the value is expected to be of `long` type (e.g., `888L` is a `long`).  This is important for large values beyond the range of `int`.  On the other hand, if the constant is a floating-point constant, by default it is treated as type `double`.  You need to add the suffix `f` to indicate that the value is to be treated as a `float` type.
@@ -201,7 +201,9 @@ Considering the range of values that the primitive types can take, Java defines 
 
 Graphically, we can draw the subtyping relationship as an arrow from subtype to supertype.  In the case of Java primitive types, we can visualise the subtyping relationship as follows:
 
-![Primitive Subtype](figures/Primitive-Subtype.png){ width=450px }
+<p>
+--8<-- "docs/figures/primitive-subtype.svg"
+</p>
 
 !!! info "Long $<:$ Float?"
     Why is `long` a subtype of `float`?  More specifically, `long` is 64-bit, and `float` is only 32-bit.  There are more values in `long` than in `float`.

@@ -103,7 +103,7 @@ c.r = 10;    // set the radius to 10
 c.getArea(); // return 314.1592653589793
 ```
 
-To access the fields and the methods, we use the `.` notation.  For example, `object.field` or `object.method(..)`.  This can be seen in Line 2 and Line 3 of the example above.  {++We refer to `object` as the _target_ of the method call.++}
+To access the fields and the methods, we use the `.` notation.  For example, `object.field` or `object.method(..)`.  This can be seen in Line 2 and Line 3 of the example above.  We refer to `object` as the _target_ of the method call.
 
 A class is responsible for maintaining the consistency of its own data.  For instance, if the radius of a circle changes, its area should change accordingly.  Encapsulation helps to maintain this consistency by bundling the data and the methods that operate on the data together.
 
