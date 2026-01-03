@@ -2,11 +2,21 @@
 
 !!! abstract "Learning Objectives"
 
-    After taking this unit, students should:
+    After taking this unit, students should be able to:
 
-    - understand when memory is allocated/deallocated from the heap and from the stack
-    - understand the concept of call stack in JVM
+    - explain how the JVM allocates and deallocates memory on the stack and heap during program execution.
+    - draw and interpret stack–heap diagrams for object creation, method calls, and returns.
+    - reason about aliasing and shared references, and predict the effects of mutations.
+    - trace the creation and destruction of stack frames during nested method invocations.
+    - explain Java’s parameter passing semantics for primitive values and object references.
 
+## Introduction
+
+In earlier units, we focused on what objects and methods do. In this unit, we turn our attention to where and how data is stored when a Java program runs.
+
+Understanding the distinction between the stack and the heap is essential for reasoning about object creation, method calls, parameter passing, and side effects. Many common programming misconceptions, such as why changing an object inside a method affects the caller, but changing a primitive does not, can be resolved by carefully tracing how memory is allocated and shared.
+
+This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behaviour precisely.
 
 ## Heap and Stack
 
@@ -15,7 +25,7 @@ The Java Virtual Machine (JVM) manages the memory of Java programs while its byt
 - _method area_ for storing the code for the methods;
 - _metaspace_ for storing meta information about classes;
 - _heap_ for storing dynamically allocated objects;
-- _stack_ for local variables and call frames.
+- _stack_ for local variables and stack frames.
 
 Since the concepts of heap and stack are common to all execution environments (either based on bytecode or machine code), we will focus on them here.
 
@@ -25,9 +35,9 @@ The _heap_ is the region in memory where all objects are allocated and stored, w
 
 The stack contains variables.  Please note that instance and class fields are **not** variables.  As such, fields are not in the stack.
 
-Recall that the same variable names can exist in the program as long as they are in different methods.  This means that the variables are contained within the _call frames_.  Call frames are created when we invoke a method and are removed when the method completes.
+Recall that the same variable names can exist in the program as long as they are in different methods.  This means that the variables are contained within the _stack frames_.  Call frames are created when we invoke a method and are removed when the method completes.
 
-Like a "stack of books" where we can only take the book at the top and can only put more books at the top, the call frames in the stack can only be added or removed from the top.  This behavior is also called Last-In First-Out (LIFO).  In other words, the last element that is inserted (i.e., Last-In) is the first element to be removed (i.e., First-Out).
+Like a "stack of books" where we can only take the book at the top and can only put more books at the top, the stack frames in the stack can only be added or removed from the top.  This behavior is also called Last-In First-Out (LIFO).  In other words, the last element that is inserted (i.e., Last-In) is the first element to be removed (i.e., First-Out).
 
 ![SH001](figures/SH/001.png){ width=500px }
 
@@ -60,9 +70,10 @@ Line 2 creates a new `Point` object.  When the JVM executes this line of code, i
 
 This is shown in the figures below in three steps.  Note that we assume that the code snippet above is in the static method called `main`.  Although technically there should be a parameter in the call frame of `main` usually called `args` due to the typical main method `public static void main(String[] args)`, we will often omit this because the name and values are unknown.
 
-Note the crucial difference between the static method `main` and the constructor.  A static method does not have `this` in its call frame.  On the other hand, non-static methods, including constructors, have `this` in their call frames.
+Note the crucial difference between the static method `main` and the constructor.  A static method does not have `this` in its call frame.  On the other hand, non-static methods, including constructors, have `this` in their stack frames.
 
-Although we mentioned that `this` is a keyword, it behaves mostly like a variable[^1].  As such, we have its representation in the stack.  Further, note that the parameters are ordered with the leftmost parameter appearing at the bottom of the call frame after the keyword `this` (if any).
+Although we mentioned that `this` is a keyword, it behaves mostly like a variable[^1].  As such, we have its representation in the stack.  
+<!--Further, note that the parameters are ordered with the leftmost parameter appearing at the bottom of the call frame after the keyword `this` (if any).-->
 
 [^1]: It can also behave like a function/method in the sense that it can be invoked (_e.g.,_ `this(..)`).  In this case, the keyword `this` represents the constructor of the current class.  We will illustrate more of this on the topic of overloading.
 
@@ -95,7 +106,7 @@ Note that we use the symbol ∅ to indicate that the variable is not yet initial
 
 Also, we will often simplify the presentation.  First, we will omit the memory address (e.g., 9048ab50).  The arrow from the variable `p` containing the value 9048ab50 to an object located at 9048ab50 is already an abstraction of this.  Furthermore, we do not know where the actual address will be and it will be different on different runs.  So, we can omit both memory addresses stored in the variable and of the object.
 
-Secondly, we are often interested only in the snapshot of the stack and heap diagram at a particular moment.  As such, the intermediate call frames (e.g., Point constructor) that are inserted and then removed can be omitted.  Only the final effect matters.
+Secondly, we are often interested only in the snapshot of the stack and heap diagram at a particular moment.  As such, the intermediate stack frames (e.g., Point constructor) that are inserted and then removed can be omitted.  Only the final effect matters.
 
 Let us illustrate this further with the following code snippet.
 
@@ -122,9 +133,9 @@ c = new Circle(center, radius);
 center.moveto(2, 2);
 ```
 
-In this example, we have three variables, `c`, `center`, and `radius`.  Lines 1-3 declare the variables, and as a result, we have three variables allocated on the stack.  Again, we assume that the code is in the static method `main`.  Do note the order of these variables in the stack.  Since we declared `c` first, it is located at the bottom of the stack.
+In this example, we have three variables, `c`, `center`, and `radius`.  Lines 1-3 declare the variables, and as a result, we have three variables allocated on the stack.  Again, we assume that the code is in the static method `main`. 
 
-Recall that, object references are initialized to `null`.  Primitive type variables (e.g., `radius`) are initialized to 0.0 because it is of type `double`.  If it is an `int`, then it will be initialized to 0 instead,
+Recall that object references are initialized to `null`.  Primitive type variables (e.g., `radius`) are initialized to 0.0 because it is of type `double`.  If it is an `int`, then it will be initialized to 0 instead.
 
 === "After Lines 1-3"
     ![005a](figures/SH/005a.png)
@@ -142,7 +153,7 @@ Recall that, object references are initialized to `null`.  Primitive type variab
     ---
 
 
-There is a clear example of aliasing here.  Note that the field `c` of variable `c` is referencing the same object as the variable `center`.  Hence, we can say that the expression `c.c` is an _alias_ of `center`.  In the stack and heap diagram, this is illustrated by having two different arrows pointing to the same location.
+There is a clear example of aliasing here.  Note that the field `c` of the Circle object referenced by the variable `c` is referencing the same object as the variable `center`.  Hence, we can say that the expression `c.c` is an _alias_ of `center`.  In the stack and heap diagram, this is illustrated by having two different arrows pointing to the same location.
 
 In this case, the expression `c.c` consists of two arrows.  The first is from variable `c` to the object `Circle`.  The second is from the field `c` to the object `Point`.  On the other hand, the variable `center` is pointing directly to the object `Point`.
 
@@ -243,9 +254,9 @@ What is important here is that, as `x` and `y` are primitive types instead of re
 
 ## Summary
 
-To summarize, Java uses _call by value_ for primitive types, and _call by reference_ for objects[^4].
+To summarize, Java uses _call-by-value_ for primitive types, and behaves like _call-by-reference_ for objects[^4].
 
-[^4]: Alternatively, you can think of Java as always using _call by value_.  It's just that the value of a reference is, in fact, just a reference.
+[^4]: Alternatively, you can think of Java as always using _call-by-value_.  It's just that the value of a reference is, in fact, just a reference.
 
 If we make multiple nested method calls, as we usually do, the stack frames get stacked on top of each other. 
 

@@ -2,12 +2,21 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
+After this unit, students should be able to:
 
-    - understand the differences between instance methods and class methods
-    - be able to define and use a class method
-    - know that the `main` method is the entry point to a Java program 
-    - the modifies and parameters required for a `main` method
+- distinguish clearly between instance methods and class (static) methods.
+- explain why class methods cannot access instance fields or use this.
+- define and invoke class methods correctly using the class name.
+- describe the role of the main method as the entry point of a Java program.
+- identify the required modifiers, return type, and parameters of a valid main method.
+
+## Introduction
+
+In previous units, we focused on instance methods, which operate on the state of individual objects. However, not all behavior in a program naturally belongs to a specific object. Some operations conceptually belong to the class as a whole—for example, keeping track of how many objects have been created, or providing general-purpose utility functions.
+
+In this unit, we introduce class methods, which are declared using the static keyword. You will learn how class methods differ from instance methods, why they cannot access instance-specific state, and how Java uses a special class method, main, as the entry point for every program.
+
+## Static Methods
 
 Let's suppose that, in our program, we wish to assign a unique integer identifier to every `Circle` object ever created.  We can do this with the additions below:
 
@@ -42,20 +51,22 @@ class Circle {
 ```
 
 - Line 5 adds a new instance field `id` to store the identifier of the circle.  Note that, since the identifier of a circle should not change once it is created, we use the keyword `final` here.
-- Line 6 adds a new class field `lastId` to remember the `lastId` of the latest circle instance.  This field is maintained as part of the class `Circle` and is initialized to 0.
+- Line 6 adds a new class field `lastId` to remember the identifier of the most recently created circle.  This field is maintained as part of the class `Circle` and is initialized to 0.
 - On Lines 15 and 16, as part of the constructor, we initialize `id` to `lastId` and increment `lastId`.   We explicitly access `lastId` through `Circle` to make it clear that `lastId` is a class field.
 
 Note that all of the above are done privately beneath the abstraction barrier.
 
 Since `lastId` is incremented by one every time a circle is created, we can also interpret `lastId` as the number of circles created so far.  On Lines 22-24, we added a method `getNumOfCircles` to return its value.
 
-The interesting thing here is that we declare `getNumOfCircles` with a `static` keyword.  Similar to a `static` field, a `static` method is associated with a class, not with an instance of the class.  Such a method is called a _class method_.  A class method is always invoked without being attached to an instance, so it cannot access its instance fields or call other of its instance methods.  The reference `this` has no meaning within a class method.  Furthermore, just like a class field, a class method should be accessed through the class.  For example, `#!Java Circle.getNumOfCircles()`.
+The interesting thing here is that we declare `getNumOfCircles` with a `static` keyword.  Similar to a `static` field, a `static` method is associated with a class, not with an instance of the class.  Such a method is called a _class method_.  A class method is always invoked without being attached to an instance, so it _cannot access instance fields or call instance methods_.  The reference `this` has no meaning within a class method.  Furthermore, just like a class field, a class method should be accessed through the class.  For example, `#!Java Circle.getNumOfCircles()`.
 
 Other examples of class methods include the methods provided in `java.lang.Math`: `sqrt`, `min`, etc.  These methods can be invoked through the `Math` class: e.g., `Math.sqrt(x)`.
 
-### Non-Static from Static
+As a rule of thumb, use an instance method if the behavior depends on instance fields; Use a class method if the behavior conceptually belongs to the class and does not depend on any particular object.  Overusing class methods can lead to procedural-style code and should be avoided when behavior naturally belongs to objects.
 
-Recap that for static fields (i.e., class fields), we only have exactly one instance of it throughout the lifetime of the program.  More generally, a field or method with modifier `static` belongs to the class rather than the specific instance.  In other words, they can be accessed/updated (for fields, assuming proper access modifier) or invoked (for methods, assuming proper access modifier) without even instantiating the class.
+### Accessing Instance Fields from Class Methods
+
+Just as a class field represents shared state, a class method represents shared behavior.  Recall that for static fields (i.e., class fields), we only have exactly one instance of it throughout the lifetime of the program.  More generally, a field or method with modifier `static` belongs to the class rather than the specific instance.  In other words, they can be accessed/updated (for fields, assuming proper access modifier) or invoked (for methods, assuming proper access modifier) without even instantiating the class.
 
 As a consequence, if we have not instantiated a class, no instance of that class has been created.  The keyword `this` is meant to refer to the _current instance_, and if there is no instance, the keyword `this` is not meaningful.  Therefore, within the context of a `static` method, Java actually prevents the use of `this` from any method with the `static` modifier.
 
@@ -65,7 +76,7 @@ As a consequence, if we have not instantiated a class, no instance of that class
   }
 ```
 
-Try it out, you will get the following error.
+If you try this, you will get the following error.
 
 ```
 _.java:_: error: non-static variable this cannot be referenced from a static context
@@ -73,7 +84,13 @@ _.java:_: error: non-static variable this cannot be referenced from a static con
                ^
 ```
 
-The opposite is not true.  We can access class fields from non-static methods.
+The opposite is not true.  We can access class fields from instance methods.  For example,
+
+```Java
+  public double areaRatio() { // instance method
+    return this.getArea() / Circle.getNumOfCircles();
+  }
+```
 
 ## The `main` method
 
@@ -84,7 +101,7 @@ Every Java program has a class method called `main`, which serves as the entry p
 java Hello
 ```
 
-will invoke the `main` method defined within the class `Hello` to kick start the execution of the program.
+will invoke the `main` method defined within the class `Hello` to kick start the execution of the program.  The main method must be declared `static` because it is invoked by the JVM before any objects of the class are created.
 
 The `main` method must be defined in the following way:
 ```Java

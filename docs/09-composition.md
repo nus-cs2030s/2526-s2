@@ -2,18 +2,27 @@
 
 !!! abstract "Learning Objectives"
 
-    After learning this unit, students should understand:
+    After completing this unit, students should be able to:
 
-    - how to compose a new class from existing classes using composition
-    - how composition models the HAS-A relationship
-    - how sharing reference values in composed objects could lead to surprising results
+    - explain composition as a design technique for building complex objects from simpler ones
+    - distinguish HAS-A (composition) relationships from IS-A (inheritance) relationships
+    - design classes that use composition to improve abstraction and encapsulation
+    - reason about aliasing and explain how shared references can lead to unintended behaviour
+    - evaluate design trade-offs between sharing objects, copying objects, and immutability
 
+## Introduction
+
+In earlier units, we built classes primarily from primitive fields and methods. While this works for simple abstractions, real software systems are rarely built this way. Instead, complex objects are constructed by combining simpler objects.
+
+This unit introduces _composition_, a core object-oriented design technique where one class is built from instances of other classes. Composition allows us to raise the level of abstraction, improve encapsulation, and model real-world “HAS-A” relationships more naturally.
+
+We will also examine a subtle but important consequence of composition: shared references. While reusing objects can reduce memory usage and duplication, it can also lead to surprising bugs due to aliasing. Understanding these trade-offs is essential for writing correct and maintainable object-oriented programs.
 
 ## Adding more Abstractions
 
 Our previous implementation of `Circle` stores the center using its Cartesian coordinates $(x,y)$.  We have a method `contains` that takes in the Cartesian coordinate of a point.  As such, our implementation of `Circle` assumes that a 2D point is best represented using its Cartesian coordinate.  
 
-Recall that we wish to hide the implementation details as much as possible, protecting them with an abstraction barrier, so that the client does not have to bother about the details and it is easy for the implementer to change the details.  Let's consider an example: what if the programmer finds that it is more convenient to use polar coordinates to represent a 2D point?  We will have to change the code of the constructor to `Circle` and the method `contains`.  If our code contains other shapes or other methods in `Circle` that similarly assume a point is represented with its Cartesian coordinates, we will have to change them as well.  It is easy for bugs to creep in.  For instance, we might pass in the polar coordinates $(r, \theta)$ to a method, but the method treats the two parameters as the Cartesian $(x,y)$.
+Recall that we wish to hide the implementation details as much as possible, protecting them with an abstraction barrier, so that the client does not have to bother about the details and it is easy for the implementer to change the details.  Let's consider an example: what if the programmer finds that it is more convenient to use polar coordinates to represent a 2D point?  We will have to change the constructor to `Circle` and the method `contains`.  If our code contains other shapes or other methods in `Circle` that similarly assume a point is represented with its Cartesian coordinates, we will have to change them as well.  It is easy for bugs to creep in.  For instance, we might pass in the polar coordinates $(r, \theta)$ to a method, but the method treats the two parameters as the Cartesian $(x,y)$.
 
 We can apply the principle of abstraction and encapsulation here, and create a new class `Point`.  The details of which are omitted and left as an exercise.
 
@@ -71,7 +80,8 @@ class Cylinder {
     this.base = base;
     this.height = height;
   }
-    :
+    
+  // other methods omitted
 }
 ```
 
@@ -92,9 +102,11 @@ Let's say that we want to allow a Circle to move its center.  For the sake of th
 p.moveTo(1, 1);
 ```
 
-You will find that by moving `p`, we are actually moving the center of _both_ `c1` and `c2`!  This result is due to both circles `c1` and `c2` sharing the same point.  When we pass the center into the constructor, we are passing the reference instead of passing a cloned copy of the center.  
+You will find that by moving `p`, we are actually moving the center of _both_ `c1` and `c2`!  This result is due to both circles `c1` and `c2` sharing the same `Point` object.  
+When we pass the center into the constructor, we are passing the reference instead of passing a cloned copy of the center.  
+so, there is only one `Point` object, even though there are two circles.  
 
-This is a common source of bugs and we will see how we can reduce the possibilities of such bugs later in this module, but let's first consider the following "fix" (that is still not ideal).
+This is a common source of bugs and we will see how we can reduce the possibilities of such bugs later in this module, but let's first consider the following attempted fix.
 
 Let's suppose that instead of moving `p`, we add a `moveTo` method to the `Circle` instead:
 ```Java
@@ -110,7 +122,7 @@ class Circle {
     this.c = c;
   }
 
-   :
+  // other methods omitted
 }
 ```
 
