@@ -2,13 +2,28 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should understand:
+    After completing this unit, students should be able to:
 
-    - how infinite lists can be constructed using a lazy evaluation.
+    - Explain why an eagerly evaluated list cannot represent an unbounded sequence and how `InfiniteList` overcomes this limitation using lazy evaluation.
+    - Construct instances of `InfiniteList` using higher-order factory methods such as `generate` and `iterate`.
+    - Trace and reason about the evaluation order of `InfiniteList` operations, including `head`, `tail`, `get`, and `map`.
+    - Implement and reason about lazy transformations on `InfiniteList`, particularly `map` and `filter`.
+    - Identify design challenges in `InfiniteList` implementations (e.g. filtering, repeated evaluation) and motivate the use of abstractions such as `Maybe<T>` and `Lazy<T>` to address them.
+
+
+## Introduction
+
+In earlier units, we learned how higher-order functions and lambda expressions allow us to build flexible abstractions over data. We also introduced lazy evaluation, using ` Producer` and `Lazy`, to delay computation until a value is needed.
+
+This unit brings these ideas together to construct an `InfiniteList`: a list that can represent an unbounded sequence of values. Such a structure cannot be implemented using eager evaluation, as attempting to generate all elements would never terminate. By using laziness, however, we can describe infinite sequences declaratively and compute only the elements we actually access.
 
 ## Preliminary: An Eagerly Evaluated List
 
-Let's consider first how we can represent an eagerly evaluated, finite list, recursively.  A simple way is to treat the list as a recursive structure, containing a `head` and a `tail`, with the `tail` being a list itself.  We have a special terminating list called `Sentinel` that we use to terminate the EagerList.
+We begin with an eagerly evaluated list not to propose it as a reusable abstraction, but to establish a familiar baseline. By contrasting an eagerly evaluated list with a lazily evaluated one, we can isolate exactly what must change when a list is allowed to be unbounded. 
+
+Let's consider first how we can represent an eagerly evaluated, finite list, recursively.  
+
+A simple way is to treat the list as a recursive structure, containing a `head` and a `tail`, with the `tail` being a list itself.  We have a special terminating list called `Sentinel` that we use to terminate the EagerList.
 
 ```Java
 class EagerList<T> {
@@ -21,19 +36,19 @@ class EagerList<T> {
     this.tail = tail;
   }
 
-  public T head() {    // be careful, the method name
-    return this.head;  // is the same as the field name
+  public T head() {    
+    return this.head;  
   }
 
-  public EagerList<T> tail() { // same here, method name
-    return this.tail;          // is the same as field name
+  public EagerList<T> tail() { 
+    return this.tail;          
   }
   
   public T get(int n) {
     if (n == 0) {
-      return this.head();          // be careful!
-    }                              //   use the methods
-    return this.tail().get(n - 1); //   instead of fields
+      return this.head();          
+    }                              
+    return this.tail().get(n - 1); 
   }
 
   public static <T> EagerList<T> empty() {
@@ -129,7 +144,7 @@ l.get(2);               // 18
 
 ## An Infinite List
 
-Lazy evaluation allows us to delay the computation that produces data until the data is needed.  This powerful concept enables us to build computationally efficient data structures.  We will focus on building a list with a possibly infinite number of elements &mdash; something that couldn't be done without lazy evaluation.  Any eager-evaluation-based solution will just run in an infinite loop if the list is infinitely long.  For instance,
+Lazy evaluation allows us to delay the computation that produces data until the data is needed.  This powerful concept enables us to build computationally efficient data structures.  We will focus on building a list with a possibly an infinite number of elements &mdash; something that couldn't be done without lazy evaluation.  Any eager-evaluation-based solution will just run in an infinite loop if the list is infinitely long.  For instance,
 
 ```Java
 EagerList.iterate("", s -> s.length() >= 0, s -> s + "a"); // infinite loop
@@ -149,8 +164,8 @@ class InfiniteList<T> {
     this.tail = tail;
   }
 
-  public T head() {             // be careful, the method name
-    return this.head.produce(); // is the same as the field name
+  public T head() {             
+    return this.head.produce(); 
   }
 
   public InfiniteList<T> tail() { // same here, method name
@@ -159,9 +174,9 @@ class InfiniteList<T> {
   
   public T get(int n) {
     if (n == 0) {
-      return this.head();          // be careful!
-    }                              //   use the methods
-    return this.tail().get(n - 1); //   instead of fields
+      return this.head();          
+    }                              
+    return this.tail().get(n - 1); 
   }
 }
 ```
@@ -225,7 +240,8 @@ evens.map(x -> x + 1).map(x -> x * 2).head(); // 2
 ```
 
 ## Under The Hood
-It is worthwhile to trace through the code and understand how `head()` works.  For simplicity, let's put all our code together for easy reference.
+
+This section explains how `InfiniteList` works at runtime by tracing the chain of `Producer` objects created by successive calls to iterate and map. The goal is to understand when computations are triggered and how values flow through a lazy pipeline. Focus in particular on how a single call to `head()` causes a sequence of deferred computations to execute.  It is thus worthwhile to trace through the code and understand how `head()` works.  For simplicity, let's put all our code together for easy reference.
 
 ```Java
 class InfiniteList<T> {
@@ -247,8 +263,8 @@ class InfiniteList<T> {
     this.tail = tail;
   }
 
-  public T head() {             // be careful, the method name
-    return this.head.produce(); // is the same as the field name
+  public T head() {             
+    return this.head.produce(); 
   }
 
   public InfiniteList<T> tail() { // same here, method name
@@ -257,9 +273,9 @@ class InfiniteList<T> {
   
   public T get(int n) {
     if (n == 0) {
-      return this.head();          // be careful!
-    }                              //   use the methods
-    return this.tail().get(n - 1); //   instead of fields
+      return this.head();          
+    }                              
+    return this.tail().get(n - 1); 
   }
 
   public <R> InfiniteList<R> map(Transformer<? super T, ? extends R> mapper) {
@@ -342,7 +358,8 @@ The method calls `iterate` and `map` only set up the producers that call other p
 
 ## Filtering A Lazy List
 
-Now, let's consider how we would filter an `InfiniteList`.  This is a bit trickier.  The following naive version does not work.
+Filtering an `InfiniteList` is more subtle than mapping it. In an eagerly evaluated list, filtering naturally proceeds element by element until the list ends. In a lazy setting, however, neither the head nor the tail should be evaluated prematurely. A naive translation of the eager filter implementation will therefore break laziness and lead to incorrect behaviour.  The following naive version does not work.
+
 ```Java
   // wrong
   public InfiniteList<T> filter(BooleanCondition<? super T> cond) {

@@ -2,13 +2,21 @@
 
 !!! abstract "Learning Objectives"
 
-    After going through this unit, students should:
+    After completing this unit, students should be able to:
 
-    - be aware of the meaning of wildcard `?` and bounded wildcards
-    - know how to use wildcards to write methods that are more flexible in accepting a range of types
-    - know that upper-bounded wildcard is covariant and lower-bounded wildcard is contravariant
-    - know the PECS principle and how to apply it
-    - be aware that the unbounded wildcard allows us to not use raw types in our programs
+    - explain why Java generics are invariant and how this limits method flexibility
+    - use upper-bounded (`? extends T`) and lower-bounded (`? super T`) wildcards to safely relax type constraints
+    - reason about covariance and contravariance induced by wildcards
+    - reason about and apply the PECS principle to method parameters
+    - distinguish between `Seq<?>`, `Seq<Object>`, and raw `Seq`, and explain why raw types should be avoided
+
+## Introduction
+
+In earlier units, we saw how generics help us write reusable and type-safe code. However, we also encountered an important limitation: generics in Java are invariant. This means that even if `Circle` is a subtype of `Shape`, `Seq<Circle>` is not a subtype of `Seq<Shape>`.
+
+While invariance prevents subtle run-time errors, it can also make otherwise reasonable code impossible to write. For example, why can’t we search for a `Shape` in a sequence of circles, or copy a sequence of circles into a sequence of shapes?
+
+In this unit, we introduce wildcards as a way to recover flexibility without sacrificing type safety. We will see how bounded wildcards express variance explicitly, how the PECS principle guides our choice of bounds, and how unbounded wildcards let us avoid raw types entirely.
 
 ## `contains` with `Seq<T>`
 
@@ -38,12 +46,12 @@ A.<String>contains(stringSeq, "hello"); // ok
 A.<Circle>contains(circleSeq, circle); // ok
 ```
 
-But trying to search for a circle in an sequence of strings would lead to a type error:
+But trying to search for a circle in a sequence of strings would lead to a type error:
 ```Java
 A.<String>contains(stringSeq, circle); // error
 ```
 
-Consider now having an sequence of shapes.
+Consider now having a sequence of shapes.
 ```Java
 Seq<Shape> shapeSeq;
 Seq<Circle> circleSeq;
@@ -63,7 +71,7 @@ A.<Shape>contains(shapeSeq, circle); // ok
 
 Note that we can pass in a `Circle` instance as a `Shape`, since `Circle` <: `Shape`.
 
-Generics are invariant in Java, i.e, there is no subtyping relationship between `Seq<Shape>` and `Seq<Circle>`.  `Seq<Circle>` is not a subtype of `Seq<Shape>`.  Otherwise, it would violate the Liskov Substitution Principle, we can put a square into a `Seq<Shape>` instance, but we can't put a square into a `Seq<Circle>` instance.
+Generics are invariant in Java, i.e., there is no subtyping relationship between `Seq<Shape>` and `Seq<Circle>`.  `Seq<Circle>` is not a subtype of `Seq<Shape>`.  Otherwise, it would violate the Liskov Substitution Principle: we can put a square into a `Seq<Shape>` instance, but we can't put a square into a `Seq<Circle>` instance.
 
 So, we can't call:
 ```Java
@@ -266,12 +274,12 @@ class Seq<T> {
   private T[] array;
 
   public Seq(int size) {
-  // The only way we can put an object into the array is through
-  // the method set() and we only put an object of type T inside.
-  // So it is safe to cast `Object[]` to `T[]`.
-  @SuppressWarnings("unchecked")
+    // The only way we can put an object into the array is through
+    // the method set() and we only put an object of type T inside.
+    // So it is safe to cast `Object[]` to `T[]`.
+    @SuppressWarnings("unchecked")
     T[] a = (T[]) new Object[size];
-  this.array = a;
+    this.array = a;
   }
 
   public void set(int index, T item) {
@@ -452,4 +460,4 @@ new Comparable<?>[10];
 
 Previously, we said that we could not create an array using the expression `new Comparable<String>[10]` because generics and arrays do not mix well.  Java insists that the array creation expression uses a _reifiable_ type, i.e., a type where no type information is lost during compilation.  Unlike `Comparable<String>`, however, `Comparable<?>` is reifiable.  Since we don't know what is the type of `?`, no type information is lost during erasure!
 
-Going forward now in the module, we will not permit the use of raw types in any scenario.
+Going forward now in the module, we will not permit the use of raw types in any scenario.  Every historical justification for raw types now has a wildcard alternative.

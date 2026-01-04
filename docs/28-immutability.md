@@ -2,16 +2,30 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
+    After completing this unit, students should be able to:
 
-    - be able to create an immutable class
-    - understand the usefulness of making classes immutable
+    - Explain immutability as a design principle and articulate how it reduces bugs arising from aliasing, mutation, and unintended side effects. 
+    - Design and implement immutable classes in Java, including the correct use of `final`, factory methods, and copy-on-write semantics.
+    - Distinguish between `final` and true immutability, and identify common pitfalls where `final` fields do not guarantee immutability.
+    - Reason about safe sharing of objects and internal representations, including when and why structural sharing is correct and efficient.
+    - Recognize the role of immutability in program reasoning and concurrency, and explain why immutable objects are inherently thread-safe.
 
-So far in this course, we have been focusing on three ways of dealing with software complexity: by encapsulating and hiding the complexity behind abstraction barriers, using a language with a strong type system and adhering to the subtyping substitution principle, and applying the abstraction principles and reusing code written as functions, classes, and generics types.
+## Introduction
 
-Another useful strategy to reduce bugs when code complexity increases is to _avoid_ change altogether.  This can be done by making our classes _immutable_. We create an instance of an immutable class, the instance _cannot have any visible changes outside its abstraction barrier_.  This means that every call of the instance's method must behave the same way throughout the lifetime of the instance.
+In earlier units, we saw how abstraction, typing, and reuse help manage software complexity. In this unit, we introduce another powerful strategy: avoiding change.
 
-There are many advantages of why we want to make our class immutable when possible.  To start, let's revisit a common bug due to aliasing.  Recall the following example from [Unit 9](09-composition.md),  where we create two circles `c1` and `c2` centered at the origin (0, 0).
+Many subtle bugs arise from mutation, especially when objects are aliased and updated through multiple references. When an object can change over time, reasoning about program behaviour becomes significantly harder.
+
+Immutability avoids this problem by ensuring that an object’s observable state never changes after creation. Updates instead produce new objects, eliminating aliasing bugs and enabling safe sharing without defensive copying.
+
+In this unit, we learn how to design immutable classes in Java and why immutability is a key tool for writing simpler, safer, and more robust programs.
+
+
+## Avoiding Change
+
+Another useful strategy to reduce bugs when code complexity increases is to _avoid_ change altogether.  This can be done by making our classes _immutable_. We create an instance of an immutable class, the instance _cannot have any observable changes outside its abstraction barrier_.  This means that every call to the instance's method must behave the same way throughout the lifetime of the instance.  An object can be logically immutable even if it mutates private, unobservable state, as long as its externally visible behaviour remains unchanged.
+
+There are many advantages to making classes immutable when possible.  To start, let's revisit a common bug due to aliasing.  Recall the following example from [Unit 9](09-composition.md),  where we create two circles `c1` and `c2` centered at the origin (0, 0).
 ```Java
 Point p = new Point(0, 0);
 Circle c1 = new Circle(p, 1);
@@ -65,9 +79,9 @@ Circle c2 = new Circle(p2, 4);
 c1.moveTo(1, 1);
 ```
 
-This approach avoids sharing references by creating copies of our points so that no two references point to the same instance, avoiding aliasing altogether.  This _partial_ fix, however, comes with extra costs in computational resources as the number of objects may proliferate.
+This approach avoids sharing references by creating separate copies of the points so that no two references point to the same instance, avoiding aliasing altogether.  This _partial_ fix, however, comes with extra costs in computational resources as the number of objects may proliferate.
 
-This is also not a complete solution because surprisingly, we can move `c2` without calling `c2.moveTo(1, 1)` but by calling the code below.
+This is also not a complete solution because we can still move `c2` without calling `c2.moveTo(1, 1)` but by calling the code below.
 
 ```Java
 p2.moveTo(1, 1);
@@ -101,7 +115,7 @@ final class Point {
 }
 ```
 
-Note that, to avoid (likely malicious or ignorant) subclasses of `Point` overriding the methods to make it appears that the point has mutated, it is recommended that we declare immutable classes as `final` to disallow inheritance.
+Note that, to prevent subclasses from overriding methods in a way that breaks immutability, it is recommended that we declare immutable classes as as `final` to disallow inheritance.
 
 Now, let's make `Circle` immutable:
 
@@ -175,7 +189,7 @@ final class Point {
     this.y = y;
   }
 
-  private final static Point ORIGIN = new Point(0, 0);
+  private static final Point ORIGIN = new Point(0, 0);
 
   public static Point of(double x, double y) {
     if (x == 0 && y == 0) {
@@ -183,7 +197,8 @@ final class Point {
     }
     return new Point(x, y);
   }
-    :
+    
+  // other methosd omitted
 }
 ```
 
@@ -235,7 +250,7 @@ a = ImmutableSeq.of(1, 2, 3);
 a = ImmutableSeq.of(1, 2, 3, 4, 5);
 ```
 
-**@SafeVarargs.** &nbsp; Since the varargs is just an array, and array and generics do not mix well in Java, the compiler would throw us an unchecked warning.  In this instance, however, we know that our code is safe because we never put anything other than items of type `T` into the array.  We can use the `@SafeVarargs` annotation to tell the compiler that we know what we are doing and this varargs is safe.
+**@SafeVarargs.** &nbsp; Since the varargs is implemented as an array, and array and generics do not mix well in Java, the compiler would throw us an unchecked warning.  In this instance, however, we know that our code is safe because we never put anything other than items of type `T` into the array.  We can use the `@SafeVarargs` annotation to tell the compiler that we know what we are doing and this varargs is safe.
 
 Notice that we removed the `set` method and there is no other way an external client can modify the array once it is created.  This, of course, assumes that we will only be inserting an immutable object into our immutable array.  Unfortunately, this cannot be enforced by the compiler as the generic type `T` can be anything.
 
@@ -276,7 +291,7 @@ class ImmutableSeq<T> {
 
   public T get(int index) {
     if (index < this.start || this.start + index > this.end) {
-      throw new IllegalArgumentException("Index out of bound");
+      throw new IllegalArgumentException("Index out of bounds");
     }
     return this.array[this.start + index];
   }
@@ -289,7 +304,7 @@ class ImmutableSeq<T> {
 
 ### Enabling Safe Concurrent Execution
 
-We will explore concurrent execution of code towards the end of the module, but making our classes immutable goes a long way in reducing bugs related to concurrent execution.  Without going into details here (you will learn the details later), concurrent programming allows multiple threads of code to run in an interleaved fashion, in an arbitrary interleaving order.   If we have complex code that is difficult to debug to begin with, imagine having code where we have to ensure its correctness regardless of how the execution interleaves!  Immutability helps us ensure that regardless of how the code interleaves, our objects remain unchanged.
+We will explore concurrent execution of code towards the end of the module, but making our classes immutable goes a long way in reducing bugs related to concurrent execution.  Without going into details (you will learn this later), concurrent programming allows multiple threads of code to run in an interleaved fashion, in an arbitrary interleaving order.   If we have complex code that is difficult to debug to begin with, imagine having code where we have to ensure its correctness regardless of how the execution interleaves!  Immutability helps us ensure that regardless of how the code interleaves, our objects remain unchanged.
 
 ## Final &ne; Immutable
 
@@ -346,4 +361,14 @@ final class Circle {
 }
 ```
 
-That is not to say that the `final` keyword is not important.  It helps accidental re-assignment and in some cases, that is sufficient especially if the fields are of primitive type.  Once we have created one immutable class, we can then create other larger immutable classes by only using immutable classes as fields.
+That does not mean that the `final` keyword is not important.  It helps accidental re-assignment and in some cases, that is sufficient especially if the fields are of primitive type.  Once we have created one immutable class, we can then create other larger immutable classes by only using immutable classes as fields.
+
+# Performance Trade-offs of Immutability
+
+While immutability offers significant benefits in correctness, reasoning, and safety, it is not without cost. Because immutable objects cannot be modified in place, updates typically require creating new objects, which may increase memory allocation and garbage collection overhead.
+
+In performance-critical code, such as tight loops, low-level data processing, or numerical computations, this additional allocation can be expensive compared to mutating an existing object. You have seen an example of this issue when we discussed wrapper classes, which are immutable.  
+
+In such cases, a carefully designed mutable implementation may be more efficient.  Hence, immutability should be viewed as a design trade-off, not a universal rule.  When correctness, simplicity, and safe sharing are priorities, immutability is often the better choice. When performance is critical and mutation can be tightly controlled within a well-defined abstraction barrier, mutability may be justified.
+
+In practice, many systems combine both approaches: using mutable objects internally for efficiency, while exposing immutable interfaces to clients.

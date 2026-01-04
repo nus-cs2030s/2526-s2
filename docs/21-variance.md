@@ -2,12 +2,12 @@
 
 !!! abstract "Learning Objectives"
 
-After completing this unit, students should be able to:
+    After completing this unit, students should be able to:
 
-- explain what variance means and distinguish between covariant, contravariant, and invariant type relationships
-- reason about subtype relationships involving complex types (e.g., arrays) based on the subtype relationships of their component types
-- explain why Java arrays are covariant and how this design choice can lead to run-time type errors despite successful compilation
-- predict when Java’s type system can and cannot prevent unsafe operations involving arrays
+    - explain what variance means and distinguish between covariant, contravariant, and invariant type relationships
+    - reason about subtype relationships involving complex types (e.g., arrays) based on the subtype relationships of their component types
+    - explain why Java arrays are covariant and how this design choice can lead to run-time type errors despite successful compilation
+    - predict when Java’s type system can and cannot prevent unsafe operations involving arrays
 
 ## Introduction
 

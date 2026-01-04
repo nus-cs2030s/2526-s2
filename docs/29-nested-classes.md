@@ -2,17 +2,27 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
-    
-    - understand the need for nested class
-    - understand the behavior of the different kinds of nested class
-    - be able to write nested classes
+    After completing this unit, students should be able to:
 
-So far, we have defined a class only at the "top level" of our program.  Java allows us to define a class within another class or a method.  
+    - Explain why and when nested classes are used, particularly for encapsulation, information hiding, and logical grouping of tightly coupled classes.
+    - Differentiate between the kinds of nested classes in Java (static nested classes, inner classes, local classes, and anonymous classes), including their scoping rules and access to enclosing members.
+    - Reason about access control and abstraction barriers when exposing or hiding nested classes, and understand how this affects clients of a class.
+    - Apply qualified this correctly to disambiguate between enclosing instances in inner classes.
+    - Explain and predict variable capture behavior, including the notion of effectively final variables and its implications for program correctness.
+    - Write and use local and anonymous classes appropriately, especially for single-use behaviors such as custom comparators.
+
+
+## Introduction
+
+As programs grow is size, a class often requires several helper classes that exist solely to support its internal implementation. Declaring these helpers as top-level classes can clutter the namespace and expose unnecessary implementation details to clients.
+
+Java allows classes to be defined within other classes or even within methods. These nested classes let us group tightly coupled components together, keep helper classes within the abstraction barrier, and express design intent more clearly. Nested classes also interact closely with Java’s access control, static and instance contexts, and scoping rules.
+
+In this unit, we examine the different kinds of nested classes in Java and the rules that govern their access to enclosing state, including variable capture and the requirement for effectively final variables. Understanding these mechanisms will help you write better-encapsulated code and understand common patterns used in Java libraries.
 
 ## Nested Class
 
-A nested class is a class defined within another containing class.  For example, the following declaration declares a private nested class named `B` within the class `A`.
+A nested class is a class defined within an enclosing class.  For example, the following declaration declares a private nested class named `B` within the class `A`.
 
 ```Java
 class A {
@@ -22,11 +32,11 @@ class A {
 }
 ```
 
-Nested classes are used to group logically relevant classes together.  Typically, a nested class is tightly coupled with the container class and would have no use outside of the container class.  Nested classes can be used to encapsulate information within a container class, for instance, when the implementation of the container class becomes too complex.  As such, it is useful for "helper" classes that serve specific purposes.
+Nested classes are used to group logically relevant classes together.  Typically, a nested class is tightly coupled with the enclosing class and would have no use outside of the enclosing class.  Nested classes can be used to encapsulate implementation details within an enclosing class, for instance, when the implementation of the enclosing class becomes too complex.  As such, they are useful for "helper" classes that serve specific purposes.
 
-A nested class is a field of the containing class and can access fields and methods of the container class, including those declared as `private`.  We can keep the nested class within the abstraction barrier by declaring the nested class as `private` if there is no need for it to be exposed to the client outside the barrier.  
+A nested class is a field of the enclosing class and can access its fields and methods, including those declared as `private`.  We can keep the nested class within the abstraction barrier by declaring the nested class as `private` if there is no need for it to be exposed to the client outside the barrier.  
 
-Since the nested class can access the private fields of the container class, we should introduce a nested class only if the nested class belongs to the same encapsulation as the container class.  Otherwise, the container class would leak its implementation details to the nested class.
+Since the nested class can access the private fields of the enclosing class, we should introduce a nested class only if the nested class belongs to the same encapsulation as the enclosing class.  Otherwise, the enclosing class would leak its implementation details to the nested class.
 
 Take the `HashMap<K,V>` class for instance.  [The implementation of `HashMap<K,V>`](https://github.com/openjdk-mirror/jdk7u-jdk/blob/master/src/share/classes/java/util/HashMap.java) contains several nested classes, including `HashIterator`, which implement an `Iterator<E>` interface for iterating through the key and value pairs in the map, and an `Entry<K,V>` class, which encapsulates a key-value pair in the map.  Some of these classes are declared `private`, as they are only used within the `HashMap<K,V>` class.
 
@@ -34,9 +44,9 @@ Take the `HashMap<K,V>` class for instance.  [The implementation of `HashMap<K,V
 
     We can take another example from your labs on bank simulation.  In one of many possible designs, the subclasses of `Event`: `ArrivalEvent`, `DepartureEvent`, etc. are not used anywhere outside of `BankSimulation`.  They can be safely encapsulated within `BankSimulation` as inner classes, so that these classes can access the fields within the `BankSimulation` class, simplifying their implementation.
 
-A nested class can be either static or non-static.  Just like static fields and static methods, a _static nested class_ is associated with the containing _class_, NOT an _instance_.  So, it can only access static fields and static methods of the containing class.  A _non-static nested class_, on the other hand, can access all fields and methods of the containing class.  A _non-static nested class_ is also known as an _inner class_.
+A nested class can be either static or non-static.  Just like static fields and static methods, a _static nested class_ is associated with the enclosing _class_, NOT an _instance_.  So, it can only access static fields and static methods of the enclosing class.  A _non-static nested class_, on the other hand, carries implicitly a reference to the enclosing object and can access all fields and methods of the enclosing instance.  A _non-static nested class_ is also known as an _inner class_. It cannot be instantiated without an enclosing instance.
 
-The example below shows a container class `A` with two nested classes, a non-static inner class `B`, and a static nested class `C`.  `B` can access instance fields, instance methods, class fields, and class methods in `A`.  `C` can only access the class fields and class methods in `A`.
+The example below shows an enclosing class `A` with two nested classes, a non-static inner class `B`, and a static nested class `C`.  `B` can access instance fields, instance methods, class fields, and class methods in `A`.  `C` can only access the class fields and class methods in `A`.
 
 ```Java
 class A {
@@ -254,7 +264,8 @@ b.g();
 
 will give us a reference to an object of type `B` now.  But, if we call `b.g()`, what is the value of `y`?
 
-For this reason, even though a local class can access the local variables in the enclosing method, the local class makes _a copy of local variables_ inside itself.  We say that a local class _captures_ the local variables.   
+For this reason, although a local class can access local variables in the enclosing method, the local class makes _a copy of local variables_ inside itself.  We say that a local class _captures_ the local variables.   
+Capturing local variables or enclosing instances may extend their lifetime beyond the execution of the method.
 
 ### Effectively `final`
 
@@ -279,7 +290,7 @@ void sortNames(List<String> names) {
 
 Will `sort` sorts in ascending order (i.e., use the value of `ascendingOrder` when the class is declared) or descending order (i.e., use the value of `ascendingOrder` when the class is instantiated)?
 
-To avoid confusion like this, Java only allows a local class to access variables that are explicitly declared `final` or implicitly final (or _effectively_ final).  An implicitly final variable cannot be re-assigned after initialization.  Therefore, Java saves us from such a hair-pulling situation and disallows such code &mdash; `ascendingOrder` is not effectively final so the code above does not compile.
+To avoid such confusion, Java only allows a local class to access variables that are explicitly declared `final` or implicitly final (or _effectively_ final).  An implicitly final variable cannot be re-assigned after initialization.  Therefore, Java saves us from such a hair-pulling situation and disallows such code &mdash; `ascendingOrder` is not effectively final so the code above does not compile.
 
 **Breaking the Limitation of Effectively `final`.** &nbsp;&nbsp; The limitation of effectively final only happens because the value is of a primitive type.  So, if we capture the value and forbid re-assigning the value, there is nothing we can do to change the primitive value.
 
@@ -316,7 +327,7 @@ The code above compiles correctly now.  But, as a result, the behavior of the co
 
 ### Anonymous Class
 
-An anonymous class is one where you declare a local class and instantiate it in a single statement.  This is a syntactic sugar to allow programmers to declare quickly a "single-use" class -- a class that we use only once and never need again.  We don't even need to give the class a name (hence, anonymous).
+An anonymous class is one where you declare a local class and instantiate it in a single statement.  This is syntactic sugar to allow programmers to declare quickly a "single-use" class -- a class that we use only once and never need again.  We don't even need to give the class a name (hence, anonymous).
 
 ```Java
 names.sort(new Comparator<String>() {
@@ -335,7 +346,7 @@ Put simply, you cannot have `extends` and `implements` keywords in between `X` a
 - _arguments_ are the arguments that you want to pass into the constructor of the anonymous class.  If the anonymous class is extending an interface, then there is no constructor, but we still need `()`.
 - _body_ is the body of the class as per normal, except that we cannot have a constructor for an anonymous class.
 
-The syntax might look overwhelming at the beginning, but we can also write it as:
+The syntax might look overwhelming at first, but we can also write it as:
 
 ```Java
 Comparator<String> cmp = new Comparator<String>() {
@@ -349,3 +360,5 @@ names.sort(cmp);
 Line 1 above looks just like what we do when we instantiate a class, except that we are instantiating an interface with a `{ .. }` body.
 
 Like a local class, an anonymous class captures the variables of the enclosing scope as well &mdash; the same rules to variable access as local classes apply.
+
+Anonymous classes were commonly used before Java 8 for single-use behavior. In many cases, lambda expressions (which you will encounter in the next unit) now provide a clearer alternative, but anonymous classes are still required when state or multiple methods are involved.

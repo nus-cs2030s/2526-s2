@@ -1,16 +1,20 @@
 # Unit 34: Streams in Java
 
 !!! abstract "Learning Objectives"
+ 
+    After completing this unit, students should be able to:
 
-    After this unit, students should understand:
+    - Construct and evaluate Java streams, explaining laziness and how terminal operations trigger execution. 
+    - Use intermediate and terminal stream operations (map, filter, flatMap, limit, takeWhile, reduce, matching) to express computations declaratively. 
+    - Reason about boundedness and statefulness of stream operations, and identify operations that are unsafe on infinite streams. 
+    - Explain the key differences between Java Stream and InfiniteList, particularly single-use consumption and design trade-offs. 
+    - Refactor loop-based imperative code into stream-based solutions, and judge when streams improve clarity versus when loops are more appropriate.
 
-    - how to use Java `Stream`.
-    - the difference between Java `Stream` and `InfiniteList`.
+## Introduction
 
+In the earlier units, we built our own functional abstractions such as `Lazy`, `Maybe`, and `InfiniteList` to understand how computation can be expressed declaratively using higher-order functions and laziness. While these abstractions helped us reason about program structure and evaluation, real Java programs rely on a richer, standardised library to work with large and potentially infinite sequences of data. In this unit, we study Java’s `Stream` API, which generalises many ideas from `InfiniteList` while introducing important new constraints and capabilities, allowing us to write clearer, more expressive, and less error-prone code—when used appropriately.
 
 ## Java API
-
-We have been building and using our own functional interfaces and abstractions. 
 
 Java provides its own version of functional interfaces that are comparable to ours, in the `java.util.function` package.  The table below shows some commonly used ones:
 
@@ -49,7 +53,7 @@ Many other APIs in Java return a `Stream` instance (e.g., `Files::lines`)
 
 A `Stream` is lazy, just like `InfiniteList`.
 
-A terminal operation is an operation on the stream that triggers the evaluation of the stream.  A typical way of writing code that operates on streams is to chain a series of intermediate operations together, ending with a terminal operation.  
+A terminal operation is an operation on the stream that triggers the evaluation of the stream; Without one, no computation occurs.  A typical way of writing code that operates on streams is to chain a series of intermediate operations together, ending with a terminal operation.  
 
 The `forEach` method is a terminal operation that takes in a stream and applies a lambda expression to each element.  
 The lambda expression to apply does not return any value.  Java provides the [`Consumer<T>`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html) functional interface for this.   Typical use is
@@ -130,7 +134,7 @@ for each element in the stream
 return result
 ```
 
-Note that there are constraints on the identity and accumulation function, which are placed due to the potential parallelization of `reduce`.   We will revisit this operation later.
+Note that there are constraints on the identity and accumulation function, which are placed to ensure correctness when the stream is evaluated in parallel.   We will revisit this operation later.
 
 Java also overloaded `reduce` with two other versions &mdash; a simpler one (with `null` identity) and a more complex one, which supports a different returned type than the type of the elements in the stream.   You can read the [java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html#reduce(T,java.util.function.BinaryOperator)) for details.
 
@@ -220,6 +224,8 @@ With a stream, we no longer have to write loops, we have moved the iterations to
 
 We will end this unit with a note of caution.
 
-Using stream in place of loops should make our code simpler, more elegant, and less bug-prone.  One should note that not all loops can be translated into stream elegantly.  A double-nested loop, for instance, stretches the elegance of streams.  A triple-nested loop should perhaps be best written as a loop with appropriate inner components written with lambdas and streams.
+Using streams in place of loops should make our code simpler, more elegant, and less bug-prone.  One should note that not all loops can be translated into stream elegantly.  A double-nested loop, for instance, stretches the elegance of streams.  A triple-nested loop should perhaps be best written as a loop with appropriate inner components written with lambdas and streams.
+
+The goal is not to replace all loops with streams, but to recognise when streams allow us to express intent more clearly and safely.
 
 As you go through exercises in using streams, you will find more examples of the limitations of streams.

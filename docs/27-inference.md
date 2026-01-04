@@ -2,18 +2,24 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
 
-    - be familiar how Java infers missing type arguments
+    After this unit, students should be able to:
 
+    - explain what type inference is and why Java supports it for generic methods and types
+    - identify the sources of type constraints (method arguments, bounds, and target typing) used during inference
+    - manually derive the inferred type arguments in common generic method calls
+    - recognize situations where type inference leads to surprising or unsafe behaviour
+    - diagnose and explain compilation errors caused by incompatible inference bounds
 
-We have seen in the past units the importance of types in preventing run-time errors.  Utilizing types properly can help programmers catch type mismatch errors that could have caused a program to fail during run-time, possibly after it is released and shipped.
+## Introduction
 
-By including type information everywhere in the code, we make the code explicit in communicating the intention of the programmers to the reader.  Although it makes the code more verbose and cluttered &mdash; it is a small price to pay for ensuring the type correctness of the code and reducing the likelihood of bugs as the code complexity increases.
+In earlier units, we saw how Java’s type system helps prevent many classes of run-time errors by enforcing type correctness at compile time. We also learned that generic types and wildcards allow us to write flexible and reusable code—but often at the cost of additional type annotations.
 
-Java, however, allows the programmer to skip some of the type annotations and try to infer the type argument of a generic method and a generic type, through the _type inference_ process.
+To reduce verbosity, Java allows programmers to omit some type arguments and rely on the compiler to infer them automatically. This process, known as type inference, attempts to determine which type arguments would make the program type-correct.
 
-The basic idea of type inference is simple: Java will figure out which matching types would lead to successful type checks (if any), and pick the most specific ones.
+While type inference can make code shorter and easier to read, it is not merely a convenience feature. It follows precise rules based on subtyping, bounds, and target types—and these rules can sometimes lead to results that surprise even experienced programmers.
+
+In this unit, we study how Java infers type arguments for generic methods and types, how these inferences are derived from constraints, and why understanding the inference process is essential for writing safe and predictable generic code.
 
 ## Diamond Operator
 
@@ -57,17 +63,17 @@ We could remove the type argument `<Shape>` so that we can call `contains` just 
 
 and Java could still infer that `S` should be `Shape`.  The type inference process looks for all possible types that match.  In this example, the type of the two arguments must match.  Let's consider each individually first:
 
-- An object of type `Shape` is passed as an argument to the parameter `obj`.  So `S` might be `Shape` or, if widening type conversion has occurred, one of the other supertypes of `Shape`. Therefore, we can say that `Shape <: S <: Object`.
-- A `Seq<Circle>` has been passed into `Seq<? extends S>`.  A widening type conversion occurred here, so we need to find all possible `S` such that `Seq<Circle>` <: `Seq<? extends S>`.  This is true only if `S` is `Circle`, or another supertype of `Circle`. Therefore, we can say that `Circle <: S <: Object`.
+- An object of type `Shape` is passed as an argument to the parameter `obj`.  So `S` might be `Shape` or, if widening type conversion has occurred, one of the other supertypes of `Shape`. Therefore, `Shape <: S <: Object`.
+- A `Seq<Circle>` has been passed into `Seq<? extends S>`.  A widening type conversion occurred here, so we need to find all possible `S` such that `Seq<Circle>` <: `Seq<? extends S>`.  This is true only if `S` is `Circle`, or another supertype of `Circle`. Therefore, `Circle <: S <: Object`.
 
 Solving for these two constraints on `S`, we get the following:
 ```
 Shape <: S <: Object 
 ```
  
-We therefore know that `S` could be `Shape` or one of its supertypes: `GetAreable` and `Object`.   We choose the lower bound, so `S` is inferred to be `Shape`.
+Therefore, `S` could be `Shape` or one of its supertypes: `GetAreable` and `Object`.   We choose the lower bound, so `S` is inferred to be `Shape`.
 
-Type inferencing can have unexpected consequences.  Let's consider an [older version of `contains` that we wrote](23-generics.md):
+Type inference can have unexpected consequences.  Let's consider an [older version of `contains` that we wrote](23-generics.md):
 
 ```Java title="contains v0.4 (with generics)"
 class A {
@@ -93,7 +99,7 @@ But, if we write:
 A.contains(strArray, 123); // ok!  (huh?)
 ```
 
-The code compiles!  Let's go through the type inferencing steps to understand what happened.  Again, we have two parameters:
+The code compiles!  Let's go through the type inference steps to understand what happened.  Again, we have two parameters:
 
 - `strArray` has the type `String[]` and is passed to `T[]`.  So `T` must be `String` or its superclass `Object` (i.e. `String <: T <: Object`).  The latter is possible since Java array is covariant.
 - `123` is passed as type `T`.  The value is treated as `Integer` and, therefore, `T` must be either `Integer`,  or its superclasses `Number`, and `Object` (i.e. `Integer <: T <: Object`). 
@@ -110,9 +116,11 @@ A.<Object>contains(strArray, 123);
 
 And our version 0.4 of `contains` actually is quite fragile and does not work as intended.  We were bitten _again_ by the fact that the Java array is covariant.
 
+Type inference does not guarantee that the inferred type matches the programmer's intention. When multiple types satisfy the constraints, Java chooses the most general one that satisfies all bounds, even if that makes the method semantically meaningless.  Explicit type witnesses override inference and can be used to document intent or avoid surprising inferences. However, they do not bypass type checking, only inference.
+
 ## Target Typing
 
-The example above performs type inferencing on the parameters of the generic methods.  Type inferencing can involve the type of the expression as well.  This is known as _target typing_.  Take the following upgraded version of `findLargest`:
+The example above performs type inference on the parameters of the generic methods.  Type inference can involve the type of the expression as well.  This is known as _target typing_.  Take the following upgraded version of `findLargest`:
 
 ```Java title="findLargest v0.6 (with Seq&lt;T&gt;)"
 public static <T extends GetAreable> T findLargest(Seq<? extends T> seq) {
@@ -167,15 +175,15 @@ Then we consider the following code excerpt:
 ColoredCircle c = foo(new Seq<GetAreable>());
 ```
 
-What does the java compiler infer `T` to be? Lets look at all of the constraints on `T`.
+What does the java compiler infer `T` to be? Let's look at all of the constraints on `T`.
 
-- First we can say that the return type of `foo` must be a subtype of `ColoredCircle`, therefore we can say `T <: ColoredCircle`.
+- First, the return type of `foo` must be a subtype of `ColoredCircle`, therefore `T <: ColoredCircle`.
 
-- `T` is also a bounded type parameter, and therefore we also know `T <: Circle`.
+- `T` is also a bounded type parameter, therefore `T <: Circle`.
 
 - Our method argument is of type `Seq<GetAreable>` and must be a subtype of `Seq<? extends T>`, so `T` must be a supertype of `GetAreable` (i.e. `GetAreable <: T <: Object`).
 
-We can see that there no solution to our contraints, `T` can not be both a subtype of `ColoredCircle` and a supertype of `GetAreable` and therefore the Java compiler can not find a type `T`. The Java compiler will throw an error stating the inference variable `T` has incompatible bounds.
+We can see that there is no solution to our contraints, `T` can not be both a subtype of `ColoredCircle` and a supertype of `GetAreable` and therefore the Java compiler can not find a type `T`. The Java compiler will throw an error stating the inference variable `T` has incompatible bounds.
 
 Lets consider, one final example using the following method signature of a generic method `bar`:
 
@@ -191,7 +199,7 @@ GetAreable c = bar(new Seq<Circle>());
 
 What does the java compiler infer `T` to be? Again, lets look at all of the constraints on `T`.
 
-- We can say that the return type of `bar` must be a subtype of `GetAreable`, therefore we can say `T <: GetAreable`.
+- We can say that the return type of `bar` must be a subtype of `GetAreable`, therefore `T <: GetAreable`.
 
 - Our method argument is of type `Seq<Circle>` and must be a subtype of `Seq<? super T>`, so `T` must be a subtype of `Circle` (i.e. `T <: Circle`).
 
@@ -206,12 +214,16 @@ Whilst `ColoredCircle` is also a subtype of `Circle` it is not included in the a
 
 ## Rules for Type Inference
 
-We now summarize the steps for type inference. First, we figure out all of the type constraints on our type parameters, and then we solve these constraints. If no type can satisfy all the constraints, we know that Java will fail to compile. If in resolving the type constraints for a given type parameter `T` we are left with:
+We now summarize the steps for type inference. First, we figure out all of the type constraints on our type parameters, and then we solve these constraints. If no type can satisfy all the constraints, Java will fail to compile. If in resolving the type constraints for a given type parameter `T` we are left with:
 
 - `Type1 <: T <: Type2`, then `T` is inferred as `Type1`
 - `Type1 <: T`[^2], then `T` is inferred as `Type1`
 - `T <: Type2`, then `T` is inferred as `Type2`
 
-where `Type1` and `Type2` are arbitrary types.
+where `Type1` and `Type2` are arbitrary types. Java prefers the lower bound when both bounds are present, as it leads to more specific types and better type safety.  If only one bound is present, Java uses that bound to infer the type.
 
 [^2]: Note that `T <: Object` is implicit here. We can see that this case could also be written as `Type1 <: T <: Object`, and would therefore also be explained by the previous case (`Type1 <: T <: Type2`).
+
+!!! notes "Fresh Type Variables and Captured Wildcards"
+
+    In more complex scenarios, Java may introduce _fresh type variables_ or _capture wildcards_ during type inference to handle cases where the exact type cannot be determined directly. These mechanisms allow Java to maintain type safety while still providing flexibility in generic programming. However, these topics are beyond the scope of this unit and will be covered in more advanced discussions on Java's type system.

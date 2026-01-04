@@ -141,3 +141,64 @@ T[] array;
 ```
 
 In summary, generic array _declaration_ is fine but generic array _instantiation_ is not.
+
+## Bridge Methods
+
+Type erasure has an important consequence when inheritance and method overriding interact with generics. To preserve polymorphism after erasure, the Java compiler sometimes generates additional methods known as bridging methods (or bridge methods).
+
+Consider the following example:
+
+```Java title="Generic Superclass"
+class Box<T> {
+  void get(T t) {
+    // body omitted  
+  }
+}
+
+class StringBox extends Box<String> {
+  @Override
+  void get(String s) {
+    // body omitted
+  }
+}
+```
+
+At the source level, `StringBox::get(String)` clearly overrides `Box::get(T)`.
+
+After erasure, the compiler conceptually sees:
+
+```Java title="After erasure"
+class Box {
+  void get(Object o) {
+    // body omitted
+  }
+}
+
+class StringBox extends Box {
+  void get(String s) {
+    // body omitted
+  }
+}
+```
+
+The two methods now have different descriptors: `void get(Object)` and `void get(String)`, breaking polymorphism.
+
+In such situation, where (i) a class is a subtype of a parameterized type and (ii) type erasure changes the signature of any inherited method, the Java compiler automatically generates a bridging method.  
+
+In the case of `StringBox`, 
+
+```Java
+class StringBox extends Box {
+  // compiler-generated bridge method
+  void get(Object s) {
+    return get((String) s);   
+  }
+
+  // programmer-defined method
+  void get(String s) {
+    return "hello";
+  }
+}
+```
+
+The bridge method `get(Object)` simply casts its argument to `String` and delegates to the programmer-defined `get(String)`. This synthetically generated method preserves the semantic of polymorphism, 

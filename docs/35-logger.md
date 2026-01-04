@@ -2,17 +2,27 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should understand:
+    After completing this unit, students should be able to:
 
-    - why we need `flatMap` operation.
+    - explain why naïve function composition breaks down when additional context (e.g. logging) is introduced
+    - construct a simple abstraction that combines a value with auxiliary information
+    - distinguish between `map` and `flatMap` in terms of what kinds of transformations they support
+    - use `flatMap` to compose computations that produce contextualised results
+    - generalise a concrete abstraction into a type-parameterised one using Java generics
 
-So far in the class, we have seen very general abstractions that support the `flatMap` operation.  But, it is not clear where this operation comes from, why is it fundamental, nor why is it useful[^1]
+## Introduction
 
-In this unit, we are going to build a general abstraction step-by-step, get stuck at some point, and see how `flatMap` comes to our rescue.  Hopefully, through this exercise, you will get some appreciation of `flatMap`.
+In earlier units, we learned how to compose pure functions and use higher-order operations such as map to build more complex behaviour. This worked well as long as our functions only transformed values.
 
-## Function Composition
+In practice, however, computations often need to carry additional context, such as log messages. Once this extra information is introduced, simple function composition breaks down and map is no longer sufficient.
 
-Let's start with some methods that we wish to operate over `int`.  Let's use some trivial functions so that we don't get distracted by its details.
+In this unit, we start from a concrete logging example[^1] and gradually build an abstraction that restores composability. Through this process, we uncover why `flatMap` is needed, where it comes from, and how it allows us to compose context-carrying computations in a disciplined way.
+
+## Function Composition with Logging
+
+In this unit, we are going to build a general abstraction step-by-step, reach a limitation, and see how `flatMap` resolves this issue.  Through this exercise, you will gain an appreciation of `flatMap`.
+
+Let's start with some methods that operate on `int` values.  Let's use some trivial functions so that we don't get distracted by its details.
 
 ```Java
 int incr(int x) {
@@ -24,7 +34,7 @@ int abs(int x) {
 }
 ```
 
-These methods are pure functions without side effects, they take in one argument and produce a result. 
+These methods are pure functions without side effects, they each takes one argument and produces a result. 
 
 Just like mathematical functions, we can compose them together in arbitrary order to form more complex operations.
 
@@ -47,7 +57,7 @@ Pair<Integer,String> absWithLog(int x) {
 }
 ```
 
-Now, we can't compose the methods as cleanly as before.  This is because the return value of `absWithLog` is a `Pair<Integer, String>` but `incrWithLog` accepts an `int` as its parameter.
+Now, we can no longer compose the logging methods as cleanly as before.  This is because the return value of `absWithLog` is a `Pair<Integer, String>` but `incrWithLog` accepts an `int` as its parameter.
 
 ```Java
 incrWithLog(absWithLog(-4));  // error
@@ -128,7 +138,7 @@ Loggable.of(4).map(x -> incr(x)).map(x -> abs(x))
 
 We can still chain the methods together to compose them.
 
-But, `map` allows us to only apply the function to the value.  What should we do to the log messages?  Since the given lambda returns an int, it is not sufficient to tell us what message we want to add to the log.
+However, `map` only allows us to apply the function to the value.  What should we do to the log messages?  Since the given lambda returns an int, it is not sufficient to tell us what message we want to add to the log.
 
 To fix this, we will need to pass in a lambda expression that takes in an integer but returns us a pair of an integer and a string.  In other words, it returns us a `Loggable`.  We call our new method `flatMap`.
 
@@ -138,6 +148,8 @@ To fix this, we will need to pass in a lambda expression that takes in an intege
     return new Loggable(l.value, l.log + this.log); 
   }
 ```
+
+Note that the log from the new computation is prepended to the existing log to preserve execution order.
 
 By making `flatMap` take in a lambda that returns a pair of an integer and a string, `Loggable` can rely on these lambda expressions to tell it how to update the log messages.  Now, if we have methods like this:
 

@@ -2,22 +2,30 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should be familiar with:
+    After completing this unit, students should be able to:
 
-    - the concept of functions as side-effect-free programming constructs and its relation to functions in mathematics.
-    - understand the importance of writing code that is free of side effects
-    - how functions can be first-class citizens in Java through using local anonymous class
-    - how we can succinctly use a lambda expression or a method reference in place of using local anonymous class
-    - how we can use currying to generalize to functions with higher arity
-    - how we can create a closure with lambda and environment capture
+    - Explain the notion of functions as side-effect-free computations and relate them to mathematical functions, including referential transparency.
+    - Identify and reason about side effects and purity in Java methods, and explain why purity improves program reasoning and correctness.
+    - Use functions as first-class values in Java, including defining, assigning, passing, and returning functions via functional interfaces.
+    - Write and refactor code using lambda expressions and method references, replacing anonymous classes where appropriate.
+    - Apply currying and partial application to transform multi-argument computations into higher-order unary functions.
+    - Explain and use closures, including how lambda expressions capture their surrounding environment and the implications of effective finality.
+
+## Introduction
+
+In earlier units, we emphasized abstraction, immutability, and reasoning about program behavior using types. These ideas allow us to control how objects are used and how data flows through a program, but they do not by themselves guarantee that code is easy to reason about.
+
+As programs grow, reasoning becomes difficult when methods can modify state, depend on hidden variables, or produce unexpected side effects. Even simple expressions can no longer be safely replaced by their values, breaking the local reasoning we rely on in mathematics.
+
+This unit revisits these earlier ideas from a different angle: how restricting side effects allows programs to be reasoned about like mathematical functions. By treating computation as the composition of well-behaved functions, we strengthen the guarantees provided by immutability and abstraction, and make program behavior easier to understand, test, and maintain.
 
 ## Functions
 
 Recall that, a function, in mathematics, refers to a mapping from a set of inputs (_domain_) $X$ to a set of output values (_codomain_) $Y$.  We write $f: X \rightarrow Y$.  Every input in the domain must map to exactly one output but multiple inputs can map to the same output.  Not all values in the codomain need to be mapped.  
 
-We know how to deal with mathematical functions very well.  There are certain rules that we follow when we reason about functions.  For instance, suppose we have an unknown $x$ and a function $f$, we know that applying $f$ on $x$, i.e., $f(x)$ does not change the value of $x$, or any other unknowns $y$, $z$, etc.  We say that mathematical functions have _no side effects_.  It simply computes and returns the value.
+In mathematics, we follow certain rules to reason about functions.  For instance, suppose we have an unknown $x$ and a function $f$, we know that applying $f$ on $x$, i.e., $f(x)$ does not change the value of $x$, or any other unknowns $y$, $z$, etc.  We say that mathematical functions have _no side effects_.  It simply computes and returns the value.
 
-Another property of mathematical function is _referential transparency_.  Let $f(x) = a$.  Then in every formula that $f(x)$ appears in, we can safely replace occurances of $f(x)$ with $a$.  Conversely, everywhere $a$ appears, we can replace it with $f(x)$.  We can be guarantee that the resulting formulas are still equivalent.
+Another property of a mathematical function is _referential transparency_.  Let $f(x) = a$.  Then in every formula that $f(x)$ appears in, we can safely replace occurences of $f(x)$ with $a$.  Conversely, everywhere $a$ appears, we can replace it with $f(x)$.  We are guaranteed that the resulting formulas are still equivalent.
 
 These two fundamental properties of mathematical functions allow us to solve equations, prove theorems, and reason about mathematical objects rigorously.
 
@@ -27,9 +35,9 @@ Unfortunately, we can't always reason about our program the same way as we reaso
 s.get(0)
 ```
 
-where `s` is an instance of `Seq<T>`.  Suppose we know that `s.get(0)` is 5 for some `s`.  When we reason about the behavior of our code, we cannot replace (mentally) every invocation of `s.get(0)` with the value 5.  This is because the sequence `s` may not be immutable and therefore `s.get(0)` cannot be guaranteed to be the same.  
+where `s` is an instance of `Seq<T>`.  Suppose we know that `s.get(0)` is 5 for some `s`.  When we reason about the behavior of our code, we cannot replace (mentally) every invocation of `s.get(0)` with the result 5.  This is because the sequence `s` may not be immutable and therefore `s.get(0)` cannot be guaranteed to be the same.  
 
-The reverse should be true as well.  Suppose we have a variable
+The converse should also hold.  Suppose we have a variable
 
 ```java
 T t = s.get(0);
@@ -125,7 +133,7 @@ new Transformer<Integer, Integer>() {
 
 We can write a method `chain` that composes two given computations together and returns the new computation:
 ```Java
-// Use of PECS left as an exercise to the reader
+// The use of PECS is left as an exercise to the reader
 <T, R, S> Transformer<T,R> chain(Transformer<T,S> t1, Transformer<S,R> t2) {
   return new Transformer<T,R>() {
     public R transform(T value) {
@@ -252,6 +260,8 @@ A::foo             // (x, y) -> x.foo(y) or (x, y) -> A.foo(x,y)
 
 The last example shows that the same method reference expression can be interpreted in two different ways.  The actual interpretation depends on how many parameters `foo` takes and whether `foo` is a class method or an instance method.  When compiling, Java searches for the matching method, performing type inferences to find the method that matches the given method reference.  A compilation error will be thrown if there are multiple matches or if there is ambiguity in which method matches.
 
+Note the difference between a lambda expression and a method reference.  A lambda expression defines a new anonymous function by explicitly specifying its parameters and computation, while a method reference refers to an existing method and reuses its implementation. Lambdas are used when we need to describe what computation to perform, whereas method references are used when an appropriate method already exists and we only want to treat it as a function value. 
+
 ## Curried Functions
 
 Mathematically, a function takes in only one value and returns one value (e.g., `square` above).  In programming, we often need to write functions that take in more than one argument (e.g., `add` above).
@@ -281,7 +291,7 @@ Let's break it down a little, `add` is a function that takes in an `Integer` obj
 Transformer<Integer,Integer> incr = add.transform(1);
 ```
 
-Note that `add` is no longer a function that takes two arguments and returns a value.  It is a _higher-order function_ that takes in a single argument and returns another function.
+Note that `add` is no longer a function that takes two arguments and returns a value.  It is a _higher-order function_.  A higher-order function is one that takes or returns another function. 
 
 The technique that translates a general $n$-ary function to a sequence of $n$ unary functions is called _currying_.  After currying, we have a sequence of _curried_ functions.  
 
