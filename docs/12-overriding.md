@@ -2,21 +2,29 @@
 
 !!! abstract "Learning Objectives"
 
-    After taking this unit, students should:
+    After taking this unit, students should be able to:
 
-    - be aware that every class inherits from `Object`
-    - be familiar with the `equals` and `toString` methods
-    - understand what constitutes a method signature
-    - understand method overriding
-    - appreciate the power of method overriding
-    - understand what Java annotations are for, and know when to use `@Override`
-    - be exposed to the `String` class and its associated methods, especially the `+` operator
+    - explain why every Java class implicitly inherits from Object
+    - describe and override Object::toString and Object::equals
+    - distinguish between method signature and method descriptor
+    - explain what method overriding is and when it occurs
+    - reason about compile-time and runtime rules governing overriding
+    - use Java annotations correctly, in particular @Override
+    - explain how String concatenation triggers implicit toString calls
+
+## Introduction
+
+In the previous units, we introduced inheritance as a mechanism for sharing code and modeling “is-a” relationships between classes. We have also seen that subclasses automatically inherit fields and methods from their parent classes.
+
+In this unit, we explore how inheritance allows not only reuse, but also customization of behavior through method overriding. We will see that every class in Java inherits from a common ancestor, Object, and that some of its methods—most notably toString and equals—are designed to be overridden.
+
+Along the way, we introduce precise terminology such as method signature and method descriptor, and we examine the rules that govern method overriding. Importantly, these rules are enforced partly during compilation and partly at runtime, illustrating once again Java’s emphasis on early error detection and type safety.
 
 ## `Object` and `String`
 
 In Java, every class that does not extend another class inherits from the [class `Object`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html) implicitly.  `Object` is, therefore, the "ancestor" of all classes in Java and is at the root of the class hierarchy.
 
-The `Object` class does not encapsulate anything in particular.  It is a very general class that provides useful methods common to all objects.  The two useful ones that we are going to spend time with are:
+The `Object` class does not encapsulate anything in particular.  It is a very general class that provides useful methods common to all objects.  Two particularly useful methods are:
 
 - `equals(Object obj)`, which checks if two objects are equal to each other, and
 - `toString()`, which returns a string representation of the object as a `String` object.
@@ -36,7 +44,7 @@ Circle c = new Circle(new Point(0, 0), 4.0);
 String s = "Circle c is " + c;
 ```
 
-You will see that `s` now contains the string "Circle c is Circle@1ce92674 " (the seemingly gibberish text after @ is the reference to the object so your result will be different).
+You will see that `s` now contains the string "Circle c is Circle@1ce92674 " (the seemingly unintelligible text after @ is the reference to the object so your result will be different).
 
 What happened here is that the `+` operator sees that one of the operands is a string but the other is not, so it converts the one that is not a string to a string by calling its `toString()` method automatically for us.  This is equivalent to[^1]
 ```Java
@@ -49,7 +57,7 @@ String s = "Circle c is " + c.toString();
 Recall that in our `Circle` class (up to version 0.5) we do not have any `Circle::toString()` method.  The `toString` method that we invoked here is the `toString` method inherited from its parent `Object` (_i.e.,_ `Object::toString()`).
 
 !!! Note "`jshell` and `toString`"
-    Recall that `jshell` is a REPL tool.  After evaluating an expression, `jshell` prints the resulting value.  If the resulting value is a reference type, `jshell` will invoke `toString` to convert the reference type to a string first, before printing the string.
+    Recall that `jshell` is a REPL tool.  After evaluating an expression, `jshell` prints the resulting value.  If the resulting value is a reference type, `jshell` will invoke `toString` to convert the reference type to a string first, before printing the string.  This behavior makes `toString` especially important during debugging.
 
 ## Customizing `toString` for `Circle`
 
