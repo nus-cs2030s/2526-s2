@@ -2,12 +2,22 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
 
-    - be familiar with the concept of an abstract class
-    - know the use of the Java keyword `abstract` and the constraints that come with it.
-    - understand the usefulness of defining and using an abstract class
-    - understand what makes a class concrete
+    After this unit, students should be able to:
+
+    - explain why abstract classes are needed to model incomplete abstractions
+    - declare and use abstract classes and abstract methods correctly in Java
+    - reason about compile-time constraints enforced by abstract methods and classes
+    - design class hierarchies that use abstract classes to support polymorphism safely
+    - distinguish clearly between abstract and concrete classes and their roles
+
+## Introduction
+
+In earlier units, we learned how inheritance and polymorphism allow us to write code that works at a higher level of abstraction.  For example, writing methods that operate on `Object`, or on a superclass such as `Shape`, rather than on a specific subclass like `Circle`. This allowed our programs to be more extensible and reusable.
+
+However, as we push abstraction further, we encounter a new problem: some classes are too abstract to be fully implemented.  In this unit, we introduce abstract classes, a language mechanism that allows us to express such incomplete abstractions explicitly. Abstract classes let us define what must be implemented by subclasses, while preventing misuse, such as instantiating objects that are conceptually incomplete. More importantly, abstract classes allow the compiler to enforce design constraints that would otherwise lead to subtle runtime bugs.
+
+This unit completes the abstraction story that began with inheritance and polymorphism by showing how Java helps us encode design intent directly into the type system.
 
 ## High-Level Abstraction
 
@@ -27,7 +37,7 @@ boolean contains(Object[] array, Object obj) {
 }
 ```
 
-The function above is very general.  We do not assume and do not need to know, about the details of the items being stored or searched.  All we required is that the `equals` method compared if two objects are equal.
+The function above is very general.  We do not assume and do not need to know about the details of the items being stored or searched.  All we required is that the `equals` method compared if two objects are equal.
 
 In contrast, someone whose mind focuses on finding a circle might write something like this:
 ```Java title="contains v0.3 for Circle only"
@@ -45,7 +55,7 @@ The version above serves the purpose, but is not general enough.  The only metho
 
 ## Abstracting Circles
 
-Now, let's consider the following function, which finds the largest area among the circles in a given array:
+Consider the following function, which finds the largest area among the circles in a given array:
 
 ```Java title="findLargest v0.1 with Circle"
 double findLargest(Circle[] array) {
@@ -155,7 +165,7 @@ class Circle extends Shape {
   }
 
   /**
-   * Return true the object is the same circle (i.e., same center, same radius).
+   * Return true if the object is the same circle (i.e., same center, same radius).
    */
   @Override
   public boolean equals(Object obj) {
@@ -167,7 +177,7 @@ class Circle extends Shape {
 }
 ```
 
-Notably, since our `Shape` is a highly abstract entity, it does not have any fields.  One question that arises is, how are we going to write `Shape::getArea()`?   We cannot compute the area of a shape unless we know what sort of shape it is.
+Notably, since our `Shape` is a highly abstract entity, it does not have any fields.  A key question is: how are we going to write `Shape::getArea()`?   We cannot compute the area of a shape unless we know what sort of shape it is.
 
 One solution is to make `Shape::getArea()` return 0.
 
@@ -179,9 +189,9 @@ class Shape {
 }
 ```
 
-This is not ideal.  It is easy for someone to inherit from `Shape`, but forget to override `getArea()`.  If this happens, then the subclass will have an area of 0.  Bugs ensue.
+This design is unsafe and error-prone.  It is easy for someone to inherit from `Shape`, but forget to override `getArea()`.  If this happens, then the subclass will have an area of 0.  This leads to silent logical errors that the compiler cannot detect.
 
-As we usually do in CS2030S, we want to exploit programming language constructs and rely on the compiler to check and catch such errors for us.
+As we usually do in CS2030S, we want to exploit programming language constructs and rely on the compiler to check and catch such errors for us.  Abstract methods shift error detection from runtime to compile time. If a subclass fails to implement an abstract method, the program will not compile—preventing incomplete implementations from slipping into execution.
 
 ## Abstract Methods and Classes
 
@@ -189,9 +199,9 @@ This brings us to the concept of _abstract classes_.  An abstract class in Java 
 
 The `Shape` class above makes a good abstract class since we do not have enough details to implement `Shape::getArea`.
 
-To declare an abstract class in Java, we add the `abstract` keyword to the `class` declaration.  To make a method abstract, we add the keyword `abstract` when we declare the method.
+To declare an abstract class in Java, we add the `abstract` keyword to the `class` declaration.  To make an instance method abstract, we add the keyword `abstract` when we declare the instance method.
 
-An `abstract` method cannot be implemented and therefore should not have any method body.
+An `abstract` instance method cannot be implemented and therefore should not have any method body.
 
 This is how we implement `Shape` as an abstract class.
 
@@ -208,7 +218,7 @@ Shape s = new Shape();
 
 would result in an error.
 
-Note that our simple example of `Shape` only encapsulates one abstract method.  An abstract class can contain multiple fields and multiple methods.  Not all the methods have to be abstract.  As long as one of them is abstract, the class becomes abstract.
+Note that our simple example of `Shape` only encapsulates one abstract instance method.  An abstract class can contain multiple fields and multiple methods (including class methods).  Not all the methods have to be abstract.  As long as one of them is abstract, the class becomes abstract.
 
 To illustrate this, consider
 ```Java
@@ -223,10 +233,10 @@ abstract class Shape {
 }
 ```
 
-`Shape::isSymmetric()` is a concrete method but the class is still abstract since `Shape::getArea()` is abstract.
+`Shape::isSymmetric()` is a concrete instance method but the class is still abstract since `Shape::getArea()` is abstract.
 
-Note that the rule for declaring an abstract class is not symmetric.  A class with _at least one_ abstract method must be declared abstract.  On the other hand, an abstract class _may have no_ abstract method.
+Note that the rule for declaring an abstract class is not symmetric.  A class with _at least one_ abstract instance method must be declared abstract.  On the other hand, an abstract class _may have no_ abstract method.
 
 ## Concrete Classes
 
-We call a class that is not abstract as a _concrete class_.  A concrete class cannot have any abstract method.  Thus, any concrete subclass of `Shape` must override `getArea()` to supply its own implementation.
+We call a class that is not abstract as a _concrete class_.  A concrete, non-abstract, class cannot have any abstract method.  Thus, any concrete subclass of `Shape` must override `getArea()` to supply its own implementation.

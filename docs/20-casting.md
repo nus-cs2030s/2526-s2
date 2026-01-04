@@ -2,12 +2,24 @@
 
 !!! abstract "Learning Objectives"
 
-    After taking this unit, students should:
+    After completing this unit, students should be able to:
 
-    - understand the need for narrowing type conversion and type casting when writing code that depends on higher-level abstraction
-    - understand the possibility of encountering run-time errors if typecasting is not done properly
+    - explain why narrowing type conversion requires explicit casting in Java
+    - distinguish between compile-time type checking and run-time type checking in the presence of casts
+    - identify situations where a cast is syntactically valid but can fail at run time
+    - reason about how abstraction (interfaces and supertypes) can lead to run-time class mismatch errors
 
-We have seen in [Unit 18](18-interface.md) how we can write code that is reusable and general by making our code dependent on types at a higher level of abstraction.  Our main example is the following `findLargest` method, which takes in an array of objects that support the `getArea` method and returns the largest area among these objects.
+## Introduction
+
+In earlier units, we learned how to write reusable and flexible code by programming to higher-level abstractions, such as interfaces and supertypes. This approach allows our code to work uniformly over many different concrete classes, improving extensibility and reuse.
+
+However, abstraction also comes with a cost. When we deliberately “forget” the concrete class of an object and treat it as a more general type, we sometimes need to recover that concrete type later. In Java, doing so requires type casting, and incorrect casts can lead to errors that only appear at run time.
+
+In this unit, we examine how such run-time class mismatch errors arise, why the compiler cannot always prevent them, and what responsibilities fall on the programmer when casting is used.
+
+## Finding the Object with the Largest Area
+
+Let's revisit our example of `findLargest` method, which takes in an array of objects that support the `getArea` method and returns the largest area among these objects.
 
 ```Java title="findLargest v0.4 with GetAreable"
 double findLargest(GetAreable[] array) {
@@ -60,13 +72,14 @@ On Line 7, we try to return the return object to a variable with compile-time ty
 
 ## Cast Carefully
 
-Typecasting, as we did in Line 8 above, is basically is a way for programmers to ask the compiler to trust that the object returned by `findLargest` has a run-time type of `Circle` (or its subtype).
+Recall that, type casting, as we did in Line 8 above, is basically a way for programmers to ask the compiler to trust that the object returned by `findLargest` has a run-time type of `Circle` (or one of its subtype).
+A cast does not change the object or convert it into another class. It only changes how the compiler allows the reference to be used. 
 
 In the snippet above, we can be sure (even _prove_) that the returned object from `findLargest` must have a run-time type of `Circle` since the input variable `circles` contains only `Circle` objects.
 
 The need to cast our returned object, however, leads to fragile code.  Since the correctness of Line 8 depends on the run-time type, the compiler cannot help us.  It is then up to the programmers to not make mistakes.
 
-Consider the following two snippets, which will compile perfectly, but will lead to the program crashing at run-time.
+Consider the following two snippets, which will compile perfectly, but will lead to an error at run-time, when Java detects that the actual object is not an instance of the target class.
 
 ```Java
 GetAreable[] circles = new GetAreable[] {
@@ -88,4 +101,4 @@ GetAreable[] circles = new GetAreable[] {
 Square sq = (Square) findLargest(circles);
 ```
 
-We will see how to resolve this problem in later units.
+We will see how to resolve this problem in later units, where we will show how Java’s type system (in particular, generics) allows us to express stronger guarantees so that many of these casts and the associated run-time risks can be avoided entirely.
