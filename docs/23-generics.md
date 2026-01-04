@@ -2,11 +2,20 @@
 
 !!! abstract "Learning Objectives"
 
-    After taking this unit, students should:
 
-    - know how to define and instantiate a generic type and a generic method
-    - be familiar with the term parameterized types, type arguments, type parameters
-    - appreciate how generics can reduce duplication of code and improve type safety
+    After completing this unit, students should be able to:
+
+    - define and use generic classes and generic methods with appropriate type parameters
+    - distinguish clearly between type parameters, type arguments, and parameterized types
+    - explain how generics enforce compile-time type safety and eliminate certain classes of run-time errors
+    - apply bounded type parameters to constrain permissible operations on type variables
+    - reason about how generics reduce code duplication while preserving static typing guarantees
+
+## Introductoin
+
+In earlier units, we saw how polymorphism allows us to write general code that works for many types, often by treating objects uniformly as Object or through interfaces. While flexible, this approach can sacrifice type precision and shift certain errors from compile time to run time.
+
+This unit introduces generics, a language mechanism that allows us to write reusable and abstract code without giving up static type safety. By parameterizing classes and methods with types, we let the compiler track and enforce relationships between values, preventing common mistakes such as invalid casts. Generics form a key bridge between abstraction and safety in Java, and understanding them is essential for reasoning about correctness in larger systems.
 
 ## The `Pair` class
 
@@ -123,11 +132,23 @@ We declare a generic type by specifying its type parameters between `<` and `>` 
 
 Note that the constructor is still declared as `Pair` (without the type parameters).
 
-### Using/Instanting a Generic Type
+Here is a summary of the two approaches towards writing generic code: 
+
+| Aspect | Using `Object` | Using Generics |
+|-------|----------------|---------------|
+| Type checking | Run time | Compile time |
+| Casts required | Yes | No |
+| Risk of `ClassCastException` | High | Eliminated |
+| Code readability | Lower | Higher |
+| Compiler assistance | Minimal | Strong |
+
+Generics allow us to encode relationships between types directly in method and class definitions, so that the compiler, not the programmer, checks these relationship.
+
+### Using/Instantiating a Generic Type
 
 To use a generic type, we have to pass in _type arguments_, which itself can be a non-generic type, a generic type, or another type parameter that has been declared.  Once a generic type is instantiated, it is called a _parameterized type_.
 
-To avoid potential human errors leading to `ClassCastException` in the example above, we can use the generic version of `Pair` as follows, taking in two non-generic types:
+To avoid human errors that could lead to `ClassCastException` in the example above, we can use the generic version of `Pair` as follows, taking in two non-generic types:
 
 ```Java
 Pair<String,Integer> foo() {
@@ -138,7 +159,7 @@ Pair<String,Integer> p = foo();
 Integer i = (Integer) p.getFirst(); // compile-time error
 ```
 
-With the parameterized type `Pair<String,Integer>`, the return type of `getFirst` is bound to `String`, and the compiler now have enough type information to check and give us an error since we try to cast a `String` to an `Integer`.
+With the parameterized type `Pair<String,Integer>`, the return type of `getFirst` is bound to `String`, and the compiler now has enough type information to check and give us an error since we try to cast a `String` to an `Integer`.
 
 Note that we use `Integer` instead of `int`, since _only reference types_ can be used as type arguments.
 
@@ -169,7 +190,7 @@ class A {
 }
 ```
 
-While using this method does not involve narrowing type conversion and type casting, it is a little to general &mdash; it allows us to call `contains` in a nonsensical way, like this:
+While using this method does not involve narrowing type conversion and type casting, it is a little too general &mdash; it allows us to call `contains` in a nonsensical way, like this:
 ```Java
 String[] strArray = new String[] { "hello", "world" };
 A.contains(strArray, 123);

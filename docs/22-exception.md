@@ -2,13 +2,25 @@
 
 !!! abstract "Learning Objectives"
 
-    After taking this unit, students should:
+    After completing this unit, students should be able to:
 
-    - understand the handling of Java exceptions and how to use the `try`-`catch`-`finally` blocks
-    - understand the hierarchy of exception classes and the difference between checked and unchecked exceptions
-    - be able to create new types of exceptions
-    - understand the control flow of exceptions
-    - be aware of good practices for exception handling
+    - explain why exceptions improve program structure compared to error codes and global state
+    - trace and reason about exception control flow across method calls (try, catch, finally)
+    - distinguish checked vs unchecked exceptions and justify when each should be used
+    - design methods that throw, handle, or propagate exceptions appropriately
+    - apply good exception-handling practices without breaking abstraction barriers
+
+## Introduction
+
+In earlier units, you have already encountered runtime exceptions such as `NullPointerException`, `ClassCastException`, and `ArrayStoreException`. These exceptions are thrown automatically by Java when fundamental safety rules are violated, for example, invoking a method on null, performing an invalid cast, or storing an incompatible object into an array.
+
+So far, when such an exception occurs, the program typically terminates with a stack trace. As programmers, however, we often want more control: to detect invalid situations earlier, provide clearer error messages, recover gracefully, or enforce constraints specific to our own abstractions.
+
+This unit introduces exceptions as a programming construct. You will learn how to use `try`, `catch`, and `finally` to separate normal program logic from error handling, and how to define and throw your own exceptions to enforce the rules of your classes, just as Java does for its built-in abstractions.
+
+By the end of this unit, you should learn to use exceptions as a deliberate design tool for writing robust, well-structured programs.
+
+## A Motivating Example from a C program
 
 One of the nuances of programming is having to write code to deal with exceptions and errors. Consider writing a method that reads a single integer value from a file.  Here are some things that could go wrong:
 
@@ -50,7 +62,7 @@ Out of the lines above, only TWO lines correspond to the actual task of opening 
 
 The examples above also have to return different values to the calling method, because the calling method may have to do something to handle the errors. Note that the POSIX API has a global variable `errno` that signifies the detailed error. First, we have to check for different `errno` values and react accordingly (we can use `perror`, but that has its limits). Second, `errno` is global, and using a global variable is a bad practice.  In fact, the code above might not work because `fprintf` in Line 3 might have changed `errno`.
 
-Finally, there is the issue of having to repeatedly clean up after an error &mdash; here we `fclose` the file if there is an error reading, twice. It is easy to forget to do so if we have to do this in multiple places.  Furthermore, if we need to perform a more complex cleanup, then we would end up with lots of repeated code.
+Finally, another issue is having to repeatedly clean up after an error &mdash; here we `fclose` the file if there is an error reading, twice. It is easy to forget to do so if we have to do this in multiple places.  Furthermore, if we need to perform a more complex cleanup, then we would end up with lots of repeated code.
 
 Many modern programming languages support exceptions as a programming construct.  In Java, this is done with `try`, `catch`, `finally` keywords, and a hierarchy of `Exception` classes.  The `try`/`catch`/`finally` keywords group statements that check/handle errors together making code easier to read. The Java equivalent to the above is:
 
@@ -84,7 +96,7 @@ try {
   // handle exception
 } finally {
   // clean up code
-  // regardless of there is an exception or not
+  // regardless of whether an an exception occurs
 }
 ```
 
@@ -118,7 +130,7 @@ catch (FileNotFoundException e) {
 
 The error handling comes under the `catch` clauses, each handling a different type of exception.  In Java, exceptions are instances that are a subtype of the `Exception` class.  Information about an exception is encapsulated in an exception instance and is "passed" into the `catch` block.  In the example above, `e` is the variable containing an exception instance.
 
-The catch blocks are checked in the order they appear in our program. The first catch block that has an exception type compatible with the type of the thrown exception (i.e. a subtype) is selected to handle the exception. This means the actual type of the exception object must be the same as, or a subclass of, the exception type specified in the catch block. Consider if we have `ExceptionX` <: `ExceptionY` and we have the following `catch` block:
+The catch blocks are checked in the order they appear in our program from top to bottom. The first catch block that has an exception type compatible with the type of the thrown exception (i.e. a subtype) is selected to handle the exception. This means the actual type of the exception object must be the same as, or a subclass of, the exception type specified in the catch block. Consider if we have `ExceptionX` <: `ExceptionY` and we have the following `catch` block:
 
 ```Java
   :
@@ -157,7 +169,7 @@ catch (FileNotFoundException | InputMismatchException | NoSuchElementException e
 
 The `try`-`catch`-`finally` blocks above show you how to _handle_ exceptions.  Let's see how we can throw an exception.  Let's revisit our `Circle` class.  A circle cannot have a negative radius.  Let's say that we wish our constructor to throw an `IllegalArgumentException` when a negative radius is passed in.  
 
-We need to do two things.  First, we need to declare that the construct is throwing an exception, with the `throws` keyword.  Second, we have to create a new `IllegalArgumentException` object and throw it to the caller with the `throw` keywords.
+We need to do two things.  First, we need to declare that the constructor is throwing an exception, with the `throws` keyword.  Second, we have to create a new `IllegalArgumentException` object and throw it to the caller with the `throw` keywords.
 
 ```Java hl_lines="5 7"
 class Circle {
@@ -181,14 +193,12 @@ The caller then can catch and handle this exception:
 try {
 	c = new Circle(point, radius);
 } catch (IllegalArgumentException e) {
-	System.err.println("Illegal arguement:" + e.getMessage());
+	System.err.println("Illegal argument:" + e.getMessage());
 }
 ```
 
-
 !!! warning "`throw` vs `throws`"
     The keyword `throws` is used in the method declaration.  The keyword `throw` is used to throw exceptions.
-
 
 ## Checked vs Unchecked Exceptions
 
@@ -200,9 +210,18 @@ A checked exception is an exception that a programmer has no control over.  Even
 
 In Java, unchecked exceptions are subclasses of the class `RuntimeException`.
 
+## Exceptions as Method Contracts
+
+Exceptions are part of a method’s contract with its callers. In addition to specifying parameter types and return values, a method also specifies which exceptional situations may occur, typically through its `throws` clause.
+
+For checked exceptions, this contract is enforced by the compiler: any caller must either handle the exception or explicitly propagate it. As a result, changing the set of checked exceptions that a method throws is a change to its public specification and may require changes to all its callers. This is why overridden methods are only allowed to throw the same or more specific checked exceptions.  Callers relying on the original contract must not be surprised by new exceptional behavior. 
+
+Unchecked exceptions, on the other hand, usually signal violated preconditions and are therefore not part of the method’s explicit contract, even though they may still occur at runtime.
+
+
 ## Passing the Buck
 
-The caller of the method that generates (i.e., `new` and `throws`) an exception need not catch the exception.  The caller can pass the exception to its caller, and so on if the programmer deems that it is not the right place to handle it.  
+The caller of the method that generates (i.e., `new` and `throw`) an exception need not catch the exception.  The caller can pass the exception to its caller, and so on if the programmer deems that it is not the right place to handle it.  
 
 An unchecked exception, if not caught, will propagate automatically down the stack until either, it is caught or if it is not caught at all, resulting in an error message displayed to the user.
 
@@ -284,6 +303,8 @@ class Toy {
 In the code above, every method passes the buck around.  No one takes the responsibility to handle it and the user ends up with the exception.  The ugly internals of the program (such as the call stack) are then revealed to the user.
 
 _A good program always handles checked exception gracefully_ and hides the details from the users.  
+
+As a guideline, handle an exception at the lowest level that can meaningfully respond to it.  If a method can restore a valid state or clean up resources, it should catch the exception. Otherwise, propagate it upward.
 
 ## Control Flow of Exceptions
 
@@ -448,7 +469,7 @@ class ClassRoster {
 
 The caller will have to change their exception handling code accordingly.
 
-We should, as much as possible, handle the implementation-specific exceptions within the abstraction barrier.
+We should, as much as possible, handle the implementation-specific exceptions within the abstraction barrier.  A method should not expose implementation-specific exceptions across abstraction boundaries.
 
 ### Do NOT use Exception as a Control Flow Mechanism
 
@@ -471,7 +492,11 @@ We use an `if` condition to handle the logic.  Some programmers wrote this:
    }
 ```
 
-Not only is this less efficient, but it also might not be correct, since a `NullPointerException` might be triggered by something else other than `obj` being null.
+The mechanism of throwing and catching exception is expensive: When an exception is thrown, the JVM must first abort normal execution immediately at the throw site, unwin the call stack, discarding stack frames one by one until a matching catch block is found, construct an exception object, which includes recording a stack trace that captures the sequence of method calls leading to the error, and finall transfer control non-locally to a catch block, bypassing intermediate method logic.
+
+Furthermore, not only is exception as control flow expensive, but it also might not be correct, since a `NullPointerException` might be triggered by something else other than `obj` being null.
+
+Do not use exceptions to handle normal program logic.  If you expect it to happen, it is not exceptional.
 
 ## The `Error` class
 

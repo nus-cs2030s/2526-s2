@@ -2,15 +2,19 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
+    After completing this unit, students should be able to:
 
-    - be aware of how to use generics with an array
-    - be aware of unchecked warnings that compilers can give when we are using generics
-    - be able to make arguments as to why a piece of code is type-safe for simple cases
-    - know how to suppress warnings from compilers
-    - be aware of the ethics when using the @SuppressWarnings("unchecked") annotation
-    - know what is a raw type
-    - be aware that raw types should never never be used in modern Java
+    - Explain why arrays and generics do not mix well in Java and how unchecked warnings arise.
+    - Interpret unchecked warnings produced by the Java compiler (`-Xlint:unchecked`).
+    - Reason about and justify (informally) the type safety of simple generic code despite unchecked casts.
+    - Use `@SuppressWarnings("unchecked")` correctly, minimally, and ethically.
+    - Explain what raw types are, why they exist, and why they should generally be avoided in modern Java.
+
+## Introduction
+
+In earlier units, we learned that Java’s type system helps detect many errors at compile time, preventing failures such as `ClassCastException` at run time. Generics play a crucial role in achieving this safety. However, there are situations, especially when implementing generic data structures, where the compiler cannot fully verify type safety. In these cases, Java issues unchecked warnings rather than errors.
+
+This unit explores why unchecked warnings arise, what they mean, and how programmers should respond to them. We will see how type erasure, arrays, and raw types interact in subtle ways, and why the compiler sometimes has to rely on human reasoning instead of static checks. We will also discuss when (and when not) it is appropriate to suppress warnings, emphasizing both technical correctness and professional responsibility.
 
 ## Creating Arrays with Type Parameters
 
@@ -26,11 +30,11 @@ pairList.add(0, new Pair<Double,Boolean>(3.14, true));  // error
 ArrayList<Object> objList = pairList;  // error
 ```
 
-`ArrayList` itself is a generic class, and when parameterized, it ensures type safety by checking for appropriate types during compile time.  We can't add a `Pair<Double,Boolean>` object to a list of `Pair<String,Integer>`.  Furthermore, unlike Java array, which is covariant, generics are invariant.  There is no subtyping relationship between `ArrayList<Object>` and `ArrayList<Pair<String,Integer>>` so we can't alias one with another, preventing the possibility of heap pollution.
+`ArrayList` itself is a generic class, and when parameterized, it ensures type safety by checking for appropriate types during compile time.  We can't add a `Pair<Double,Boolean>` object to a list of `Pair<String,Integer>`.  Furthermore, unlike Java arrays, which is covariant, generics are invariant.  There is no subtyping relationship between `ArrayList<Object>` and `ArrayList<Pair<String,Integer>>` so we can't alias one with another, preventing the possibility of heap pollution.
 
 Using `ArrayList` instead of arrays only _gets around_ the problem of mixing arrays and generics, as a user.  `ArrayList` is implemented with an array internally after all.  As computing students, especially computer science students, it is important to know how to implement your own data structures instead of using ones provided by Java or other libraries.  
 
-Let's try to build one and to minimise confusion let's call it `Seq<T>`:
+Let's try to build one and to minimize confusion let's call it `Seq<T>`:
 ```Java title="Seq&lt;T&gt; v0.1 with getArray"
 class Seq<T> {
   private T[] array;
@@ -62,9 +66,9 @@ Note: Seq.java uses unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
 
-Let's do what the compiler tells us, and compile with the `-Xlint:unchecked" flags.
+Let's do what the compiler tells us, and compile with the `-Xlint:unchecked` flags.
 ```
-$ javac -Xlint:unchecked Seq.java
+$ javac -`lint:unchecked Seq.java
 Seq.java:6: warning: [unchecked] unchecked cast
     array = (T[]) new Object[size];
                   ^
@@ -79,7 +83,9 @@ We get a warning that our Line 6 is doing an unchecked cast.
 
 ## Unchecked Warnings
 
-An unchecked warning is basically a message from the compiler that it has done what it can, and because of type erasures, there could be a run-time error that it cannot prevent.
+An unchecked warning is a message from the compiler that it has done what it can, and because of type erasures, there could be a run-time error that it cannot prevent.
+They indicate that the compiler cannot prove type safety, not that the code is necessarily unsafe. The responsibility shifts from the compiler to the programmer.
+
 Recall that type erasure generates the following code:
 ```Java
 (String) array.get(0);
@@ -126,7 +132,7 @@ If we are sure (and only if we are sure) that the line
     array = (T[]) new Object[size];
 ```
 
-is safe, we can thank the compiler for its warning and assure the compiler that everything is going to be fine.  We can do so with the `@SuppressWarning("unchecked")` annotation.
+is safe, we can thank the compiler for its warning and assure the compiler that everything is going to be fine.  We can do so with the `@SuppressWarnings("unchecked")` annotation.
 
 ```Java title="Seq&lt;T&gt; v0.3 with @SuppressWarnings"
 class Seq<T> {
@@ -151,10 +157,10 @@ class Seq<T> {
 }
 ```
 
-`@SuppressWarning` is a powerful annotation that suppresses warning messages from compilers.  Like everything that is powerful, we have the responsibility to use it properly:
+`@SuppressWarnings` is a powerful annotation that suppresses warning messages from compilers.  Like everything that is powerful, we have the responsibility to use it properly:
 
-- `@SuppressWarning` can apply to declaration at a different scope: a local variable, a method, a type, etc.  We must always use `@SuppressWarning` to the _most limited_ scope to avoid unintentionally suppressing warnings that are valid concerns from the compiler.
-- We must suppress a warning _only if_ we are sure that it will not cause a type error later.  
+- `@SuppressWarnings` can apply to declaration at a different scope: a local variable, a method, a type, etc.  We must always use `@SuppressWarnings` to the _most limited_ scope to avoid unintentionally suppressing warnings that are valid concerns from the compiler.  In CS2030/S, we only allow applying `@SuppressWarnings` to local variables.
+- We must suppress a warning _only if_ we are sure that it will not cause a type error later.  Note that suppressing a warning does not fix the underlying problem.  It only hides the warning from the compiler.  If we are wrong, we are on our own.
 - We must always add a note (as a comment) to fellow programmers explaining why a warning can be safely suppressed.
 
 Note that since `@SuppressWarnings` cannot apply to an assignment but only to the declaration, we declare a local variable `a` in the example above before assigning `this.array` to `a`.
