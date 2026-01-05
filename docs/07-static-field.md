@@ -76,7 +76,7 @@ public double getArea() {
 
 Below is an example of a non-constant class field.  We introduce a class field `circleCount` to count how many `Circle` objects have been created so far.
 
-```Java title="Circle v0.4"
+```Java title="Circle v0.3b" hl_lines="2 11 18-20"
 class Circle {
   private static int circleCount = 0; // class field to count circles
   private double x;
@@ -94,25 +94,26 @@ class Circle {
     return Math.PI * this.r * this.r;
   }
 
-  public static int getCircleCount() {
-    return circleCount; // return the total number of Circle instances created
+  public int getCircleCount() {
+    return Circle.circleCount; // return the total number of Circle instances created
   }
 }
 ```
 
 Here, there is only exactly one instance of `circleCount` regardless of how many instances of `Circle` we have created.  In fact, we need not create any instance of `Circle` at all to be able to use `circleCount`.
 
-```Java
-Circle.getCircleCount(); // returns 0 without instance of `Circle`
-new Circle(0, 0, 1);
-new Circle(0, 0, 1);
-Circle.getCircleCount(); // returns 2
+```Java title="Demonstrating of shared class field"
+Circle c = new Circle(0, 0, 1);
+c.getCircleCount(); // returns 1
+c = new Circle(1, 1, 2);
+c.getCircleCount(); // returns 2
 ```
 
-In Java, it is fine to access a class field through an instance, but it is discouraged because it can be misleading.  The following code is legal, but it is better to access `circleCount` through the class name `Circle` instead of the instance `c1`.
-```Java
-Circle c1 = new Circle(0, 0, 1);
-c1.getCircleCount();   // legal but discouraged
+In Java, it is fine to access a class field through an instance, but it is discouraged because it can be misleading.  The following code is legal, but it is better to access `circleCount` through the class name `Circle` instead of the instance reference.
+```Java title="Class method (invoking via instance)" 
+  public int getCircleCount() {
+    return this.circleCount; // return the total number of Circle instances created
+  }
 ```
 
 !!! note "Class Fields and Methods in Python"
@@ -124,5 +125,3 @@ c1.getCircleCount();   // legal but discouraged
     ```
 
     In the above example, `x` and `y` are class fields, not instance fields.
-
-

@@ -18,47 +18,42 @@
 
 ## Static Methods
 
-Let's suppose that, in our program, we wish to assign a unique integer identifier to every `Circle` object ever created.  We can do this with the additions below:
+In the previous unit, we added a class field `circleCount` to our `Circle` class to keep track of how many `Circle` instances have been created, and we added a method `getCircleCount()` to return its value.  However, `getCircleCount()` was still defined as an instance method.  This means that we had to invoke it through a specific `Circle` instance, even when the field `circleCount` exists without an `Circle` instance.
 
-```Java title="Circle with Static Fields" hl_lines="5 6 15 16 22 23 24"
+Since `getCircleCount()` does not depend on any particular `Circle` instance, it is more appropriate to define it as a _class method_.  A class method is defined with the `static` modifier.  Here is an improved version of the `Circle` class that uses a class method to return the number of circles created so far.
+
+```Java title="Circle v0.3b with Class Method" hl_lines="18"
 class Circle {
-  private double x;  // x-coordinate of the center
-  private double y;  // y-coordinate of the center
-  private double r;  // the length of the radius
-  private final int id; // identifier
-  private static int lastId = 0; // the id of the latest circle instance
+  private static int circleCount = 0; // class field to count circles
+  private double x;
+  private double y;
+  private double r;
 
-  /**
-   * Create a circle centered on (x, y) with a given radius
-   */
   public Circle(double x, double y, double r) {
     this.x = x;
     this.y = y;
     this.r = r;
-    this.id = Circle.lastId;
-    Circle.lastId += 1;
+    circleCount++; // increment the count whenever a new Circle is created
   }
 
-  /**
-   * Return how many circles have ever existed.
-   */
-  public static int getNumOfCircles() {
-    return Circle.lastId;
+  public double getArea() {
+    return Math.PI * this.r * this.r;
   }
 
-   : 
+  public static int getCircleCount() {
+    return Circle.circleCount; // return the total number of Circle instances created
+  }
 }
 ```
 
-- Line 5 adds a new instance field `id` to store the identifier of the circle.  Note that, since the identifier of a circle should not change once it is created, we use the keyword `final` here.
-- Line 6 adds a new class field `lastId` to remember the identifier of the most recently created circle.  This field is maintained as part of the class `Circle` and is initialized to 0.
-- On Lines 15 and 16, as part of the constructor, we initialize `id` to `lastId` and increment `lastId`.   We explicitly access `lastId` through `Circle` to make it clear that `lastId` is a class field.
+Similar to a class field, a class method is associated with a class, not with an instance of the class.  We can now invoke `getCircleCount()` through the class name `Circle`, without needing to create any instance of `Circle`.
 
-Note that all of the above are done privately beneath the abstraction barrier.
-
-Since `lastId` is incremented by one every time a circle is created, we can also interpret `lastId` as the number of circles created so far.  On Lines 22-24, we added a method `getNumOfCircles` to return its value.
-
-The interesting thing here is that we declare `getNumOfCircles` with a `static` keyword.  Similar to a `static` field, a `static` method is associated with a class, not with an instance of the class.  Such a method is called a _class method_.  A class method is always invoked without being attached to an instance, so it _cannot access instance fields or call instance methods_.  The reference `this` has no meaning within a class method.  Furthermore, just like a class field, a class method should be accessed through the class.  For example, `#!Java Circle.getNumOfCircles()`.
+```Java title="Invoking Class Method through Class Name"
+Circle.getCircleCount(); // returns 0
+new Circle(0, 6, 7)
+new Circle(1, 1, 2);
+Circle.getCircleCount(); // returns 2
+```
 
 Other examples of class methods include the methods provided in `java.lang.Math`: `sqrt`, `min`, etc.  These methods can be invoked through the `Math` class: e.g., `Math.sqrt(x)`.
 
@@ -70,27 +65,21 @@ Just as a class field represents shared state, a class method represents shared 
 
 As a consequence, if we have not instantiated a class, no instance of that class has been created.  The keyword `this` is meant to refer to the _current instance_, and if there is no instance, the keyword `this` is not meaningful.  Therefore, within the context of a `static` method, Java actually prevents the use of `this` from any method with the `static` modifier.
 
-```Java title="Invalid reference of `this` within a `static` method"
-  public static int getLastId() {
-    return this.id; 
+For example,
+```Java
+  public static int getCircleCount() {
+    return this.circleCount; 
   }
 ```
-
-If you try this, you will get the following error.
+will result in the following error.
 
 ```
-_.java:_: error: non-static variable this cannot be referenced from a static context
-  	return this.id;
+Error: non-static variable this cannot be referenced from a static context
+  	return this.circleCount;
                ^
 ```
 
-The opposite is not true.  We can access class fields from instance methods.  For example,
-
-```Java
-  public double areaRatio() { // instance method
-    return this.getArea() / Circle.getNumOfCircles();
-  }
-```
+The opposite is not true.  We can access class fields from instance methods.
 
 ## The `main` method
 

@@ -101,7 +101,7 @@ Since having accessors and mutators is better than having public fields, does it
 
 Let's consider a slightly different version of `Circle` where the center coordinate and radius are integers, perhaps because the implementer does not have the foresight that they need to be floating-point numbers.
 
-```Java title="Circle v0.4.1 with Integer Coordinates"
+```Java title="Circle v0.4a with Integer Coordinates" hl_lines="2-34"
 class Circle {
   private int x;
   private int y;
@@ -145,7 +145,7 @@ class Circle {
 
 Suppose a client of the class wishes to check if, given a point (x,y), does it lie within the circle `c`?  One approach would be:
 
-```Java title="Client Code v1"
+```Java title="Client Code v1 (Ask)"
 int cX = c.getX();
 int cY = c.getY();
 int r = c.getR();
@@ -164,7 +164,7 @@ One guiding principle to whether the implementer should provide and whether the 
 
 Let's revisit the example above. This time, the (disgruntled) client has updated the code to use floating-point coordinates and radius.
 
-```Java title="Client Code v2"
+```Java title="Client Code v2 (Ask)"
 double cX = c.getX();
 double cY = c.getY();
 double r = c.getR();
@@ -191,7 +191,7 @@ boolean contains(double x, double y) {
 ```
 
 and let the client _tell_ the `Circle` object to check if the point is within the circle.
-```Java
+```Java title="Client Code v3 (Tell)"
 boolean isInCircle = c.contains(x, y);
 ```
 

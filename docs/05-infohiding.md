@@ -22,7 +22,7 @@ In the ideal case, the code above the abstraction barrier would just call the pr
 
 Consider the case of `Circle` in Unit 4, where we modify the radius `r` directly with `c.r = 10`.  In doing so, we, as the client to `Circle`, make an explicit assumption of how `Circle` implements a circle.  The implementation details have been leaked outside the abstraction barrier.  Assessing `c.r` turns the client into a partial implementer.  Now, if the implementer wishes to change the representation of the `Circle`, for example, to store the diameter, instead. 
 
-```Java title="Circle v0.1.2 with Diameter"
+```Java title="Circle v0.1b with Diameter" hl_lines="4 7"
 class Circle {
   double x;
   double y;

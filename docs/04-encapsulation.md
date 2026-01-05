@@ -111,7 +111,7 @@ A class is responsible for maintaining the consistency of its own data.  For ins
 
 Let us take a moment to appreciate the example `Circle` v0.1 above.  This is a reasonable example as the method `getArea` is computing the area of the circle with the radius as specified in the field `r`.  So, we can clearly see that the method is associated with the data.  Let's now add another method `factorial` to `Circle`:
 
-```Java title="Circle v0.1.1 with Irrelevant Method"
+```Java title="Circle v0.1a with Irrelevant Method" hl_lines="10-12"
 class Circle {
   double x;
   double y;
@@ -249,9 +249,10 @@ A `null` reference means “this variable does not refer to any object”.  Atte
 
 A common error for beginners is to declare a reference variable and try to use it without instantiating an object:
 
-```Java
-Circle c1;    // initialized to null
-c1.r = 10.0;  // error
+```Java title="Using Uninitialized Reference Field"
+Circle c1;    // field in a class is initialized to null
+  :
+c1.r = 10.0;  // changing the field lead to error
 ```
 
 Line 2 would lead to a runtime error message
