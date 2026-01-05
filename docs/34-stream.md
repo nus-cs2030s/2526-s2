@@ -83,7 +83,7 @@ Stream.of("hello\nworld", "ciao\nmondo", "Bonjour\nle monde", "Hai\ndunia")
 
 ### Stateful and Bounded Operations
 
-Some intermediate operations are stateful &mdash; they need to keep track of some states to operate.  Two examples are `sorted` and `distinct`.
+Some intermediate operations are stateful, i.e., they need to consider states from previously seen elements to operate.  Two examples are `sorted` and `distinct`.  In `distinct`, we need to remember all previously seen elements to determine if the current element is distinct.  In `sorted`, we need to see all elements before we can sort them.
 
 `sorted` returns a stream with the elements in the stream sorted.  Without argument, it sorts according to the natural order as defined by implementing the `Comparable` interface.  You can also pass in a `Comparator` to tell `sorted` how to sort.
 

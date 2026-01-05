@@ -7,7 +7,7 @@
     - Explain how interfaces model capabilities (“can-do” behavior) independently of class hierarchies.
     - Use interfaces to generalize code beyond inheritance and avoid inappropriate IS-A relationships.
     - Reason about subtype–supertype relationships involving interfaces, including multiple supertypes.
-    - Predict and explain compile-time and run-time behavior when casting objects to interface types.
+    - Predict and explain compile-time and runtime behavior when casting objects to interface types.
     - Recognize the design trade-offs involved in evolving interfaces, including the motivation for default methods.
 
 !!! abstract "Overview"

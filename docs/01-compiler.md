@@ -9,7 +9,7 @@
     - distinguish between compilation and interpretation as execution strategies, and describe how modern systems (including Java) combine both;
     - explain how Java programs are compiled and executed using javac, java, bytecode, and the Java Virtual Machine (JVM);
     - interpret tombstone (T-) diagrams to reason about how programs, compilers, interpreters, and machines interact;
-    - distinguish between compile-time and run-time errors, and explain the role and limitations of the compiler in detecting errors.
+    - distinguish between compile-time and runtime errors, and explain the role and limitations of the compiler in detecting errors.
 
 !!! abstract "Overview"
 
@@ -17,7 +17,7 @@
 
     To understand why these ideas matter, it is important to first understand how programs are executed. A computer’s hardware can only understand instructions written in machine code, yet programmers write programs in high-level languages such as Java. Bridging this gap requires translation, and this translation process—whether done by a compiler, an interpreter, or a combination of both—fundamentally shapes how programs behave, how errors arise, and what kinds of mistakes can be detected automatically.
 
-    This unit introduces the basic concepts of programs, programming languages, compilers, and interpreters, using Java as the primary example. We will examine how Java programs are compiled and executed, how different execution models can be represented using diagrams, and why the distinction between compile-time and run-time errors is so important in practice.
+    This unit introduces the basic concepts of programs, programming languages, compilers, and interpreters, using Java as the primary example. We will examine how Java programs are compiled and executed, how different execution models can be represented using diagrams, and why the distinction between compile-time and runtime errors is so important in practice.
 
     By the end of this unit, you should have a clear mental model of how your Java programs move from source code to execution, and why the compiler plays such a central role in helping programmers write correct and reliable software. This mental model will serve as a foundation for everything else you learn in CS2030/S.
 
@@ -228,7 +228,15 @@ $ jshell Hello.jsh
 
 [^3]: Such a program is called REPL (Read-Evaluate-Print in a Loop) for short.
 
-While `jshell` is a convenient way to test things out and play with new Java concepts as we learn, do keep in mind that `jshell` combines both compilation and run-time into a single step.  The error spewed out by `jshell` could be either a compile-time error or a run-time error, and this could be confusing to beginners who try to distinguish between the two phases of program execution.
+While `jshell` is a convenient way to test things out and play with new Java concepts as we learn, do keep in mind that `jshell` combines both compilation and runtime into a single step.  The error spewed out by `jshell` could be either a compile-time error or a runtime error, and this could be confusing to beginners who try to distinguish between the two phases of program execution.  A compile-time error typically starts with the line
+```
+|  Error:
+```     
+while runtime error starts with the line
+```
+| Exception ..
+```
+
 
 !!! note "jsh vs java"
     Files intended to be run on `jshell` typically uses `.jsh` extension while files intended to be compiled and run use `.java` extension.  However, this difference is merely a convention.  You can still interpret `.java` program on `jshell`.

@@ -44,7 +44,9 @@ Take the `HashMap<K,V>` class for instance.  [The implementation of `HashMap<K,V
 
     We can take another example from your programming exercise on bank simulation.  In one of many possible designs, the subclasses of `Event`: `ArrivalEvent`, `DepartureEvent`, etc. are not used anywhere outside of `BankSimulation`.  They can be safely encapsulated within `BankSimulation` as inner classes, so that these classes can access the fields within the `BankSimulation` class, simplifying their implementation.
 
-A nested class can be either static or non-static.  Just like static fields and static methods, a _static nested class_ is associated with the enclosing _class_, NOT an _instance_.  So, it can only access static fields and static methods of the enclosing class.  A _non-static nested class_, on the other hand, carries implicitly a reference to the enclosing object and can access all fields and methods of the enclosing instance.  A _non-static nested class_ is also known as an _inner class_. It cannot be instantiated without an enclosing instance.
+A nested class can be either static or non-static.  Just like static fields and static methods, a _static nested class_ is associated with the enclosing _class_, NOT an _instance_.  So, it can only access static fields and static methods of the enclosing class.  A _non-static nested class_, on the other hand, carries implicitly a reference to the enclosing object[^1] and can access all fields and methods of the enclosing instance.  A _non-static nested class_ is also known as an _inner class_. It cannot be instantiated without an enclosing instance.
+
+[^1]: Some recent versions of Java optimize away the implicit reference to the enclosing instance if it is not used in the inner class.  However, for the purpose of this course, we will always assume the implicit reference always exists.
 
 The example below shows an enclosing class `A` with two nested classes, a non-static inner class `B`, and a static nested class `C`.  `B` can access instance fields, instance methods, class fields, and class methods in `A`.  `C` can only access the class fields and class methods in `A`.
 

@@ -64,7 +64,7 @@ Point p;
 p = new Point(1, 2);
 ```
 
-Line 1 declares a variable `p`.  When the JVM executes this line of code, it allocates some memory space for an object reference for `p`, the content is currently _uninitialized_.  We show uninitialized variables with the content having the symbol ∅.  Since `p` is a variable, it resides in the stack.
+Line 1 declares a variable `p`.  When the JVM executes this line of code, it allocates some memory space for an object reference for `p`, the content is currently _uninitialized_  (Note: "uninitialized" does not mean it has the value `null`.  An uninitialized variable has no value, not even `null`)  We show uninitialized variables with the content having the symbol ∅.  Since `p` is a variable, it resides in the stack.
 
 Line 2 creates a new `Point` object.  When the JVM executes this line of code, it (i) allocates some memory space for a `Point` object on the heap, (ii) invokes the constructor, and (iii) returns the reference to the newly allocated memory space back.  The returned memory address of this memory space becomes the reference of the object and is assigned to the variable `p`.
 

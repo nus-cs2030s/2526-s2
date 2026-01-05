@@ -260,6 +260,19 @@ A::foo             // (x, y) -> x.foo(y) or (x, y) -> A.foo(x,y)
 
 The last example shows that the same method reference expression can be interpreted in two different ways.  The actual interpretation depends on how many parameters `foo` takes and whether `foo` is a class method or an instance method.  When compiling, Java searches for the matching method, performing type inferences to find the method that matches the given method reference.  A compilation error will be thrown if there are multiple matches or if there is ambiguity in which method matches.
 
+For example, suppose we have:
+```Java
+class B {
+  static int bar(int x, int y) { ... }
+}
+
+class C {
+  int bar(int x) { ... }
+}
+```
+
+Then `B::bar` can only be interpreted as `(x, y) -> B.bar(x, y)`, while `C::bar` can only be interpreted as `(c, x) -> c.bar(x)`.
+
 Note the difference between a lambda expression and a method reference.  A lambda expression defines a new anonymous function by explicitly specifying its parameters and computation, while a method reference refers to an existing method and reuses its implementation. Lambdas are used when we need to describe what computation to perform, whereas method references are used when an appropriate method already exists and we only want to treat it as a function value. 
 
 ## Curried Functions

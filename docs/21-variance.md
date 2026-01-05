@@ -6,7 +6,7 @@
 
     - explain what variance means and distinguish between covariant, contravariant, and invariant type relationships
     - reason about subtype relationships involving complex types (e.g., arrays) based on the subtype relationships of their component types
-    - explain why Java arrays are covariant and how this design choice can lead to run-time type errors despite successful compilation
+    - explain why Java arrays are covariant and how this design choice can lead to runtime type errors despite successful compilation
     - predict when Java’s type system can and cannot prevent unsafe operations involving arrays
 
 !!! abstract "Overview"
@@ -59,7 +59,7 @@ contains(objArray, Integer.valueOf(1)); // ok
 contains(intArray, Integer.valueOf(1)); // ok
 ```
 
-Line 4 is not surprising since the type for `objArray` matches that of the parameter `array`.  Line 5, however, shows that it is possible to assign a reference to an object with run-time type `Integer[]` to a variable with compile-time type `Object[]`.
+Line 4 is not surprising since the type for `objArray` matches that of the parameter `array`.  Line 5, however, shows that it is possible to assign a reference to an object with runtime type `Integer[]` to a variable with compile-time type `Object[]`.
 
 ## Variance of Types
 
@@ -89,7 +89,7 @@ Object[] objArray;
 objArray = intArray; // ok
 ```
 
-By making array covariant, however, Java opens up the possibility of run-time errors, even without typecasting!
+By making array covariant, however, Java opens up the possibility of runtime errors, even without typecasting!
 
 Consider the following code:
 ```Java
@@ -101,13 +101,13 @@ objArray = intArray;
 objArray[0] = "Hello!"; // <- compiles!
 ```
 
-On Line 5 above, we set `objArray` (with a compile-time type of `Object[]`) to refer to an object with a run-time type of `Integer[]`.  This is allowed since the array is covariant.
+On Line 5 above, we set `objArray` (with a compile-time type of `Object[]`) to refer to an object with a runtime type of `Integer[]`.  This is allowed since the array is covariant.
 
-On Line 6, we try to put a `String` object into the `Object` array.  Since `String` <: `Object`, the compiler allows this.  The compiler does not realize that at run-time, the `Object` array will refer to an array of `Integer`.  
+On Line 6, we try to put a `String` object into the `Object` array.  Since `String` <: `Object`, the compiler allows this.  The compiler does not realize that at runtime, the `Object` array will refer to an array of `Integer`.  
 
 So we now have a perfectly compilable code, that will crash on us with an `ArrayStoreException` when it executes Line 6 &mdash; only then would Java realize that we are trying to stuff a string into an array of integers!
 
-This is an example of a type system rule that is unsafe.  In other words, covariance of arrays breaks the guarantee that “well-typed programs do not go wrong.” Java compensates by inserting run-time checks, shifting some type safety from compile time to run time.
+This is an example of a type system rule that is unsafe.  In other words, covariance of arrays breaks the guarantee that “well-typed programs do not go wrong.” Java compensates by inserting runtime checks, shifting some type safety from compile time to run time.
 
 Since the array type is an essential part of the Java language, this rule cannot be changed without ruining existing code.  We will see later that Java’s generic types (such as List<T>) avoid this pitfall by not being covariant by default, trading flexibility for stronger compile-time guarantees.
 

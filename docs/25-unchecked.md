@@ -83,7 +83,7 @@ We get a warning that our Line 6 is doing an unchecked cast.
 
 ## Unchecked Warnings
 
-An unchecked warning is a message from the compiler that it has done what it can, and because of type erasures, there could be a run-time error that it cannot prevent.
+An unchecked warning is a message from the compiler that it has done what it can, and because of type erasures, there could be a runtime error that it cannot prevent.
 They indicate that the compiler cannot prove type safety, not that the code is necessarily unsafe. The responsibility shifts from the compiler to the programmer.
 
 Recall that type erasure generates the following code:
@@ -198,6 +198,8 @@ Seq.java:24: warning: [unchecked] unchecked call to set(int,T) as a member of th
 1 warning
 ```
 
-If we ignore this warning or worse, suppress this warning, we will get a run-time error when we execute `s.get(0)`.
+If we ignore this warning or worse, suppress this warning, we will get a runtime error when we execute `s.get(0)`.
 
-Raw types must not be used in your code, ever.  The only exception to this rule is using it as an operand of the `instanceof` operator.  Since `instanceof` checks for run-time type and type arguments have been erased, we can only use the `instanceof` operator on raw types.
+Raw types exists in modern Java for backward compatibility reason, and it could behave in an unexpected way.  For instance, if we have a generic type `A<T>`, then `A` $<:$ `A<T>` and `A<T>` $<:$ `A`.
+
+Raw types must not be used in your code, ever.  For now, the only exception to this rule is using it as an operand of the `instanceof` operator.  Since `instanceof` checks for runtime type and type arguments have been erased, we can only use the `instanceof` operator on raw types.  We will remove this allowance after we introduce wildcards in later units.

@@ -241,16 +241,20 @@ Sharing objects through references can lead to unintended side effects, and is a
 
 ## Special Reference Value: `null`
 
-Any reference variable that is not initialized will have the special reference value `null`.  A `null` reference means “this variable does not refer to any object”.  Attempting to access fields or methods through `null` fails because there is no object to operate on.
+All local variables in Java must be initialized before use.  The compiler will issue an error if the code attempts to use a local variable without initalization. 
+
+For fields, however, Java will auto-initialize them to default values.  For primitive fields, the default values are `0` for numeric types, `false` for `boolean`, and `'\u0000'` for `char`.  For reference fields, the default value is a special reference value `null`.
+
+A `null` reference means “this variable does not refer to any object”.  Attempting to access fields or methods through `null` fails because there is no object to operate on.
 
 A common error for beginners is to declare a reference variable and try to use it without instantiating an object:
 
 ```Java
-Circle c1;
+Circle c1;    // initialized to null
 c1.r = 10.0;  // error
 ```
 
-Line 2 would lead to a run-time error message
+Line 2 would lead to a runtime error message
 ```
 |  Exception java.lang.NullPointerException
 ```

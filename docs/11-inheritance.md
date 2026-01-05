@@ -9,7 +9,7 @@
     - use the extends and super keywords correctly to define and initialize subclasses
     - reason about compile-time types versus runtime types in the presence of inheritance
     - predict the behavior of code involving subtype polymorphism
-    - determine when narrowing type conversion (casting) is permitted and when it may fail at run-time
+    - determine when narrowing type conversion (casting) is permitted and when it may fail at runtime
 
 !!! abstract "Overview"
     In earlier units, we learned how to build complex abstractions by composing objects, carefully preserving abstraction barriers and separating client and implementer responsibilities. Composition remains our default design tool—but it is not the only one.
@@ -80,7 +80,7 @@ class ColoredCircle extends Circle {
 }
 ```
 
-We have just created a new type called `ColoredCircle` as a class that extends from `Circle`.  We call `Circle` the _parent class_ or _superclass_ of `ColoredCircle`; and `ColoredCircle` a _subclass_ of `Circle`.
+We have just created a new type called `ColoredCircle` as a class that extends from `Circle`.  We call `Circle` the _parent class_ or _superclass_ of `ColoredCircle`; and `ColoredCircle` a _subclass_ of `Circle`.  Note that if a class A is a subclass of B, A $<:$ B.  The converse is not true, A $<:$ B does not imply that A is a subclass of B (e.g., `int` is not a subclass of `float`).
 
 We also say that `ColoredCircle` _inherits_ from `Circle`, since all the public fields of `Circle` (if any) and public methods (like `getArea()`) are now accessible to `ColoredCircle`.  Just like a parent-child relationship in real life, however, anything private to the parent remains inaccessible to the child.  This privacy veil maintains the abstraction barrier of the parent from the child, and creates a bit of a tricky situation &mdash; technically a child `ColoredCircle` object has a center and a radius, but it has no access to it!
 

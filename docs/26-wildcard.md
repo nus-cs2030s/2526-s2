@@ -14,7 +14,7 @@
 
     In earlier units, we saw how generics help us write reusable and type-safe code. However, we also encountered an important limitation: generics in Java are invariant. This means that even if `Circle` is a subtype of `Shape`, `Seq<Circle>` is not a subtype of `Seq<Shape>`.
 
-    While invariance prevents subtle run-time errors, it can also make otherwise reasonable code impossible to write. For example, why can’t we search for a `Shape` in a sequence of circles, or copy a sequence of circles into a sequence of shapes?
+    While invariance prevents subtle runtime errors, it can also make otherwise reasonable code impossible to write. For example, why can’t we search for a `Shape` in a sequence of circles, or copy a sequence of circles into a sequence of shapes?
 
     In this unit, we introduce wildcards as a way to recover flexibility without sacrificing type safety. We will see how bounded wildcards express variance explicitly, how the PECS principle guides our choice of bounds, and how unbounded wildcards let us avoid raw types entirely.
 
@@ -84,7 +84,7 @@ A.<Shape>contains(circleSeq, shape); // compilation error
 A.<Circle>contains(circleSeq, shape); // compilation error
 ```
 
-Thus, with our current implementation, we can't look for a shape (which may be a circle) in a sequence of circles, even though this is something reasonable that a programmer might want to do.  This constraint is due to the invariance of generics &mdash; while we avoided the possibility of run-time errors by avoiding the covariance of arrays, our methods have become less general.
+Thus, with our current implementation, we can't look for a shape (which may be a circle) in a sequence of circles, even though this is something reasonable that a programmer might want to do.  This constraint is due to the invariance of generics &mdash; while we avoided the possibility of runtime errors by avoiding the covariance of arrays, our methods have become less general.
 
 Let's see how we can fix this with bounded type parameters first.  We can introduce another type parameter, say `S`, to remove the constraints that the type of the sequence must be the same as the type of the object to search for,  i.e., we change from
 ```Java
@@ -191,6 +191,17 @@ shapeSeq.copyFrom(circleSeq); // ok
 
 without error.
 
+!!! note " Important Distinction between Wildcards and Type Variables"
+
+    Wildcards are not type variables.  A wildcard `?` cannot be used in place of a type variable.  For instance, the following code would not compile:
+
+    ```Java
+    class A<? extends Circle> { // compilation error
+    }
+    ```
+
+    A wildcard and its bounds can only be used in the context of parameterized types, as type argument.  
+
 ## Lower-Bounded Wildcards
 
 Let's now try to allow copying of a `Seq<Circle>` to `Seq<Shape>`.
@@ -235,7 +246,7 @@ The `copyTo` method of `Seq<Shape>` would allow a `Seq<Circle>` as an argument, 
         dest.set(i, this.get(i));
 ```
 
-is not type-safe and could lead to `ClassCastException` during run-time.  
+is not type-safe and could lead to `ClassCastException` during runtime.  
 
 Where can we copy our shapes into?  We can only copy them safely into a `Seq<Shape>`, `Seq<Object>`, `Seq<GetAreable>`, for instance.  In other words, into sequences containing `Shape` or supertype of `Shape`.  
 
@@ -438,6 +449,7 @@ Now, we can search for a shape in a sequence of circles.
 A.<Shape>contains(circleSeq, shape);
 ```
 
+
 ## Revisiting Raw Types
 
 In previous units, we said that you may use raw types only in two scenarios. Namely, when using generics and `instanceof` together, and when creating arrays. However, with unbounded wildcards, we can now see it is possible to remove both of these exceptions. We can now use `instanceof` in the following way:
@@ -446,12 +458,12 @@ In previous units, we said that you may use raw types only in two scenarios. Nam
 a instanceof A<?> 
 ```
 
-Recall that in the example above, `instanceof` checks of the run-time type of `a`.  Previously, we said that we can't check for, say,
+Recall that in the example above, `instanceof` checks of the runtime type of `a`.  Previously, we said that we can't check for, say,
 ```Java
 a instanceof A<String> 
 ```
 
-since the type argument `String` is not available during run-time due to erasure.  Using `<?>` fits the purpose here because it explicitly communicates to the reader of the code that we are checking that `a` is an instance of `A` with some unknown (erased) type parameter.
+since the type argument `String` is not available during runtime due to erasure.  Using `<?>` fits the purpose here because it explicitly communicates to the reader of the code that we are checking that `a` is an instance of `A` with some unknown (erased) type parameter.
 
 Similarly, we can create arrays in the following way:
 ```Java

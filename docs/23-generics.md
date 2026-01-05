@@ -7,7 +7,7 @@
 
     - define and use generic classes and generic methods with appropriate type parameters
     - distinguish clearly between type parameters, type arguments, and parameterized types
-    - explain how generics enforce compile-time type safety and eliminate certain classes of run-time errors
+    - explain how generics enforce compile-time type safety and eliminate certain classes of runtime errors
     - apply bounded type parameters to constrain permissible operations on type variables
     - reason about how generics reduce code duplication while preserving static typing guarantees
 
@@ -87,7 +87,7 @@ At the cost of using a [wrapper class](19-wrapper.md) in place of primitive type
 
 You might recall that we used a similar approach for our [`contains` method](14-polymorphism.md) to implement a general _method_ that works for any type of object.  Here, we are using this approach for a general _class_ that encapsulates any type of object.
 
-Unfortunately, the issues we faced with narrowing type conversion and potential run-time errors apply to the `Pair` class as well.  Suppose that a function returns a `Pair` containing a `String` and an `Integer`, and we accidentally treat this as an `Integer` and a `String` instead, the compiler will not be able to detect the type mismatch and stop the program from crashing during run-time.
+Unfortunately, the issues we faced with narrowing type conversion and potential runtime errors apply to the `Pair` class as well.  Suppose that a function returns a `Pair` containing a `String` and an `Integer`, and we accidentally treat this as an `Integer` and a `String` instead, the compiler will not be able to detect the type mismatch and stop the program from crashing during runtime.
 
 ```Java
 Pair foo() {
@@ -95,7 +95,7 @@ Pair foo() {
 }
 
 Pair p = foo();
-Integer i = (Integer) p.getFirst(); // run-time ClassCastException
+Integer i = (Integer) p.getFirst(); // runtime ClassCastException
 ```
 
 To reduce the risk of human error, what we need is a way to specify the following: suppose the type of `first` is $S$ and type of `second` is $T$, then we want the return type of `getFirst` to be $S$ and of `getSecond` to be $T$.
@@ -171,7 +171,7 @@ class DictEntry<T> extends Pair<String,T> {
 }
 ```
 
-We define a generic class called `DictEntry<T>` with a single type parameter `T` that extends from `Pair<String,T>`, where `String` is the first type argument (in place of `S`), while the type parameter `T` from `DictEntry<T>` is passed as the type argument for `T` of `Pair<String,T>`.
+We define a generic class called `DictEntry<T>` with a single type parameter `T` that extends from `Pair<String,T>`, where `String` is the first type argument (in place of `S`), while the type parameter `T` from `DictEntry<T>` is passed as the type argument for `T` of `Pair<String,T>`.  Now, if we want a dictionary entry that maps a `String` to an `Integer`, we can use the parameterized type `DictEntry<Integer>`.
 
 ### Generic Methods
 
@@ -225,7 +225,7 @@ The code above won't compile since the compiler expects the second argument to a
 
 ## Bounded Type Parameters
 
-Let's now try to apply our newly acquired trick to fix the issue with `findLargest`.  Recall that we have the following `findLargest` method (which we now put into an ad hoc class just for clarity), which [requires us to perform a narrowing type conversion](20-casting.md) to cast from `GetAreable` and possibly lead to a run-time error.
+Let's now try to apply our newly acquired trick to fix the issue with `findLargest`.  Recall that we have the following `findLargest` method (which we now put into an ad hoc class just for clarity), which [requires us to perform a narrowing type conversion](20-casting.md) to cast from `GetAreable` and possibly lead to a runtime error.
 
 ```Java title="findLargest v0.5 with GetAreable"
 class A {

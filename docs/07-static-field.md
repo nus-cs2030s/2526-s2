@@ -70,7 +70,7 @@ A class field behaves just like a global variable and can be accessed in the cod
 
 ```Java
 public double getArea() {
-  return Math.PI * this.r * this.r;
+  return Math.PI * this.r * this.r;  // Math is the class containing PI
 }
 ```
 
@@ -107,6 +107,12 @@ Circle.getCircleCount(); // returns 0 without instance of `Circle`
 new Circle(0, 0, 1);
 new Circle(0, 0, 1);
 Circle.getCircleCount(); // returns 2
+```
+
+In Java, it is fine to access a class field through an instance, but it is discouraged because it can be misleading.  The following code is legal, but it is better to access `circleCount` through the class name `Circle` instead of the instance `c1`.
+```Java
+Circle c1 = new Circle(0, 0, 1);
+c1.getCircleCount();   // legal but discouraged
 ```
 
 !!! note "Class Fields and Methods in Python"

@@ -114,7 +114,7 @@ Allowing a programmer to change the behavior of the existing code without changi
 
 A type system is also an important tool to reduce the complexity of software development.  Constraining the interactions among the variables, expressions, and functions, reduces the possible interdependence between these programming constructs.  Furthermore, any attempt by programmers to break the constraint can be caught automatically by the compiler.  By utilizing the type system properly, we can detect potential bugs before they manifest themselves.
 
-A reason CS2030/S chooses to use Java is due to its type system.  CS2030/S will introduce the concept of types, subtypes, compile-time vs. run-time types, variants of types, parameterized types, and type inferences, in the context of Java.  We will see how we can define our own types (using classes and interfaces) and define relationships between them.  We will see how we can define parameterized types and generic functions that take in types as parameters.  These concepts apply to many other programming languages.
+A reason CS2030/S chooses to use Java is due to its type system.  CS2030/S will introduce the concept of types, subtypes, compile-time vs. runtime types, variants of types, parameterized types, and type inferences, in the context of Java.  We will see how we can define our own types (using classes and interfaces) and define relationships between them.  We will see how we can define parameterized types and generic functions that take in types as parameters.  These concepts apply to many other programming languages.
 
 ### Eliminating Side Effects
 

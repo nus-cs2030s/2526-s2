@@ -214,7 +214,7 @@ try {
 
 Java distinguishes between two types of exceptions: checked and unchecked.  
 
-An unchecked exception is an exception caused by a programmer's errors.  They should not happen if perfect code is written.  `IllegalArgumentException`, `NullPointerException`, `ClassCastException` are examples of unchecked exceptions.  Generally, unchecked exceptions are not explicitly caught or thrown.  They indicate that something is wrong with the program and cause run-time errors.
+An unchecked exception is an exception caused by a programmer's errors.  They should not happen if perfect code is written.  `IllegalArgumentException`, `NullPointerException`, `ClassCastException` are examples of unchecked exceptions.  Generally, unchecked exceptions are not explicitly caught or thrown.  They indicate that something is wrong with the program and cause runtime errors.
 
 A checked exception is an exception that a programmer has no control over.  Even if the code written is perfect, such an exception might still happen.  The programmer should thus actively anticipate the exception and handle them.  For instance, when we open a file, we should anticipate that in some cases, the file cannot be opened.  `FileNotFoundException` is an example of a checked exception.  A checked exception must be either handled, or else the program will not compile.
 
@@ -226,7 +226,7 @@ Exceptions are part of a method’s contract with its callers. In addition to sp
 
 For checked exceptions, this contract is enforced by the compiler: any caller must either handle the exception or explicitly propagate it. As a result, changing the set of checked exceptions that a method throws is a change to its public specification and may require changes to all its callers. This is why overridden methods are only allowed to throw the same or more specific checked exceptions.  Callers relying on the original contract must not be surprised by new exceptional behavior. 
 
-Unchecked exceptions, on the other hand, usually signal violated preconditions and are therefore not part of the method’s explicit contract, even though they may still occur at runtime.
+Unchecked exceptions, on the other hand, usually signal violated preconditions and are therefore not part of the method’s explicit contract, even though they may still occur at runtime.  As such, we do not need to declare them in the `throws` clause.
 
 In Java, checked exceptions are subclasses of the class `Exception` that are not a subclass of `RuntimeException`.
 
@@ -336,25 +336,25 @@ try {
 ```
 
 ```Java
-void m1() {
+void m1() throws E2 {
 	:
 	m2();
 	:
 }
 
-void m2() {
+void m2() throws E2 {
 	:
 	m3();
 	:
 }
 
-void m3() {
+void m3() throws E2 {
 	:
 	m4();
 	:
 }
 
-void m4() {
+void m4() throws E2 {
 	:
 	throw new E2();
 	:
@@ -508,6 +508,17 @@ The mechanism of throwing and catching exception is expensive: When an exception
 Furthermore, not only is exception as control flow expensive, but it also might not be correct, since a `NullPointerException` might be triggered by something else other than `obj` being null.
 
 Do not use exceptions to handle normal program logic.  If you expect it to happen, it is not exceptional.
+
+### Do NOT throw checked exception to the users
+
+As mentioned earlier, a good program always handles checked exceptions gracefully and hides the details from the users.  Do not let checked exceptions propagate to the top-level `main` method, or else the user will see ugly stack traces.
+
+```Java
+  // bad practice
+  public static void main(String[] args) throws FileNotFoundException {
+      :
+  }
+```
 
 ## The `Error` class
 

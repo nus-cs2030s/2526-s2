@@ -54,6 +54,8 @@ With each `Thread` instance, we run `start()`, which causes the given lambda exp
 
 The two threads above now run in two separate sequences of execution.  The operating system has a scheduler that decides which threads to run when, and on which core (or which processor).  You might see different interleaving of executions every time you run the same program.
 
+Note that we can only control the order in which we start the threads (by changing the order of `Thread::start` invocation).  We have no control over in what order the threads are run.  The scheduling is done by the operating system. 
+
 Java provides more than one way to create a thread.  The `Thread` class also contains methods that we can use to query and control, in a finer-grained manner, how the thread could be executed.
 
 ### Names

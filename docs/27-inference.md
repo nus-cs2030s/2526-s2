@@ -13,7 +13,7 @@
 
 !!! abstract "Overview"
 
-    In earlier units, we saw how Java’s type system helps prevent many classes of run-time errors by enforcing type correctness at compile time. We also learned that generic types and wildcards allow us to write flexible and reusable code—but often at the cost of additional type annotations.
+    In earlier units, we saw how Java’s type system helps prevent many classes of runtime errors by enforcing type correctness at compile time. We also learned that generic types and wildcards allow us to write flexible and reusable code—but often at the cost of additional type annotations.
 
     To reduce verbosity, Java allows programmers to omit some type arguments and rely on the compiler to infer them automatically. This process, known as type inference, attempts to determine which type arguments would make the program type-correct.
 

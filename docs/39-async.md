@@ -59,6 +59,7 @@ Maybe<Integer> foo(int x) {
   return e;
 }
 ```
+with `taskA` to `taskD` now returns `Maybe<T>` instead of `T`.  
 
 If we want to perform the tasks lazily, then we can use the `Lazy<T>` monad:
 
@@ -72,6 +73,7 @@ Lazy<Integer> foo(int x) {
   return e;
 }
 ```
+with `taskA` to `taskD` modified to `Lazy<T>` instead of `T`.  
 
 It would be useful if there is a monad that allows us to perform the tasks concurrently.  [`java.util.concurrent.CompletableFuture`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html) is such monad.  Here is an example of how to use it:
 
@@ -85,9 +87,9 @@ CompletableFuture<Integer> foo(int x) {
   return e;
 }
 ```
+where `taskA` to `taskD` now returns `CompletableFuture<T>` instead of `T`.  
 
-We can then run `foo(x).get()` to wait for all the concurrent tasks to complete and return us the value.  `CompletableFuture<T>` is a monad that encapsulates a value that is either there or not there _yet_.  Such an abstraction is also known as a promise in other languages (e.g., `Promise` in JavaScript and `std::promise` in C++)
--- it encapsulates the promise to produce a value.
+We can then run `foo(x).get()` to wait for all the concurrent tasks to complete and return us the value.  `CompletableFuture<T>` is a monad that encapsulates a value that is either there or not there _yet_.  Such an abstraction is also known as a promise in other languages (e.g., `Promise` in JavaScript and `std::promise` in C++) &mdash; it encapsulates the promise to produce a value.
 
 ## The `CompletableFuture` Monad
 
@@ -105,7 +107,7 @@ We can also create a `CompletableFuture` that relies on other `CompletableFuture
 
 ### Chaining `CompletableFuture`
 
-The usefulness of `CompletableFuture` comes from the ability to chain them up and specify a sequence of computations to be run.  We have the following methods:
+The usefulness of `CompletableFuture` comes from the ability to chain them up and specify the dependencies of computations to be run.  We have the following methods:
 
 - `thenApply`, which is analogous to `map`
 - `thenCompose`, which is analogous to `flatMap`
@@ -113,7 +115,7 @@ The usefulness of `CompletableFuture` comes from the ability to chain them up an
 
 The methods above run the given lambda expression in the same thread as the caller.  There is also an asynchronous version (`thenApplyAsync`, `thenComposeAsync`, `thenCombineAsync`), which may cause the given lambda expression to run in a different thread (thus more concurrency).
 
-`CompletableFuture` also has several methods that take in `Runnable`.  These methods have no analogy in our lab but it is similar to `runAsync` above.
+`CompletableFuture` also has several methods that take in `Runnable`.
 
 - `thenRun` takes in a `Runnable`.  It executes the `Runnable` after the current stage is completed.
 - `runAfterBoth` takes in another `CompletableFuture`[^1] and a `Runnable`.  It executes the `Runnable` after the current stage completes and the input `CompletableFuture` is completed.
@@ -122,6 +124,34 @@ The methods above run the given lambda expression in the same thread as the call
 All of the methods that take in `Runnable` return `CompletableFuture<Void>`.  Similarly, they also have the asynchronous version (`thenRunAsync`, `runAfterBothAsync`, `runAfterEitherAsync`).
 
 [^1]: Actually, this is a `CompletionStage` which is a supertype of `CompletableFuture`.
+
+Note that chaining of `CompletableFuture` instances is not limited to linear dependencies.  In the example above,
+```Java
+  CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
+  CompletableFuture<Integer> b = a.thenComposeAsync(i -> taskB(i));
+  CompletableFuture<Integer> c = a.thenComposeAsync(i -> taskC(i));
+```
+
+There is a branch after `a` completes.  Both `b` and `c` depend on `a`, but they are independent of each other.  Since `a` calls `thenComposeAsync`, both `b` and `c` can run concurrently after `a` completes.
+
+An alternative is to call `thenCompose` instead of `thenComposeAsync`.  
+```Java
+  CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
+  CompletableFuture<Integer> b = a.thenCompose(i -> taskB(i));
+  CompletableFuture<Integer> c = a.thenCompose(i -> taskC(i));
+```
+In that case, `b` and `c` would still run sequentially in the same thread as the caller, one after the other, after `a` completes.  The `CompletableFuture` implementation keeps a _stack_ of tasks to run after it completes.  The tasks are run in the reverse order they were added to the stack.  Hence, in the example above, `taskC` would run first, followed by `taskB`.
+
+Besides branching, we can also merge two `CompletableFuture` instances.  For instance, the following merges `b` and `c` after they both complete:
+```Java
+  CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
+```
+
+The other merge method is `allOf`.
+```Java
+CompletableFuture<Void> all = CompletableFuture.allOf(b, c);
+```
+which completes when both `b` and `c` complete.  Note that the return type of `allOf` is `CompletableFuture<Void>` since there is no single value to return.
 
 ### Getting the Result
 
