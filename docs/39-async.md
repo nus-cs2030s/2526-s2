@@ -2,14 +2,25 @@
 
 !!! abstract "Learning Objectives"
 
-    Students should
+### Learning Objectives
 
-    - understand the limitation of thread
-    - understand and be able to use `CompletableFuture`
+    After completing this unit, students should be able to:
+
+    - explain the limitations of using `Thread` directly for coordinating concurrent tasks
+    - describe how task dependencies and execution order can be expressed using higher-level abstractions
+    - use `CompletableFuture` to compose and execute asynchronous computations
+    - distinguish between synchronous and asynchronous chaining operations in `CompletableFuture`
+    - handle exceptions arising from asynchronous computations using `CompletableFuture`
+
+## Introduction
+
+While working directly with `Thread` provides flexibility, it also places a significant burden on the programmer. Coordinating execution order, sharing results safely, handling exceptions, and managing thread lifecycles quickly become complex as the number of interacting tasks increases.
+
+In this unit, we move away from direct thread management and introduce asynchronous programming as a higher-level approach to concurrency. Rather than focusing on threads, we focus on tasks and their dependencies. Using `CompletableFuture`, we will see how asynchronous computations can be composed and executed concurrently in a structured way, with built-in support for combining results and handling errors. This approach leads to concurrent programs that are clearer, more expressive, and easier to reason about.
 
 ## Limitations of `Thread`
 
-Writing code directly with the `Thread` class gives us control on how many threads to create, what they do, how they communicate with each other, and some level of control on which thread gets executed when.  While Java's `Thread` is already a higher-level abstraction compared to, say, the `pthread` library in C and C++, it still takes a fair amount of effort to write complex multi-threaded programs in Java.
+Writing code directly with the `Thread` class gives us control over how many threads to create, what they do, how they communicate with each other, and some level of control on which thread gets executed when.  Java's `Thread` is already a higher-level abstraction compared to, say, the `pthread` library in C and C++.  It, however, still takes significant effort to write complex multi-threaded programs in Java.
 
 Consider the situation where we have a series of tasks that we wish to execute _concurrently_ and we want to organize them such that:
 
@@ -19,9 +30,9 @@ Consider the situation where we have a series of tasks that we wish to execute _
 
 We also want to handle exceptions gracefully &mdash; if one of the tasks encounters an exception, the other tasks not dependent on it should still be completed.
 
-Implementing the above using `Thread` requires careful coordination.  Firstly, there are no methods in `Thread` that return a value.  We need the threads to communicate through shared variables.  Secondly, there is no mechanism to specify the execution order and dependencies among them &mdash; which thread to start after another thread completes.  Finally, we have to consider the possibility of exceptions in each of our tasks.
+Implementing the above using `Thread` requires careful coordination.  Firstly, there are no methods in `Thread` that return a value.  We need the threads to communicate through shared variables.  Secondly, there is no mechanism to specify the execution order and dependencies between threads.  Finally, we have to consider the possibility of exceptions in each of our tasks.
 
-Another drawback of using `Thread` is its overhead &mdash; the creation of `Thread` instances takes up some resources in Java.  As much as possible, we should reuse our `Thread` instances to run multiple tasks.  For instance, the same `Thread` instance could have run Tasks A, B, and E in the example above.  Managing the `Thread` instances itself and deciding which `Thread` instance should run which `Thread` is a gigantic undertaking.
+Another drawback of using `Thread` is its overhead &mdash; the creation of `Thread` instances takes up some resources in Java.  As much as possible, we should reuse our `Thread` instances to run multiple tasks.  For instance, the same `Thread` instance could have run Tasks A, B, and E in the example above.  Managing the `Thread` instances and deciding which `Thread` instance should run which task is a gigantic undertaking.
 
 ## A Higher-Level Abstraction
 
@@ -33,7 +44,7 @@ int foo(int x) {
   int b = taskB(a);
   int c = taskC(a);
   int d = taskD(a);
-  int e = taskE(b, c)
+  int e = taskE(b, c);
   return e;
 }
 ```
@@ -64,7 +75,7 @@ Lazy<Integer> foo(int x) {
 }
 ```
 
-Wouldn't it be nice if there is a monad that allows us to perform the tasks concurrently?  [`java.util.concurrent.CompletableFuture`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html) does just that!  Here is an example of how to use it:
+It would be useful if there is a monad that allows us to perform the tasks concurrently.  [`java.util.concurrent.CompletableFuture`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html) is such monad.  Here is an example of how to use it:
 
 ```Java
 CompletableFuture<Integer> foo(int x) {
@@ -92,7 +103,7 @@ There are several ways we can create a `CompletableFuture<T>` instance:
 - Use the `runAsync` method that takes in a `Runnable` lambda expression.  `runAsync` has the return type of `CompletableFuture<Void>`.  The returned `CompletableFuture` instance completes when the given lambda expression finishes.
 - Use the `supplyAsync` method that takes in a `Supplier<T>` lambda expression.  `supplyAsync` has the return type of `CompletableFuture<T>`.  The returned `CompletableFuture` instance completes when the given lambda expression finishes.
 
-We can also create a `CompletableFuture` that relies on other `CompletableFuture` instances.  We can use `allOf` or `anyOf` methods for this.  Both of these methods take in a variable number of other `CompletableFuture` instances.  A new `CompletableFuture` created with `allOf` is completed only when all the given `CompletableFuture` completes.  On the other hand, a new `CompletableFuture` created with `anyOf` is completed when any one of the given `CompletableFuture` completes.
+We can also create a `CompletableFuture` that relies on other `CompletableFuture` instances.  We can use `allOf` or `anyOf` methods for this.  Both of these methods take in a variable number of other `CompletableFuture` instances.  A new `CompletableFuture` created with `allOf` is completed only when all the given `CompletableFuture` instances complete.  On the other hand, a new `CompletableFuture` created with `anyOf` is completed when any one of the given `CompletableFuture` instance completes.
 
 ### Chaining `CompletableFuture`
 
@@ -114,17 +125,17 @@ All of the methods that take in `Runnable` return `CompletableFuture<Void>`.  Si
 
 [^1]: Actually, this is a `CompletionStage` which is a supertype of `CompletableFuture`.
 
-### Getting The Result
+### Getting the Result
 
 After we have set up all the tasks to run asynchronously, we have to wait for them to complete.  We can call `get()` to get the result.  Since `get()` is a synchronous call, i.e., it blocks until the `CompletableFuture` completes, to maximize concurrency, we should only call `get()` as the final step in our code.
 
-The method `CompletableFuture::get` throws a couple of checked exceptions: `InterruptedException` and `ExecutionException`, which we need to catch and handle.  The former refers to the exception that the thread has been interrupted, while the latter refers to errors/exceptions during execution.
+The method `CompletableFuture::get` throws a couple of checked exceptions: `InterruptedException` and `ExecutionException`, which we need to catch and handle.  The former refers to an exception indicating the the thread was interrupted, while the latter refers to errors/exceptions during execution.
 
 An alternative to `get()` is `join()`.  `join()` behaves just like `get()` except that no checked exception is thrown.
 
 ### Example
 
-Let's look at some examples.  Let's reuse our method that computes the i-th prime number.
+Let's look at some examples.  We reuse our method that computes the i-th prime number.
 
 ```Java
 int findIthPrime(int i) {
@@ -144,7 +155,7 @@ CompletableFuture<Integer> ith = CompletableFuture.supplyAsync(() -> findIthPrim
 CompletableFuture<Integer> jth = CompletableFuture.supplyAsync(() -> findIthPrime(j));
 ```
 
-These calls would launch two concurrent threads to compute the i-th and the j-th primes.   The method calls `supplyAsync` returns immediately without waiting for `findIthPrime` to complete.
+These calls would launch two concurrent threads to compute the i-th and the j-th primes.   The method call to `supplyAsync` returns immediately without waiting for `findIthPrime` to complete.
 
 Next, we can say, that, when `ith` and `jth` are complete, take the value computed by them, and take the difference.  We can use the `thenCombine` method:
 ```Java
@@ -174,7 +185,7 @@ CompletableFuture.<Integer>supplyAsync(() -> null)
                  .join();
 ```
 
-Suppose we want to continue chaining our tasks despite exceptions.  We can use the `handle` method, to handle the exception.  The `handle` method takes in a `BiFunction` (similar to `cs2030s.fp.Combiner`).  The first parameter of the `BiFunction` is the value, the second is the exception, and the third is the return value.
+Suppose we want to continue chaining our tasks despite exceptions.  We can use the `handle` method, to handle the exception.  The `handle` method takes in a `BiFunction` (similar to `cs2030s.fp.Combiner`).  The first parameter of the `BiFunction` is the value, the second is the exception.  The funtion's return value becomes the result of the new `CompletableFuture` returned by `handle`.
 
 Only one of the first two parameters is not `null`.  If the value is `null`, this means that an exception has been thrown.  Otherwise, the exception is `null`[^3].    
 

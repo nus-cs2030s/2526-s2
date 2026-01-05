@@ -3,22 +3,31 @@
 
 !!! abstract "Learning Objectives"
 
-    After this unit, students should:
+    After completing this unit, students should be able to:
 
-    - be aware that a program can be broken into subtasks to run parallelly and/or concurrently 
-    - be aware of the issues caused by running subtasks parallelly and concurrently.
-    - be aware that there exist tradeoffs in the number of subtasks and the processing overhead.
-    - be familiar with how to process a stream parallelly and correctly.
+    - explain the difference between sequential, concurrent, and parallel execution
+    - identify when stream computations can be safely parallelized
+    - use Java parallel streams correctly, including ordered and unordered operations
+    - reason about correctness issues such as interference, state, and side effects
+    - evaluate the performance trade-offs of parallel stream execution
+
+## Introduction
+
+In earlier units, we focused on using abstraction, immutability, and the Stream API to write programs that are declarative, compositional, and easy to reason about. So far, however, all our stream pipelines have executed sequentially—each element processed one at a time on a single thread.
+
+Modern computers rarely operate this way. They provide multiple cores and hardware support for running tasks concurrently and in parallel. To fully leverage this computational power, programmers must understand not only how to run computations in parallel, but also when doing so is correct and beneficial.
+
+In this unit, we extend our study of streams by introducing parallel streams in Java. You will see how a small change to a stream pipeline can enable parallel execution, why this works naturally for some computations but not others, and how issues such as state, side effects, and ordering affect both correctness and performance. This unit brings together ideas from earlier discussions on immutability, side effects, and functional-style programming, and shows how they become essential when programs run in parallel.
 
 ## Parallel and Concurrent Programming
 
-So far, the programs that we have written in CS2030S run _sequentially_.  What this means is that at any one time, there is only one instruction of the program running on a processor.
+The programs that we have written in CS2030S so far execute _sequentially_.  At any one time, there is only one instruction of the program running on a processor.
 
 ![Sequential](figures/parallel/sequential.png)
 
 ### What is Concurrency?
 
-A single-core processor can only execute one instruction at one time &mdash; this means that only one _process_ (or less precisely speaking, one application) can run at any one time.  Yet, when we use the computer, it _feels_ as if we are running multiple processes at the same time.  The operating system, behind the scenes, is switching between the different processes, to give the user the illusion that they are running at the same time.
+A single-core processor can only execute one instruction at one time &mdash; this means that only one _process_ (or less precisely speaking, one application) can run at a time.  Yet, when we use the computer, it appears as though multiple processes are running simultaneously.  The operating system, behind the scenes, is switching between the different processes, to give the user the illusion that they are running at the same time.
 
 ![Concurrent](figures/parallel/concurrent.png)
 
@@ -76,7 +85,7 @@ IntStream.range(2_030_000, 2_040_000)
 
 The code above produces the same output regardless if it is being parallelized or not.
 
-Note that the task above is stateless and does not produce any side effects.  Furthermore, each element is processed individually without depending on other elements.  Such computation is sometimes known as _embarrassingly parallel_.  The only communication needed for each of the parallel subtasks is to combine the result of `count()` from the subtasks into the final count (which has been implemented in `Stream` for us).
+Note that the task above is stateless and does not produce any side effects.  Furthermore, each element is processed individually without depending on other elements.  Such computation is sometimes known as _embarrassingly parallel_.  The only communication needed for each of the parallel subtasks is to combine the result of `count()` from the subtasks into the final count (which has been implemented internally in `Stream`).
 
 ### How to Parallelize a Stream
 
@@ -84,7 +93,7 @@ You have seen that adding `parallel()` to the pipeline of calls in a stream enab
 
 !!! note "sequential()"
     There is a method `sequential()` which marks the stream to be process sequentially.  If you call both `parallel()` and `sequential()` in a stream,
-    the last call "wins".  The example below processes the stream 
+    only the last call has an effect.  The example below processes the stream 
     sequentially:
     ```
     s.parallel().filter(x -> x < 0).sequential().forEach(..); 
@@ -177,7 +186,7 @@ To allow us to run `reduce` in parallel, however, there are several rules that t
 - The `combiner` and the `accumulator` must be associative &mdash; the order of applying must not matter.
 - The `combiner` and the `accumulator` must be compatible &mdash; `combiner.apply(u, accumulator.apply(identity, t))` must equal to `accumulator.apply(u, t)`
 
-The multiplication example above meetings the three rules:
+The multiplication example above meets the three rules:
     
 - `i * 1` equals `i`
 - `(x * y) * z` equals `x * (y * z)`
@@ -219,7 +228,7 @@ boolean isPrime(int n) {
 }
 ```
 
-Let's parallelize this to make this even faster!
+We can parallelize this to make this even faster:
 
 ```Java hl_lines="3"
 boolean isPrime(int n) {
@@ -237,7 +246,7 @@ _Parallelizing a stream does not always improve the performance_.  Creating a th
 
 ## Ordered vs. Unordered Source
 
-Whether or not the stream elements are _ordered_ or _unordered_ also plays a role in the performance of parallel stream operations.  A stream may define an _encounter order_.  Streams created from `iterate`, ordered collections (e.g., `List` or arrays), from `of`, are ordered.  Stream created from `generate` or unordered collections (e.g., `Set`) are unordered.
+Whether or not the stream elements are _ordered_ or _unordered_ also plays a role in the performance of parallel stream operations.  A stream may define an _encounter order_.  Streams created from `iterate`, ordered collections (e.g., `List` or arrays), from `of`, are ordered.  Streams created from `generate` or unordered collections (e.g., `Set`) are unordered.
 
 Some stream operations respect the encounter order.  For instance, both `distinct` and `sorted` preserve the original order of elements (if ordering is preserved, we say that an operation is _stable_).
 
