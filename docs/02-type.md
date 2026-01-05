@@ -51,21 +51,21 @@ Python and JavaScript are examples of _dynamically typed_ programming languages.
 
 === "JavaScript"
 
-    ```Javascript
+    ```Javascript title="Demonstration of Dynamic Typing"
     let i = 4;   // i is an integer
     i = "5";     // ok, i is now a string
     ```
 
 === "Python"
 
-    ```Python
+    ```Python title="Demonstration of Dynamic Typing"
     i = 4        // i is an integer
     i = "5"      // ok, i is now a string
     ```
 
 Java, on the other hand, is a _statically typed_ language.  We need to _declare_ every variable we use in the program and specify its type.  A variable can only hold values of the same type as the type of the variable (or its subtype, as you will see later) so we can't assign, for instance, a string to a variable of type `int`.  Once a variable is _declared_ with a particular type, the type of the variable cannot be changed.  In other words, the variable can only hold values of that declared type.
 
-```Java
+```Java title="Demonstration of Static Typing"
 int i;   // declare a variable of type int
 i = 4;   // ok because 4 is of type int
 i = "5"; // error, cannot assign a string to an `int`
@@ -88,7 +88,7 @@ Generally, a _strongly typed_ programming language enforces strict rules in its 
 
 On the other hand, a _weakly typed_ (or loosely typed) programming language is more permissive in terms of typing checking.  C is an example of a static, weakly typed language.  In C, the following is possible:
 
-```C
+```C title="Demonstration of Weak Typing in C"
 int i;        // declare a variable of type int
 i = 4;        // ok because 4 is of type int
 i = (int)"5"; // you want to treat a string as an int? ok, as you wish!   
@@ -98,7 +98,7 @@ The last line forces the C compiler to treat the string (to be more precise, the
 
 In contrast, if we try the following in Java:
 
-```Java
+```Java title="Demonstration of Strong Typing in Java"
 int i;        // declare a variable of type int
 i = 4;        // ok because 4 is of type int
 i = (int)"5"; // error
@@ -116,25 +116,25 @@ because the compiler enforces a stricter rule and allows typecasting only if it 
 
 In addition to checking for syntax errors, the compiler can check for type compatibility according to the compile-time type, to catch possible errors as early as possible.  Such type-checking is made possible with static typing.  Consider the following Python program:
 
-```Python
+```Python title="Dynamic Typing Leads to Runtime Error"
 i = 0
 while (i < 10):
   # do something that takes a long time
   i = i + 1
-print("i is " + i)
+print("i is " + i) // error after a long execution
 ```
 
 Since Python does not allow adding a string to an integer, there is a type mismatch error on Line 5.  The type mismatch error is only caught when Line 5 is executed after the program executes for a long time.  Since the type of the variable `i` can change during run time, Python (and generally, dynamically typed languages) cannot tell if Line 5 will lead to an error until it is evaluated during run time.
 
 In contrast, statically typed language like Java can detect type mismatch during compile time since the compile-time type of a variable is fixed.  As you will see later, Java allows "addition" or string and integer, but not multiplication of a string and an integer.  If we have the following code, Java can confidently produce compilation errors without even running a program: 
 
-```Java
+```Java title="Static Typing Catches Type Mismatch Early"
 int i = 0
 while (i < 10) {
   // do something that takes a long time
   i = i + 1;
 }
-String s = "i is " * i;
+String s = "i is " * i; // error during compilation
 ```
 
 ## Primitive Types in Java
@@ -212,7 +212,7 @@ Graphically, we can draw the subtyping relationship as an arrow from subtype to 
 
     Thus, a piece of code written to handle `float` can also handle `long` (since all `long` values can be represented with a `float`, albeit with possible loss of precision).
 
-    ```Java
+    ```Java title="Code that Handles `float` can also Handle `long`"
     float add(float x) {
       return x + x;
     }
@@ -223,7 +223,7 @@ Graphically, we can draw the subtyping relationship as an arrow from subtype to 
 
     On the other hand, if a piece of code is written to handle `long`, then giving it a `float` value would be erroneous since the `float` value might have more than 19 digits in the integral part and cannot be represented by `long`.
 
-    ```Java
+    ```Java title="Code that Handles `long` cannot Handle `float`"
     long add(long x) {
       return x + x;
     }
@@ -236,7 +236,7 @@ Graphically, we can draw the subtyping relationship as an arrow from subtype to 
     
 Valid subtype relationship is part of what the Java compiler checks for when it compiles.  Consider the following example:
 
- ```Java
+ ```Java title="Subtyping in Assignment"
  double d = 5.0;
  int i = 5;
  d = i; // ok

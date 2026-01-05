@@ -23,13 +23,17 @@
 
 The programs that we have written in CS2030S so far execute _sequentially_.  At any one time, there is only one instruction of the program running on a processor.
 
-![Sequential](figures/parallel/sequential.png)
+<p>
+--8<-- "docs/figures/parallel/sequential.svg"
+</p>
 
 ### What is Concurrency?
 
 A single-core processor can only execute one instruction at one time &mdash; this means that only one _process_ (or less precisely speaking, one application) can run at a time.  Yet, when we use the computer, it appears as though multiple processes are running simultaneously.  The operating system, behind the scenes, is switching between the different processes, to give the user the illusion that they are running at the same time.
 
-![Concurrent](figures/parallel/concurrent.png)
+<p>
+--8<-- "docs/figures/parallel/concurrent.svg"
+</p>
 
 We can write a program so that it runs concurrently &mdash; by dividing the computation into subtasks called _threads_. Such multi-thread programs are useful in two ways: (i) it allows us, the programmers, to separate unrelated tasks into threads, and write each thread separately; (ii) it improves the utilization of the processor.  For instance, if I/O is in one thread, and UI rendering is in another, then when the processor is waiting for I/O to complete, it can switch to the rendering thread to make sure that the slow I/O does not affect the responsiveness of UI.
 
@@ -37,7 +41,9 @@ We can write a program so that it runs concurrently &mdash; by dividing the comp
 
 While concurrency gives the illusion of subtasks running at the same time, parallel computing refers to the scenario where multiple subtasks are truly running at the same time &mdash; either we have a processor that is capable of running multiple instructions at the same time, or we have multiple cores/processors and dispatch the instructions to the cores/processors so that they are executed at the same time.
 
-![Parallel](figures/parallel/parallel.png)
+<p>
+--8<-- "docs/figures/parallel/parallel.svg"
+</p>
 
 All parallel programs are concurrent, but not all concurrent programs are parallel.
 
