@@ -10,13 +10,13 @@
     - distinguish between synchronous and asynchronous execution in Java programs
     - observe and reason about thread execution using thread names and basic thread APIs
 
-## Introduction
+!!! abstract "Overview"
 
-n the previous unit, we saw how parallel streams allow us to exploit multiple cores with minimal changes to our code. While convenient, parallel streams give us little control over when and how different parts of a computation run, and they hide many important details of concurrent execution.
+    In the previous unit, we saw how parallel streams allow us to exploit multiple cores with minimal changes to our code. While convenient, parallel streams give us little control over when and how different parts of a computation run, and they hide many important details of concurrent execution.
 
-In this unit, we step down one level of abstraction to study threads, the fundamental building blocks of concurrency in Java. Threads allow a program to perform multiple tasks at the same time, such as keeping a user interface responsive while a long-running computation is executing, by decoupling progress from blocking method calls.
+    In this unit, we step down one level of abstraction to study threads, the fundamental building blocks of concurrency in Java. Threads allow a program to perform multiple tasks at the same time, such as keeping a user interface responsive while a long-running computation is executing, by decoupling progress from blocking method calls.
 
-By understanding how threads are created, scheduled, and executed, you will gain a clearer mental model of asynchronous execution. This model will form the foundation for later units, where we learn about coordination in concurrent programs.
+    By understanding how threads are created, scheduled, and executed, you will gain a clearer mental model of asynchronous execution. This model will form the foundation for later units, where we learn about coordination in concurrent programs.
 
 ## Synchronous Programming
 
@@ -30,7 +30,7 @@ What if we want our program to do something while we wait for the method to retu
 
 ## Threads
 
-One way to achieve this is to use _threads_.  A thread is a single flow of execution in a program.  Since the beginning of this module, we have been writing single-thread programs, except for parallel streams in [Unit 37](37-parallel.md).
+One way to achieve this is to use _threads_.  A thread is a single flow of execution in a program.  Since the beginning of this course, we have been writing single-thread programs, except for parallel streams in [Unit 37](37-parallel.md).
 
 Java provides a class called [`java.lang.Thread`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html) that we can use to encapsulate a function to run in a separate thread.  The following example showss how we can create and run two threads:
 

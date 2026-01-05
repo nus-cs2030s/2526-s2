@@ -11,11 +11,11 @@
     - reason about why violating these laws leads to unintuitive or unsafe behavior
     - distinguish between functors and monads, and relate them to abstractions seen earlier in the course
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we introduced abstractions such as `Maybe<T>`, `Lazy<T>`, and `InfiniteList<T>` to structure computations that may fail, be deferred, or be infinite. Although these classes appear different, they all support a similar style of programming: values are wrapped together with additional information, and computations are chained using methods like map and flatMap.
+    In earlier units, we introduced abstractions such as `Maybe<T>`, `Lazy<T>`, and `InfiniteList<T>` to structure computations that may fail, be deferred, or be infinite. Although these classes appear different, they all support a similar style of programming: values are wrapped together with additional information, and computations are chained using methods like map and flatMap.
 
-In this unit, we step back and study the common pattern behind these abstractions. We formalize what it means for such classes to be well behaved, introducing the notion of monads and the laws they must obey. Understanding these laws explains why our earlier designs work, why some seemingly small changes can break them, and how these ideas generalize beyond Java to other programming languages and paradigms.
+    In this unit, we step back and study the common pattern behind these abstractions. We formalize what it means for such classes to be well behaved, introducing the notion of monads and the laws they must obey. Understanding these laws explains why our earlier designs work, why some seemingly small changes can break them, and how these ideas generalize beyond Java to other programming languages and paradigms.
 
 ## Generalizing `Loggable<T>`
 

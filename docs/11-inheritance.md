@@ -11,14 +11,14 @@
     - predict the behavior of code involving subtype polymorphism
     - determine when narrowing type conversion (casting) is permitted and when it may fail at run-time
 
-## Introduction
-In earlier units, we learned how to build complex abstractions by composing objects, carefully preserving abstraction barriers and separating client and implementer responsibilities. Composition remains our default design tool—but it is not the only one.
+!!! abstract "Overview"
+    In earlier units, we learned how to build complex abstractions by composing objects, carefully preserving abstraction barriers and separating client and implementer responsibilities. Composition remains our default design tool—but it is not the only one.
 
-In this unit, we introduce inheritance, a second mechanism for extending behavior that allows one abstraction to be treated as a more specific version of another. Inheritance is not primarily about code reuse; rather, it is about modeling subtyping—when one object can safely stand in for another.
+    In this unit, we introduce inheritance, a second mechanism for extending behavior that allows one abstraction to be treated as a more specific version of another. Inheritance is not primarily about code reuse; rather, it is about modeling subtyping—when one object can safely stand in for another.
 
-We will examine how inheritance expresses the is-a relationship, how Java supports this via extends and super, and why careless use of inheritance can silently break program meaning. Along the way, we will sharpen an important distinction between compile-time and runtime types, a concept that underpins polymorphism in later units.
+    We will examine how inheritance expresses the is-a relationship, how Java supports this via extends and super, and why careless use of inheritance can silently break program meaning. Along the way, we will sharpen an important distinction between compile-time and runtime types, a concept that underpins polymorphism in later units.
 
-By the end of this unit, you should not only be able to write subclasses, but also explain when you should not.
+    By the end of this unit, you should not only be able to write subclasses, but also explain when you should not.
 
 ## Extension with Composition
 
@@ -86,6 +86,7 @@ We also say that `ColoredCircle` _inherits_ from `Circle`, since all the public 
 
 Line 6 of the code above introduces another keyword in Java: `super`.  Here, we use `super` to call the constructor of the superclass, to initialize its center and radius (since the child has no direct access to these fields that it inherited).
 
+If a constructor does not explicitly invoke a superclass constructor, the Java compiler automatically inserts a call to the no-argument constructor of the superclass. If the super class does not have a no-argument constructor, you will get a compile-time error. `Object` does have such a constructor, so if `Object` is the only superclass, there is no problem.
 The concept we have shown you is called _inheritance_ and is one of the four pillars of OOP.  We can think of inheritance as a model for the "_is a_" relationship between two entities.
 
 With inheritance, we can call `#!Java coloredCircle.getArea()` without knowing how a colored circle is represented internally AND without forwarding methods.

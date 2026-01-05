@@ -10,13 +10,13 @@
     - reason about and apply the PECS principle to method parameters
     - distinguish between `Seq<?>`, `Seq<Object>`, and raw `Seq`, and explain why raw types should be avoided
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we saw how generics help us write reusable and type-safe code. However, we also encountered an important limitation: generics in Java are invariant. This means that even if `Circle` is a subtype of `Shape`, `Seq<Circle>` is not a subtype of `Seq<Shape>`.
+    In earlier units, we saw how generics help us write reusable and type-safe code. However, we also encountered an important limitation: generics in Java are invariant. This means that even if `Circle` is a subtype of `Shape`, `Seq<Circle>` is not a subtype of `Seq<Shape>`.
 
-While invariance prevents subtle run-time errors, it can also make otherwise reasonable code impossible to write. For example, why can’t we search for a `Shape` in a sequence of circles, or copy a sequence of circles into a sequence of shapes?
+    While invariance prevents subtle run-time errors, it can also make otherwise reasonable code impossible to write. For example, why can’t we search for a `Shape` in a sequence of circles, or copy a sequence of circles into a sequence of shapes?
 
-In this unit, we introduce wildcards as a way to recover flexibility without sacrificing type safety. We will see how bounded wildcards express variance explicitly, how the PECS principle guides our choice of bounds, and how unbounded wildcards let us avoid raw types entirely.
+    In this unit, we introduce wildcards as a way to recover flexibility without sacrificing type safety. We will see how bounded wildcards express variance explicitly, how the PECS principle guides our choice of bounds, and how unbounded wildcards let us avoid raw types entirely.
 
 ## `contains` with `Seq<T>`
 
@@ -460,4 +460,4 @@ new Comparable<?>[10];
 
 Previously, we said that we could not create an array using the expression `new Comparable<String>[10]` because generics and arrays do not mix well.  Java insists that the array creation expression uses a _reifiable_ type, i.e., a type where no type information is lost during compilation.  Unlike `Comparable<String>`, however, `Comparable<?>` is reifiable.  Since we don't know what is the type of `?`, no type information is lost during erasure!
 
-Going forward now in the module, we will not permit the use of raw types in any scenario.  Every historical justification for raw types now has a wildcard alternative.
+Going forward now in the course, we will not permit the use of raw types in any scenario.  Every historical justification for raw types now has a wildcard alternative.

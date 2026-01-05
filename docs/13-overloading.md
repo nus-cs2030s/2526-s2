@@ -11,20 +11,20 @@
     - explain why changing only parameter names or return types does not result in overloading
     - reason about which overloaded method is selected at compile time based on argument types
 
-## Introduction
+!!! abstract "Overview"
 
-In the previous unit, we studied method overriding, which allows subclasses to replace the behavior of inherited methods at runtime. Overriding supports polymorphism, where the same method call can behave differently depending on the object’s runtime type.
+    In the previous unit, we studied method overriding, which allows subclasses to replace the behavior of inherited methods at runtime. Overriding supports polymorphism, where the same method call can behave differently depending on the object’s runtime type.
 
-In this unit, we shift focus to method overloading, which addresses a different concern: convenience and expressiveness. Overloading allows a class to provide multiple methods with the same name that operate on different kinds of inputs, while still performing conceptually similar tasks.
+    In this unit, we shift focus to method overloading, which addresses a different concern: convenience and expressiveness. Overloading allows a class to provide multiple methods with the same name that operate on different kinds of inputs, while still performing conceptually similar tasks.
 
-Unlike overriding, overloading is resolved entirely at compile time. Understanding this distinction is essential, as it explains both what Java allows you to overload, and why some seemingly reasonable overloads are rejected by the compiler.
+    Unlike overriding, overloading is resolved entirely at compile time. Understanding this distinction is essential, as it explains both what Java allows you to overload, and why some seemingly reasonable overloads are rejected by the compiler.
 
 
 ## Method overloading
 
 In the previous unit, we introduced _method overriding_ &mdash; when a subclass defines an instance method with the same _method descriptor_ as an instance method in the parent class.
 
-In contrast, _method overloading_ occurs when a class defines two or more methods with the same name but a different _method signatures_[^1]. In other words, we create an overloaded method by changing the type, order, or number of parameters of the method while keeping the method name identical.
+In contrast, _method overloading_ occurs when a class has access to (either defined or inherited) two or more methods with the same name but a different _method signatures_[^1]. In other words, we create an overloaded method by changing the type, order, or number of parameters of the method while keeping the method name identical.
 
 [^1]: Note that this is not the same as the _method descriptor_. You cannot overload a method by changing only the return type.
 

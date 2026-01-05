@@ -10,12 +10,12 @@
     - explain and predict the behavior of reference types in Java, including aliasing and shared mutable state.
     - recognize and avoid common errors involving references, including uninitialized (`null`) references.
 
-## Introduction
+!!! abstract "Overview"
 
-This unit introduces **encapsulation**, a key abstraction mechanism in object-oriented programming.  Encapsulation builds on composite data types by bundling data together with the operations that manipulate that data, forming a clear abstraction barrier between implementation and usage.
+    This unit introduces **encapsulation**, a key abstraction mechanism in object-oriented programming.  Encapsulation builds on composite data types by bundling data together with the operations that manipulate that data, forming a clear abstraction barrier between implementation and usage.
 
-In Java, encapsulation is realized through **classes and objects**, which also introduce reference semantics. Understanding encapsulation is essential not only for writing correct programs, but also for reasoning about program design, modularity, and later concepts such as immutability
-and interfaces.
+    In Java, encapsulation is realized through **classes and objects**, which also introduce reference semantics. Understanding encapsulation is essential not only for writing correct programs, but also for reasoning about program design, modularity, and later concepts such as immutability
+    and interfaces.
 
 ## Abstraction: Composite Data Type
 
@@ -201,6 +201,25 @@ class Booking {
 ```
 
 However, if we want to leave open the possibility that we may need to store more information about an airport in the future (e.g., location, name), then it is better to model it as a class even if it contains only a single property for now.
+
+In the discussion above, we put forward the possibility that `Airport` need not be a class.  So the question is, when should we stop modelling a noun as a class?  We may be too eager to model everything as a class, including the date to be stored as booking date.  There is also the opposite problem of too lazy to model.  For instance, we may lazily group user and booking together to form a class with 4 fields.
+
+There is no clear answer to this but as a general guide, you can ask the following questions:
+
+- Is there multiple properties to be stored?
+    - If so, then creating a class is good.
+    - In the case of airport, if there is only a single data, then we need not make a class.
+- Is there an action associated with the entity?
+    - If so, then creating a class is good.
+    - In the case of user, although it only has a single property, it has an association action.
+- Is there a real world counterpart?
+    - If so, model it based on the real world.
+    - In the case of user and booking, we have real world counterpart so we model them as separate classes.
+- Is there potential changes to the entity?
+    - If so, then creating a class is good.
+    - For instance, if in the future we plan to store more information about an airport (_e.g._, the country it is located, etc), then having it as a class will minimize potential changes to other parts of the code (_e.g._, if we used `String` before, we now have to change all these `String` into `Airport`).
+
+The guide above are not exhaustive.  But they are still a good starting point if this is your first attempt at modelling in OOP.
 
 ## Reference Types in Java
 

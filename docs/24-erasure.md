@@ -10,13 +10,13 @@
     - Identify and explain heap pollution, including how it can lead to ClassCastException.
     - Explain why arrays and generics do not mix, and distinguish between generic array declaration and instantiation.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we introduced generics as a way to write reusable, type-safe code without sacrificing expressiveness. An important question remains: how are generics actually implemented in Java?
+    In earlier units, we introduced generics as a way to write reusable, type-safe code without sacrificing expressiveness. An important question remains: how are generics actually implemented in Java?
 
-In this unit, we uncover the answer by studying type erasure, Java’s design choice for implementing generics. While type erasure preserves backward compatibility and enables code sharing, it also means that generic type information is largely unavailable at run time. This design has far-reaching consequences, including surprising interactions with arrays, the possibility of heap pollution, and limitations on what the compiler and run-time can check.
+    In this unit, we uncover the answer by studying type erasure, Java’s design choice for implementing generics. While type erasure preserves backward compatibility and enables code sharing, it also means that generic type information is largely unavailable at run time. This design has far-reaching consequences, including surprising interactions with arrays, the possibility of heap pollution, and limitations on what the compiler and run-time can check.
 
-Understanding type erasure helps explain many “why can’t Java do this?” questions about generics and equips you to reason more precisely about type safety across compile time and run time.
+    Understanding type erasure helps explain many “why can’t Java do this?” questions about generics and equips you to reason more precisely about type safety across compile time and run time.
 
 ## Implementing Generics
 

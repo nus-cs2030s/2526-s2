@@ -10,12 +10,11 @@
     - Implement and reason about lazy transformations on `InfiniteList`, particularly `map` and `filter`.
     - Identify design challenges in `InfiniteList` implementations (e.g. filtering, repeated evaluation) and motivate the use of abstractions such as `Maybe<T>` and `Lazy<T>` to address them.
 
+!!! abstract "Overview"
 
-## Introduction
+    In earlier units, we learned how higher-order functions and lambda expressions allow us to build flexible abstractions over data. We also introduced lazy evaluation, using ` Producer` and `Lazy`, to delay computation until a value is needed.
 
-In earlier units, we learned how higher-order functions and lambda expressions allow us to build flexible abstractions over data. We also introduced lazy evaluation, using ` Producer` and `Lazy`, to delay computation until a value is needed.
-
-This unit brings these ideas together to construct an `InfiniteList`: a list that can represent an unbounded sequence of values. Such a structure cannot be implemented using eager evaluation, as attempting to generate all elements would never terminate. By using laziness, however, we can describe infinite sequences declaratively and compute only the elements we actually access.
+    This unit brings these ideas together to construct an `InfiniteList`: a list that can represent an unbounded sequence of values. Such a structure cannot be implemented using eager evaluation, as attempting to generate all elements would never terminate. By using laziness, however, we can describe infinite sequences declaratively and compute only the elements we actually access.
 
 ## Preliminary: An Eagerly Evaluated List
 

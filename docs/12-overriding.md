@@ -12,13 +12,13 @@
     - use Java annotations correctly, in particular @Override
     - explain how String concatenation triggers implicit toString calls
 
-## Introduction
+!!! abstract "Overview"
 
-In the previous units, we introduced inheritance as a mechanism for sharing code and modeling “is-a” relationships between classes. We have also seen that subclasses automatically inherit fields and methods from their parent classes.
+    In the previous units, we introduced inheritance as a mechanism for sharing code and modeling “is-a” relationships between classes. We have also seen that subclasses automatically inherit fields and methods from their parent classes.
 
-In this unit, we explore how inheritance allows not only reuse, but also customization of behavior through method overriding. We will see that every class in Java inherits from a common ancestor, Object, and that some of its methods—most notably toString and equals—are designed to be overridden.
+    In this unit, we explore how inheritance allows not only reuse, but also customization of behavior through method overriding. We will see that every class in Java inherits from a common ancestor, Object, and that some of its methods—most notably toString and equals—are designed to be overridden.
 
-Along the way, we introduce precise terminology such as method signature and method descriptor, and we examine the rules that govern method overriding. Importantly, these rules are enforced partly during compilation and partly at runtime, illustrating once again Java’s emphasis on early error detection and type safety.
+    Along the way, we introduce precise terminology such as method signature and method descriptor, and we examine the rules that govern method overriding. Importantly, these rules are enforced partly during compilation and partly at runtime, illustrating once again Java’s emphasis on early error detection and type safety.
 
 ## `Object` and `String`
 

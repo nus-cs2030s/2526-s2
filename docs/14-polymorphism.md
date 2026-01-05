@@ -9,9 +9,9 @@
     - explain why method overriding requires an identical method signature
     - correctly override equals(Object) and explain why overloading equals is insufficient
 
-## Introduction
+!!! abstract "Overview"
 
-In the previous units, we have seen how inheritance allows one class to reuse and extend another, and how method overloading enables multiple methods with the same name to coexist based on parameter types. In this unit, we study polymorphism, which brings these ideas together by allowing the same method call to behave differently depending on the runtime type of the object. Polymorphism is what allows object-oriented programs to be extensible, reusable, and robust in the presence of new classes added in the future, often without modifying or even recompiling existing code.
+    In the previous units, we have seen how inheritance allows one class to reuse and extend another, and how method overloading enables multiple methods with the same name to coexist based on parameter types. In this unit, we study polymorphism, which brings these ideas together by allowing the same method call to behave differently depending on the runtime type of the object. Polymorphism is what allows object-oriented programs to be extensible, reusable, and robust in the presence of new classes added in the future, often without modifying or even recompiling existing code.
 
 ## Taking on Many Forms
 
@@ -184,7 +184,7 @@ which is not scalable since every time we add a new class, we have to come back 
 As this example has shown, polymorphism allows us _to write succinct code that is future-proof_.  By dynamically deciding which method implementation to execute during runtime, the implementer can write short yet very general code that works for existing classes as well as new classes that might be added in the future by the client, without even the need to re-compile.
 
 !!! note "Different Types of Polymorphism"
-    The term polymorphism is used in different contexts to mean different things.  In CS2030S, when we refer to the term "polymorphism", we are referring to, more precisely, _subtype polymorphism_ (also known as inclusion polymorphism). 
+    The term polymorphism is used in different contexts to mean different things.  In CS2030S, when we refer to the term "polymorphism", we are referring _exclusively_ to, more precisely, _subtype polymorphism_ (also known as inclusion polymorphism). 
 
     In other literature, you may come across two other types of polymorphism.  Generics (Unit 23) is also called _parametric polymorphism_.  Method overloading (Unit 13) is sometimes refer to as _ad-hoc polymorphism_.  We don't use these terms in CS2030S.
 

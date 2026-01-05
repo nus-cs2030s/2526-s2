@@ -10,11 +10,11 @@
     - recognize common use cases of class fields (constants, shared configuration, precomputed values).
     - refactor code to eliminate “magic numbers” using appropriate class fields.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we treated objects as the fundamental building blocks of a program, each with its own state. However, not all values naturally belong to individual objects. Some values, such as mathematical constants or configuration parameters, are shared universally and remain the same across all instances.
+    In earlier units, we treated objects as the fundamental building blocks of a program, each with its own state. However, not all values naturally belong to individual objects. Some values, such as mathematical constants or configuration parameters, are shared universally and remain the same across all instances.
 
-This unit introduces class (static) fields, which belong to a class rather than any specific object. You will learn how Java supports shared state through the `static` keyword, how this differs from instance fields, and how class fields are commonly used to define constants and utility values in well-designed programs.
+    This unit introduces class (static) fields, which belong to a class rather than any specific object. You will learn how Java supports shared state through the `static` keyword, how this differs from instance fields, and how class fields are commonly used to define constants and utility values in well-designed programs.
 
 ## Why Class Fields Exist
 

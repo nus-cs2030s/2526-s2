@@ -10,11 +10,11 @@
     - describe the role of the main method as the entry point of a Java program.
     - identify the required modifiers, return type, and parameters of a valid main method.
 
-## Introduction
+!!! abstract "Overview"
 
-In previous units, we focused on instance methods, which operate on the state of individual objects. However, not all behavior in a program naturally belongs to a specific object. Some operations conceptually belong to the class as a whole—for example, keeping track of how many objects have been created, or providing general-purpose utility functions.
+    In previous units, we focused on instance methods, which operate on the state of individual objects. However, not all behavior in a program naturally belongs to a specific object. Some operations conceptually belong to the class as a whole—for example, keeping track of how many objects have been created, or providing general-purpose utility functions.
 
-In this unit, we introduce class methods, which are declared using the static keyword. You will learn how class methods differ from instance methods, why they cannot access instance-specific state, and how Java uses a special class method, main, as the entry point for every program.
+    In this unit, we introduce class methods, which are declared using the static keyword. You will learn how class methods differ from instance methods, why they cannot access instance-specific state, and how Java uses a special class method, main, as the entry point for every program.
 
 ## Static Methods
 

@@ -10,13 +10,13 @@
     - use `flatMap` to compose computations that produce contextualised results
     - generalise a concrete abstraction into a type-parameterised one using Java generics
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how to compose pure functions and use higher-order operations such as map to build more complex behaviour. This worked well as long as our functions only transformed values.
+    In earlier units, we learned how to compose pure functions and use higher-order operations such as map to build more complex behaviour. This worked well as long as our functions only transformed values.
 
-In practice, however, computations often need to carry additional context, such as log messages. Once this extra information is introduced, simple function composition breaks down and map is no longer sufficient.
+    In practice, however, computations often need to carry additional context, such as log messages. Once this extra information is introduced, simple function composition breaks down and map is no longer sufficient.
 
-In this unit, we start from a concrete logging example[^1] and gradually build an abstraction that restores composability. Through this process, we uncover why `flatMap` is needed, where it comes from, and how it allows us to compose context-carrying computations in a disciplined way.
+    In this unit, we start from a concrete logging example[^1] and gradually build an abstraction that restores composability. Through this process, we uncover why `flatMap` is needed, where it comes from, and how it allows us to compose context-carrying computations in a disciplined way.
 
 ## Function Composition with Logging
 

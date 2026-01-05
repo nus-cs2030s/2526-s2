@@ -11,11 +11,11 @@
     - apply bounded type parameters to constrain permissible operations on type variables
     - reason about how generics reduce code duplication while preserving static typing guarantees
 
-## Introductoin
+!!! abstract "Overview"
 
-In earlier units, we saw how polymorphism allows us to write general code that works for many types, often by treating objects uniformly as Object or through interfaces. While flexible, this approach can sacrifice type precision and shift certain errors from compile time to run time.
+    In earlier units, we saw how polymorphism allows us to write general code that works for many types, often by treating objects uniformly as Object or through interfaces. While flexible, this approach can sacrifice type precision and shift certain errors from compile time to run time.
 
-This unit introduces generics, a language mechanism that allows us to write reusable and abstract code without giving up static type safety. By parameterizing classes and methods with types, we let the compiler track and enforce relationships between values, preventing common mistakes such as invalid casts. Generics form a key bridge between abstraction and safety in Java, and understanding them is essential for reasoning about correctness in larger systems.
+    This unit introduces generics, a language mechanism that allows us to write reusable and abstract code without giving up static type safety. By parameterizing classes and methods with types, we let the compiler track and enforce relationships between values, preventing common mistakes such as invalid casts. Generics form a key bridge between abstraction and safety in Java, and understanding them is essential for reasoning about correctness in larger systems.
 
 ## The `Pair` class
 

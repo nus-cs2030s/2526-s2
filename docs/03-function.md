@@ -10,15 +10,15 @@
      - use functions to reduce code complexity through locality, information hiding, and reuse.
      - identify violations of the abstraction barrier and explain why they lead to brittle or error-prone code.
 
-## Introduction
+!!! abstract "Overview"
 
-As programs grow larger, complexity becomes the primary challenge.  One of the most fundamental tools for managing this complexity is the function.
+    As programs grow larger, complexity becomes the primary challenge.  One of the most fundamental tools for managing this complexity is the function.
 
-At first glance, a function may seem like nothing more than a convenient way to group statements and give them a name. But in CS2030/S, we are interested in a deeper role that functions play: functions are an abstraction over computation. They allow us to _separate what a piece of code is supposed to do from how it does it_.  
+    At first glance, a function may seem like nothing more than a convenient way to group statements and give them a name. But in CS2030/S, we are interested in a deeper role that functions play: functions are an abstraction over computation. They allow us to _separate what a piece of code is supposed to do from how it does it_.  
 
-This separation is crucial for two reasons. First, it allows us to reason about programs at a higher level without being overwhelmed by low-level details. Second, it enables collaboration and change. In real software systems, different programmers often work on different parts of a program. Some implement functionality, while others use it. Functions provide a clear boundary that allows these roles to be separated cleanly.
+    This separation is crucial for two reasons. First, it allows us to reason about programs at a higher level without being overwhelmed by low-level details. Second, it enables collaboration and change. In real software systems, different programmers often work on different parts of a program. Some implement functionality, while others use it. Functions provide a clear boundary that allows these roles to be separated cleanly.
 
-In this unit, we will study functions as a design tool. You will learn how functions reduce complexity, enable code reuse, and support information hiding.  You will see that a function is not just a way to reuse code, but it is a promise that enables independent reasoning, change, and collaboration.  More importantly, you will begin to think explicitly in terms of two roles: the implementer, who defines how a function works, and the client, who relies only on what the function promises to do.  This way of thinking will form the foundation for later abstractions in the course. 
+    In this unit, we will study functions as a design tool. You will learn how functions reduce complexity, enable code reuse, and support information hiding.  You will see that a function is not just a way to reuse code, but it is a promise that enables independent reasoning, change, and collaboration.  More importantly, you will begin to think explicitly in terms of two roles: the implementer, who defines how a function works, and the client, who relies only on what the function promises to do.  This way of thinking will form the foundation for later abstractions in the course. 
 
 ## Function as an Abstraction over Computation
 

@@ -11,15 +11,15 @@
     - interpret tombstone (T-) diagrams to reason about how programs, compilers, interpreters, and machines interact;
     - distinguish between compile-time and run-time errors, and explain the role and limitations of the compiler in detecting errors.
 
-## Introduction
+!!! abstract "Overview"
 
-In this course, we will spend a lot of time learning how to design programs so that errors are caught as early as possible, ideally before the program ever runs. Many of the programming constructs you will encounter in CS2030/S, such as strong static typing, generics, immutability, and functional-style programming, exist precisely to help the compiler detect mistakes early and reliably.
+    In this course, we will spend a lot of time learning how to design programs so that errors are caught as early as possible, ideally before the program ever runs. Many of the programming constructs you will encounter in CS2030/S, such as strong static typing, generics, immutability, and functional-style programming, exist precisely to help the compiler detect mistakes early and reliably.
 
-To understand why these ideas matter, it is important to first understand how programs are executed. A computer’s hardware can only understand instructions written in machine code, yet programmers write programs in high-level languages such as Java. Bridging this gap requires translation, and this translation process—whether done by a compiler, an interpreter, or a combination of both—fundamentally shapes how programs behave, how errors arise, and what kinds of mistakes can be detected automatically.
+    To understand why these ideas matter, it is important to first understand how programs are executed. A computer’s hardware can only understand instructions written in machine code, yet programmers write programs in high-level languages such as Java. Bridging this gap requires translation, and this translation process—whether done by a compiler, an interpreter, or a combination of both—fundamentally shapes how programs behave, how errors arise, and what kinds of mistakes can be detected automatically.
 
-This unit introduces the basic concepts of programs, programming languages, compilers, and interpreters, using Java as the primary example. We will examine how Java programs are compiled and executed, how different execution models can be represented using diagrams, and why the distinction between compile-time and run-time errors is so important in practice.
+    This unit introduces the basic concepts of programs, programming languages, compilers, and interpreters, using Java as the primary example. We will examine how Java programs are compiled and executed, how different execution models can be represented using diagrams, and why the distinction between compile-time and run-time errors is so important in practice.
 
-By the end of this unit, you should have a clear mental model of how your Java programs move from source code to execution, and why the compiler plays such a central role in helping programmers write correct and reliable software. This mental model will serve as a foundation for everything else you learn in CS2030/S.
+    By the end of this unit, you should have a clear mental model of how your Java programs move from source code to execution, and why the compiler plays such a central role in helping programmers write correct and reliable software. This mental model will serve as a foundation for everything else you learn in CS2030/S.
 
 
 ## Software Program
@@ -157,7 +157,7 @@ to invoke the JVM `java` and execute the bytecode contained in the file `Hello.c
     $ java Hello.class
     ```
 
-    This will result in an error:
+    This will result in the following error:
     ```
     Error: Could not find or load main class Hello.class
     Caused by: java.lang.ClassNotFoundException: Hello.class

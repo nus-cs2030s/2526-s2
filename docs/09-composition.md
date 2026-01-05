@@ -10,13 +10,13 @@
     - reason about aliasing and explain how shared references can lead to unintended behaviour
     - evaluate design trade-offs between sharing objects, copying objects, and immutability
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we built classes primarily from primitive fields and methods. While this works for simple abstractions, real software systems are rarely built this way. Instead, complex objects are constructed by combining simpler objects.
+    In earlier units, we built classes primarily from primitive fields and methods. While this works for simple abstractions, real software systems are rarely built this way. Instead, complex objects are constructed by combining simpler objects.
 
-This unit introduces _composition_, a core object-oriented design technique where one class is built from instances of other classes. Composition allows us to raise the level of abstraction, improve encapsulation, and model real-world “HAS-A” relationships more naturally.
+    This unit introduces _composition_, a core object-oriented design technique where one class is built from instances of other classes. Composition allows us to raise the level of abstraction, improve encapsulation, and model real-world “HAS-A” relationships more naturally.
 
-We will also examine a subtle but important consequence of composition: shared references. While reusing objects can reduce memory usage and duplication, it can also lead to surprising bugs due to aliasing. Understanding these trade-offs is essential for writing correct and maintainable object-oriented programs.
+    We will also examine a subtle but important consequence of composition: shared references. While reusing objects can reduce memory usage and duplication, it can also lead to surprising bugs due to aliasing. Understanding these trade-offs is essential for writing correct and maintainable object-oriented programs.
 
 ## Adding more Abstractions
 
@@ -106,7 +106,7 @@ You will find that by moving `p`, we are actually moving the center of _both_ `c
 When we pass the center into the constructor, we are passing the reference instead of passing a cloned copy of the center.  
 so, there is only one `Point` object, even though there are two circles.  
 
-This is a common source of bugs and we will see how we can reduce the possibilities of such bugs later in this module, but let's first consider the following attempted fix.
+This is a common source of bugs and we will see how we can reduce the possibilities of such bugs later in this course, but let's first consider the following attempted fix.
 
 Let's suppose that instead of moving `p`, we add a `moveTo` method to the `Circle` instead:
 ```Java
@@ -154,6 +154,6 @@ p1.moveTo(1, 1);
 
 Without sharing references, moving `p1` only affects `c1`, so we are safe.   
 
-The drawback of not sharing objects with the same content is that we will have a proliferation of objects and the computational resource usage is not optimized.  This is an example of the trade-offs we mentioned in the [introduction to this module](00-overview.md): we are sacrificing the computational cost to save programmers from potential suffering.
+The drawback of not sharing objects with the same content is that we will have a proliferation of objects and the computational resource usage is not optimized.  This is an example of the trade-offs we mentioned in the [introduction to this course](00-overview.md): we are sacrificing the computational cost to save programmers from potential suffering.
 
-Another approach to address this issue is _immutability_.  We will cover this later in the module.
+Another approach to address this issue is _immutability_.  We will cover this later in the course.

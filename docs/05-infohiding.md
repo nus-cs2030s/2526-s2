@@ -10,12 +10,11 @@
     - construct objects safely using constructors instead of direct field access.
     - use `this` to disambiguate fields from parameters.
 
+!!! abstract "Overview"
 
-## Introduction
+    In Unit 3, we learned how abstraction allows us to separate what a component does from how it does it, enabling clients to use a data type without understanding its internal details. In Unit 4, we saw how encapsulation groups data and related operations into a class, establishing an abstraction barrier between clients and implementers. However, abstraction and encapsulation alone are not enough: unless the programming language actively prevents clients from accessing internal representation, this barrier can be accidentally or intentionally broken.
 
-In Unit 3, we learned how abstraction allows us to separate what a component does from how it does it, enabling clients to use a data type without understanding its internal details. In Unit 4, we saw how encapsulation groups data and related operations into a class, establishing an abstraction barrier between clients and implementers. However, abstraction and encapsulation alone are not enough: unless the programming language actively prevents clients from accessing internal representation, this barrier can be accidentally or intentionally broken.
-
-In this unit, we introduce information hiding, the mechanism that enforces the abstraction barrier in practice. We will see how Java uses access modifiers to control visibility, ensuring that clients interact with a class only through its public interface. Once internal representation is hidden, we will also examine how constructors provide the only safe way to create and initialize objects, and how the this keyword helps clarify the distinction between object state and local variables. Together, these ideas show how abstraction is not just a design principle, but a property enforced by the language and the compiler.
+    In this unit, we introduce information hiding, the mechanism that enforces the abstraction barrier in practice. We will see how Java uses access modifiers to control visibility, ensuring that clients interact with a class only through its public interface. Once internal representation is hidden, we will also examine how constructors provide the only safe way to create and initialize objects, and how the this keyword helps clarify the distinction between object state and local variables. Together, these ideas show how abstraction is not just a design principle, but a property enforced by the language and the compiler.
 
 ## Breaking the Abstraction Barrier
 
@@ -45,7 +44,7 @@ Such a mechanism for protecting the abstraction barrier is called _data hiding_ 
 
 In our original `Circle` class (v0.1) in [Unit 4](04-encapsulation.md), we did not specify any access modifier &mdash; this amounts to using the _default_ modifier, the meaning of which is not our concern right now[^1]  For a start, we will explicitly indicate `private` or `public` for all our methods and fields.
 
-```Java title="Circle v0.2"
+```Java title="Circle v0.2" hl_lines="2-4"
 class Circle {
   private double x;
   private double y;
@@ -81,7 +80,7 @@ A method that initializes an object is called a _constructor_.
 
 A constructor method is a special method within the class.  It cannot be called directly but is invoked automatically when an object is instantiated.   In Java, a constructor method _has the same name as the class_ and _has no return type_.  A constructor can take in arguments just like other functions.  Let's add a constructor to our `Circle` class:
 
-```Java title="Circle v0.3"
+```Java title="Circle v0.3" hl_lines="6-10"
 class Circle {
   private double x;
   private double y;

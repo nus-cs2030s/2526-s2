@@ -10,13 +10,13 @@
     - Predict and explain compile-time and run-time behavior when casting objects to interface types.
     - Recognize the design trade-offs involved in evolving interfaces, including the motivation for default methods.
 
-## Introduction
+!!! abstract "Overview"
 
-In the previous units, we used inheritance, especially abstract classes, to write code that is more general and reusable. By programming against a superclass rather than a concrete class, we learned how to decouple what a method needs from how that behavior is implemented.
+    In the previous units, we used inheritance, especially abstract classes, to write code that is more general and reusable. By programming against a superclass rather than a concrete class, we learned how to decouple what a method needs from how that behavior is implemented.
 
-However, inheritance has an important limitation: it models an IS-A relationship. Not every form of generalization fits naturally into a single class hierarchy.
+    However, inheritance has an important limitation: it models an IS-A relationship. Not every form of generalization fits naturally into a single class hierarchy.
 
-In this unit, we take abstraction one step further. Instead of modeling what something is, we focus on what it can do. This shift allows us to write highly flexible code that works across unrelated class hierarchies—without forcing unnatural inheritance relationships.
+    In this unit, we take abstraction one step further. Instead of modeling what something is, we focus on what it can do. This shift allows us to write highly flexible code that works across unrelated class hierarchies—without forcing unnatural inheritance relationships.
 
 To achieve this, we introduce interfaces: a Java abstraction that models behavior rather than identity. Interfaces will allow us to express common capabilities, reason about multiple supertypes, and write code that is both more general and more precise.
 
@@ -53,7 +53,8 @@ interface GetAreable {
 }
 ```
 
-All methods declared in an interface are `public abstract` by default.  We could also just write:
+All methods declared in an interface are `public abstract` by default.  We could also just write the following:
+
 ```Java
 interface GetAreable {
   double getArea();
@@ -62,7 +63,8 @@ interface GetAreable {
 
 Now, for every class that we wish to be able to call `getArea()` on, we tell Java that the class `implements` that particular interface.
 
-For instance,
+For instance, we can implement the class `Shape` as follows.
+
 ```Java
 abstract class Shape implements GetAreable {
   private int numOfAxesOfSymmetry;
@@ -192,7 +194,7 @@ i = (I) a; // Compiles, but failed during execution
 
 ## Impure Interfaces
 
-As we mentioned at the beginning of this module, it is common for software requirements, and their design, to continuously evolve.  Once an interface is exposed beyond an abstraction barrier, changing it becomes difficult.  Unlike classes, interfaces represent a contract that many independent implementations may rely on.
+As we mentioned at the beginning of this course, it is common for software requirements, and their design, to continuously evolve.  Once an interface is exposed beyond an abstraction barrier, changing it becomes difficult.  Unlike classes, interfaces represent a contract that many independent implementations may rely on.
 
 Suppose that, after we define that `GetAreable` interface, other developers in the team start to write classes that implement this interface.  One fine day, we realized that we need to add more methods to the `GetAreable` interface.  Perhaps we need methods `getAreaInSquareFeet()` and `getAreaInSquareMeter()` in the interface.  
 

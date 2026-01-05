@@ -10,9 +10,9 @@
     - Explain the key differences between Java Stream and InfiniteList, particularly single-use consumption and design trade-offs. 
     - Refactor loop-based imperative code into stream-based solutions, and judge when streams improve clarity versus when loops are more appropriate.
 
-## Introduction
+!!! abstract "Overview"
 
-In the earlier units, we built our own functional abstractions such as `Lazy`, `Maybe`, and `InfiniteList` to understand how computation can be expressed declaratively using higher-order functions and laziness. While these abstractions helped us reason about program structure and evaluation, real Java programs rely on a richer, standardised library to work with large and potentially infinite sequences of data. In this unit, we study Java’s `Stream` API, which generalises many ideas from `InfiniteList` while introducing important new constraints and capabilities, allowing us to write clearer, more expressive, and less error-prone code—when used appropriately.
+    In the earlier units, we built our own functional abstractions such as `Lazy`, `Maybe`, and `InfiniteList` to understand how computation can be expressed declaratively using higher-order functions and laziness. While these abstractions helped us reason about program structure and evaluation, real Java programs rely on a richer, standardised library to work with large and potentially infinite sequences of data. In this unit, we study Java’s `Stream` API, which generalises many ideas from `InfiniteList` while introducing important new constraints and capabilities, allowing us to write clearer, more expressive, and less error-prone code—when used appropriately.
 
 ## Java API
 

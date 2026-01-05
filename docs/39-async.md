@@ -2,8 +2,6 @@
 
 !!! abstract "Learning Objectives"
 
-### Learning Objectives
-
     After completing this unit, students should be able to:
 
     - explain the limitations of using `Thread` directly for coordinating concurrent tasks
@@ -12,11 +10,11 @@
     - distinguish between synchronous and asynchronous chaining operations in `CompletableFuture`
     - handle exceptions arising from asynchronous computations using `CompletableFuture`
 
-## Introduction
+!!! abstract "Overview"
 
-While working directly with `Thread` provides flexibility, it also places a significant burden on the programmer. Coordinating execution order, sharing results safely, handling exceptions, and managing thread lifecycles quickly become complex as the number of interacting tasks increases.
+    While working directly with `Thread` provides flexibility, it also places a significant burden on the programmer. Coordinating execution order, sharing results safely, handling exceptions, and managing thread lifecycles quickly become complex as the number of interacting tasks increases.
 
-In this unit, we move away from direct thread management and introduce asynchronous programming as a higher-level approach to concurrency. Rather than focusing on threads, we focus on tasks and their dependencies. Using `CompletableFuture`, we will see how asynchronous computations can be composed and executed concurrently in a structured way, with built-in support for combining results and handling errors. This approach leads to concurrent programs that are clearer, more expressive, and easier to reason about.
+    In this unit, we move away from direct thread management and introduce asynchronous programming as a higher-level approach to concurrency. Rather than focusing on threads, we focus on tasks and their dependencies. Using `CompletableFuture`, we will see how asynchronous computations can be composed and executed concurrently in a structured way, with built-in support for combining results and handling errors. This approach leads to concurrent programs that are clearer, more expressive, and easier to reason about.
 
 ## Limitations of `Thread`
 

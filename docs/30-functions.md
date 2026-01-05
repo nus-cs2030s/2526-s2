@@ -11,13 +11,13 @@
     - Apply currying and partial application to transform multi-argument computations into higher-order unary functions.
     - Explain and use closures, including how lambda expressions capture their surrounding environment and the implications of effective finality.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we emphasized abstraction, immutability, and reasoning about program behavior using types. These ideas allow us to control how objects are used and how data flows through a program, but they do not by themselves guarantee that code is easy to reason about.
+    In earlier units, we emphasized abstraction, immutability, and reasoning about program behavior using types. These ideas allow us to control how objects are used and how data flows through a program, but they do not by themselves guarantee that code is easy to reason about.
 
-As programs grow, reasoning becomes difficult when methods can modify state, depend on hidden variables, or produce unexpected side effects. Even simple expressions can no longer be safely replaced by their values, breaking the local reasoning we rely on in mathematics.
+    As programs grow, reasoning becomes difficult when methods can modify state, depend on hidden variables, or produce unexpected side effects. Even simple expressions can no longer be safely replaced by their values, breaking the local reasoning we rely on in mathematics.
 
-This unit revisits these earlier ideas from a different angle: how restricting side effects allows programs to be reasoned about like mathematical functions. By treating computation as the composition of well-behaved functions, we strengthen the guarantees provided by immutability and abstraction, and make program behavior easier to understand, test, and maintain.
+    This unit revisits these earlier ideas from a different angle: how restricting side effects allows programs to be reasoned about like mathematical functions. By treating computation as the composition of well-behaved functions, we strengthen the guarantees provided by immutability and abstraction, and make program behavior easier to understand, test, and maintain.
 
 ## Functions
 
@@ -148,7 +148,7 @@ We can write a method `chain` that composes two given computations together and 
 
 While we have achieved functions as first-class citizens in Java, the code is verbose and ugly.  Fortunately, there is a much cleaner syntax to write functions that applies to interfaces with a single abstract method.
 
-An interface in Java with _exactly_ one abstract method is called a _functional interface_.  Both `Comparator` and `Transformer` are functional interfaces.  It is recommended that, if a programmer intends an interface to be a functional interface, they should annotate the interface with the `@FunctionalInterface` annotation.
+An interface in Java with _exactly one abstract method_ is called a _functional interface_.  Both `Comparator` and `Transformer` are functional interfaces.  It is recommended that, if a programmer intends an interface to be a functional interface, they should annotate the interface with the `@FunctionalInterface` annotation.
 
 ```Java
 @FunctionalInterface
@@ -291,7 +291,7 @@ Let's break it down a little, `add` is a function that takes in an `Integer` obj
 Transformer<Integer,Integer> incr = add.transform(1);
 ```
 
-Note that `add` is no longer a function that takes two arguments and returns a value.  It is a _higher-order function_.  A higher-order function is one that takes or returns another function. 
+Note that `add` is no longer a function that takes two arguments and returns a value.  It is a _higher-order function_.  A higher-order function is one that takes or returns another function.
 
 The technique that translates a general $n$-ary function to a sequence of $n$ unary functions is called _currying_.  After currying, we have a sequence of _curried_ functions.  
 
@@ -305,7 +305,7 @@ How is currying useful?  Consider `add(1, 1)` &mdash; we have to have both argum
 In the example, we showed earlier,
 ```Java
 Point origin = new Point(0, 0);
-Transformer<Point, Double> dist = origin::distanceTo;
+Transformer<Point, Double> dist = p -> origin.distanceTo(p);
 ```
 
 the variable `origin` is captured by the lambda expression `dist`.  Just like in local and anonymous classes, a captured variable must be either explicitly declared as `final` or is effectively final.
@@ -315,3 +315,13 @@ A lambda expression stores more than just the function to invoke &mdash; it also
 Being able to save the current execution environment, and then continue to compute it later, adds new power to how we can write our program.  We can make our code cleaner with fewer parameters to pass around and less duplicated code.  We can separate the logic to do different tasks in a different part of our program more easily.
 
 We will see more examples of this later.
+
+Another difference between a lambda expression and method reference, is that method reference does not capture the surrounding environment.  For instance, in the example above, if we wrote:
+```Java
+Point origin = new Point(0, 0);
+Transformer<Point, Double> dist = origin::distanceTo;
+origin = new Point(1, 1);
+double diagonal = dist.transform(new Point(3, 4)); // 5.0
+```
+
+`diagonal` will be 5.0.  Line 4 computes the distance with respect to the original `origin` at (0, 0).  So although `origin` is not effectively final, the method reference `origin::distanceTo` is pointing to exactly the method `distanceTo` within this particular instance when the assignment occurs.  So even if the variable `origin` is reassigned to another value, the method reference is still pointing to the old method.

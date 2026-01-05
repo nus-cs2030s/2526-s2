@@ -8,11 +8,11 @@
     - use functional interfaces (such as `Producer<T>`) to defer evaluation and avoid unnecessary computation;
     - implement memoization using a `Lazy<T>` abstraction and reason about when such laziness is safe and beneficial.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how lambda expression allows us to treat behavior as data, enabling higher-order functions and more declarative code. In this unit, we build on that idea to explore *when* computations are performed.
+    In earlier units, we learned how lambda expression allows us to treat behavior as data, enabling higher-order functions and more declarative code. In this unit, we build on that idea to explore *when* computations are performed.
 
-By default, Java evaluates expressions eagerly — values are computed immediately, even if they are never used. Lazy evaluation delays computation until the result is actually needed, allowing us to avoid unnecessary work and improve efficiency. We will see how lambda expressions, together with simple abstractions such as `Producer<T>` and `Lazy<T>`, allow us to implement laziness explicitly in Java.
+    By default, Java evaluates expressions eagerly — values are computed immediately, even if they are never used. Lazy evaluation delays computation until the result is actually needed, allowing us to avoid unnecessary work and improve efficiency. We will see how lambda expressions, together with simple abstractions such as `Producer<T>` and `Lazy<T>`, allow us to implement laziness explicitly in Java.
 
 ## Lambda as Delayed Data
 

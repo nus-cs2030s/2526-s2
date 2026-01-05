@@ -10,13 +10,13 @@
     - refactor client code that relies on getters into object-oriented method calls
     - reason about encapsulation trade-offs when deciding whether to expose object state
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how to define classes with private fields and public methods, and how encapsulation helps protect an object’s internal state.
+    In earlier units, we learned how to define classes with private fields and public methods, and how encapsulation helps protect an object’s internal state.
 
-In this unit, we examine a common but subtle design mistake: exposing an object’s internal state through accessors and mutators, and pushing logic into client code. Although getters and setters may seem harmless—or even “good practice”—they can quietly weaken encapsulation and increase coupling.
+    In this unit, we examine a common but subtle design mistake: exposing an object’s internal state through accessors and mutators, and pushing logic into client code. Although getters and setters may seem harmless—or even “good practice”—they can quietly weaken encapsulation and increase coupling.
 
-We introduce the Tell, Don’t Ask principle, which encourages clients to tell objects what to do, rather than asking for their internal data and operating on it externally. This shift helps us design objects that are more robust, flexible, and easier to change.
+    We introduce the Tell, Don’t Ask principle, which encourages clients to tell objects what to do, rather than asking for their internal data and operating on it externally. This shift helps us design objects that are more robust, flexible, and easier to change.
 
 ## Accessors and Mutators
 
@@ -25,7 +25,7 @@ While accessors and mutators are common, using them indiscriminately can undermi
 
 The example below shows a `Circle` class with accessor and mutator methods for its fields.
 
-```Java title="Circle v0.4"
+```Java title="Circle v0.4" hl_lines="12-34"
 class Circle {
   private double x;
   private double y;
@@ -74,6 +74,8 @@ In the code above, we can categorise the accessor and mutator of each field as f
 | `x` | `getX` | `setX` |
 | `y` | `getY` | `setY` |
 | `r` | `getR` | `setR` |
+
+Do note that using the prefix `get` or `set` for accessor and mutator is _optional_, although it is a good practice.  For instance, we could name a mutator that sets the radius as `resize` instead of `setRadius`.
 
 ### Accessor/Mutator vs Public
 

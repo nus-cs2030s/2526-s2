@@ -9,15 +9,15 @@
     - explain why Java arrays are covariant and how this design choice can lead to run-time type errors despite successful compilation
     - predict when Java’s type system can and cannot prevent unsafe operations involving arrays
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how Java establishes subtype relationships between classes and interfaces through inheritance and implementation. These relationships allow polymorphism: a variable of a supertype can refer to an object of a subtype.
+    In earlier units, we learned how Java establishes subtype relationships between classes and interfaces through inheritance and implementation. These relationships allow polymorphism: a variable of a supertype can refer to an object of a subtype.
 
-However, once we start working with collections of objects, such as arrays, the situation becomes more subtle. Even if one type is a subtype of another, it is no longer obvious whether an array of the first type should be considered a subtype of an array of the second.
+    However, once we start working with collections of objects, such as arrays, the situation becomes more subtle. Even if one type is a subtype of another, it is no longer obvious whether an array of the first type should be considered a subtype of an array of the second.
 
-This unit introduces the notion of variance, which describes how subtype relationships between component types affect subtype relationships between complex types. We will see that Java makes arrays covariant, a decision that enables flexibility but also introduces a form of unsoundness that only manifests at run time.
+    This unit introduces the notion of variance, which describes how subtype relationships between component types affect subtype relationships between complex types. We will see that Java makes arrays covariant, a decision that enables flexibility but also introduces a form of unsoundness that only manifests at run time.
 
-Understanding this trade-off is essential for appreciating both Java’s type system design and the motivation behind safer alternatives introduced later in the course.
+    Understanding this trade-off is essential for appreciating both Java’s type system design and the motivation behind safer alternatives introduced later in the course.
 
 
 ## Arrays of Reference Types

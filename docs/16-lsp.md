@@ -10,14 +10,13 @@
     - Relate LSP to testing, explaining why subclasses must pass all tests written for their superclasses.
     - Use `final` appropriately to prevent unsafe inheritance or overriding when correctness depends on fixed behavior.
 
-## Introduction
+!!! abstract "Overview"
 
-In the previous units, we saw how polymorphism allows code to be written against abstractions, enabling clients and implementers to evolve independently. We also learned how method overriding lets subclasses customize behavior while preserving a common interface.
+    In the previous units, we saw how polymorphism allows code to be written against abstractions, enabling clients and implementers to evolve independently. We also learned how method overriding lets subclasses customize behavior while preserving a common interface.
 
-However, with this flexibility comes risk. When inheritance and overriding are used carelessly, they can silently change the behavior of existing code—sometimes without causing any compilation errors. These bugs are often hard to trace, because the client code itself has not changed.
+    However, with this flexibility comes risk. When inheritance and overriding are used carelessly, they can silently change the behavior of existing code—sometimes without causing any compilation errors. These bugs are often hard to trace, because the client code itself has not changed.
 
-In this unit, we study the Liskov Substitution Principle (LSP), a fundamental rule that governs when inheritance is safe to use. LSP formalizes the idea that a subclass should be usable anywhere its superclass is expected, without breaking existing assumptions. We will see how violating this principle can lead to subtle runtime bugs, how LSP relates to testing and specifications, and how Java provides tools such as `final` to help prevent unsafe inheritance.
-
+    In this unit, we study the Liskov Substitution Principle (LSP), a fundamental rule that governs when inheritance is safe to use. LSP formalizes the idea that a subclass should be usable anywhere its superclass is expected, without breaking existing assumptions. We will see how violating this principle can lead to subtle runtime bugs, how LSP relates to testing and specifications, and how Java provides tools such as `final` to help prevent unsafe inheritance.
 
 ## The Responsibility When Using Inheritance
 
@@ -25,7 +24,7 @@ As you have seen in [Unit 14](14-polymorphism.md), polymorphism is a powerful to
 
 As Ben Parker (aka Uncle Ben) said, "With great power, comes great responsibility."   A developer using inheritance and method overriding must do so carefully.  Since overriding can change how existing code behaves, they can easily break existing code and introduce bugs.  Since the client may not have access to the existing code behind the abstraction barrier, it is often tricky to trace and debug.  Furthermore, the implementer would not appreciate it if their code was working perfectly until one day, someone overriding a method causes their code to fail, even without the implementer changing anything in their code.
 
-Unfortunately, this responsibility cannot be fully enoreced by the compiler.
+Unfortunately, this responsibility cannot be fully enforced by the compiler.
 It thus becomes a developer's responsibility to ensure that any inheritance with method overriding does not introduce bugs to existing code.  This brings us to the _Liskov Substitution Principle_ (LSP), which says: "Let $\phi(x)$ be a property provable about objects $x$ of type $T$. Then $\phi(y)$ should be true for objects $y$ of type $S$ where $S <: T$."
 
 This is consistent with the definition of subtyping, $S <: T$, but spelled out more formally.
@@ -151,7 +150,6 @@ r.canMakeReservation(2200) == true; // Is true, therefore test passes
 Both test cases pass.  In fact, all test cases that pass for `Restaurant` would pass for `DigitalReadyRestaurant`.  Therefore `DigitalReadyRestaurant` is substitutable for `Restaurant`. Anywhere we can use an object of type `Restaurant`, we can use `DigitalReadyRestaurant` without breaking any previously written code.
 
 We can now rephrase our LSP in terms of testing. A _subclass_ should not break the expectations set by the _superclass_. If a class `B` is substitutable for a parent class `A` then it should be able to pass all test cases of the parent class `A`. If it does not, then it is not substitutable and the LSP is violated.
-
 
 ## Preventing Inheritance and Method Overriding
 

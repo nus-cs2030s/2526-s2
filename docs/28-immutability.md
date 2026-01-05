@@ -10,15 +10,17 @@
     - Reason about safe sharing of objects and internal representations, including when and why structural sharing is correct and efficient.
     - Recognize the role of immutability in program reasoning and concurrency, and explain why immutable objects are inherently thread-safe.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we saw how abstraction, typing, and reuse help manage software complexity. In this unit, we introduce another powerful strategy: avoiding change.
+    In earlier units, we saw how abstraction, typing, and reuse help manage software complexity. In this unit, we introduce another powerful strategy: avoiding change.
 
-Many subtle bugs arise from mutation, especially when objects are aliased and updated through multiple references. When an object can change over time, reasoning about program behaviour becomes significantly harder.
+    Many subtle bugs arise from mutation, especially when objects are aliased and updated through multiple references. When an object can change over time, reasoning about program behaviour becomes significantly harder.
 
-Immutability avoids this problem by ensuring that an object’s observable state never changes after creation. Updates instead produce new objects, eliminating aliasing bugs and enabling safe sharing without defensive copying.
+    Immutability avoids this problem by ensuring that an object’s observable state never changes after creation[^1]. Updates instead produce new objects, eliminating aliasing bugs and enabling safe sharing without defensive copying.
 
-In this unit, we learn how to design immutable classes in Java and why immutability is a key tool for writing simpler, safer, and more robust programs.
+[^1]: Note that this is a looser definition than some other definitions of immutability.  Java tutorial, for instance, defines immutability as preventing any change to the object, including private state.  Our definition allows private state to change as long as the observable behaviour remains unchanged.
+
+    In this unit, we learn how to design immutable classes in Java and why immutability is a key tool for writing simpler, safer, and more robust programs.
 
 
 ## Avoiding Change
@@ -183,13 +185,12 @@ Let's modify our `Point` class so that it creates a single copy of the origin an
 final class Point {
   private final double x;
   private final double y;
-  
+  private final static Point ORIGIN = new Point(0, 0);
+
   private Point(double x, double y) {
     this.x = x;
     this.y = y;
   }
-
-  private static final Point ORIGIN = new Point(0, 0);
 
   public static Point of(double x, double y) {
     if (x == 0 && y == 0) {
@@ -304,7 +305,7 @@ class ImmutableSeq<T> {
 
 ### Enabling Safe Concurrent Execution
 
-We will explore concurrent execution of code towards the end of the module, but making our classes immutable goes a long way in reducing bugs related to concurrent execution.  Without going into details (you will learn this later), concurrent programming allows multiple threads of code to run in an interleaved fashion, in an arbitrary interleaving order.   If we have complex code that is difficult to debug to begin with, imagine having code where we have to ensure its correctness regardless of how the execution interleaves!  Immutability helps us ensure that regardless of how the code interleaves, our objects remain unchanged.
+We will explore concurrent execution of code towards the end of the course, but making our classes immutable goes a long way in reducing bugs related to concurrent execution.  Without going into details (you will learn this later), concurrent programming allows multiple threads of code to run in an interleaved fashion, in an arbitrary interleaving order.   If we have complex code that is difficult to debug to begin with, imagine having code where we have to ensure its correctness regardless of how the execution interleaves!  Immutability helps us ensure that regardless of how the code interleaves, our objects remain unchanged.
 
 ## Final &ne; Immutable
 

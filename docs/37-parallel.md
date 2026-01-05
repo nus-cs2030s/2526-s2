@@ -11,13 +11,13 @@
     - reason about correctness issues such as interference, state, and side effects
     - evaluate the performance trade-offs of parallel stream execution
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we focused on using abstraction, immutability, and the Stream API to write programs that are declarative, compositional, and easy to reason about. So far, however, all our stream pipelines have executed sequentially—each element processed one at a time on a single thread.
+    In earlier units, we focused on using abstraction, immutability, and the Stream API to write programs that are declarative, compositional, and easy to reason about. So far, however, all our stream pipelines have executed sequentially—each element processed one at a time on a single thread.
 
-Modern computers rarely operate this way. They provide multiple cores and hardware support for running tasks concurrently and in parallel. To fully leverage this computational power, programmers must understand not only how to run computations in parallel, but also when doing so is correct and beneficial.
+    Modern computers rarely operate this way. They provide multiple cores and hardware support for running tasks concurrently and in parallel. To fully leverage this computational power, programmers must understand not only how to run computations in parallel, but also when doing so is correct and beneficial.
 
-In this unit, we extend our study of streams by introducing parallel streams in Java. You will see how a small change to a stream pipeline can enable parallel execution, why this works naturally for some computations but not others, and how issues such as state, side effects, and ordering affect both correctness and performance. This unit brings together ideas from earlier discussions on immutability, side effects, and functional-style programming, and shows how they become essential when programs run in parallel.
+    In this unit, we extend our study of streams by introducing parallel streams in Java. You will see how a small change to a stream pipeline can enable parallel execution, why this works naturally for some computations but not others, and how issues such as state, side effects, and ordering affect both correctness and performance. This unit brings together ideas from earlier discussions on immutability, side effects, and functional-style programming, and shows how they become essential when programs run in parallel.
 
 ## Parallel and Concurrent Programming
 
@@ -47,7 +47,7 @@ Modern computers have more than one core/processor[^1].  As such, the line betwe
 
 ### Parallel Computing
 
-Parallel computing is one of the major topics in computer science.  One can teach a whole module (or a focus area) on this topic alone.  The goal of this lecture is not to cover it in-depth but is to expose students in CS2030S to the concept of parallel computing in relation to the Stream abstraction in Java.
+Parallel computing is one of the major topics in computer science.  One can teach a whole course (or a focus area) on this topic alone.  The goal of this lecture is not to cover it in-depth but is to expose students in CS2030S to the concept of parallel computing in relation to the Stream abstraction in Java.
 
 ## Parallel Stream 
 

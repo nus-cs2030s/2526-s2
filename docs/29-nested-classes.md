@@ -12,13 +12,13 @@
     - Write and use local and anonymous classes appropriately, especially for single-use behaviors such as custom comparators.
 
 
-## Introduction
+!!! abstract "Overview"
 
-As programs grow is size, a class often requires several helper classes that exist solely to support its internal implementation. Declaring these helpers as top-level classes can clutter the namespace and expose unnecessary implementation details to clients.
+    As programs grow is size, a class often requires several helper classes that exist solely to support its internal implementation. Declaring these helpers as top-level classes can clutter the namespace and expose unnecessary implementation details to clients.
 
-Java allows classes to be defined within other classes or even within methods. These nested classes let us group tightly coupled components together, keep helper classes within the abstraction barrier, and express design intent more clearly. Nested classes also interact closely with Java’s access control, static and instance contexts, and scoping rules.
+    Java allows classes to be defined within other classes or even within methods. These nested classes let us group tightly coupled components together, keep helper classes within the abstraction barrier, and express design intent more clearly. Nested classes also interact closely with Java’s access control, static and instance contexts, and scoping rules.
 
-In this unit, we examine the different kinds of nested classes in Java and the rules that govern their access to enclosing state, including variable capture and the requirement for effectively final variables. Understanding these mechanisms will help you write better-encapsulated code and understand common patterns used in Java libraries.
+    In this unit, we examine the different kinds of nested classes in Java and the rules that govern their access to enclosing state, including variable capture and the requirement for effectively final variables. Understanding these mechanisms will help you write better-encapsulated code and understand common patterns used in Java libraries.
 
 ## Nested Class
 
@@ -42,7 +42,7 @@ Take the `HashMap<K,V>` class for instance.  [The implementation of `HashMap<K,V
 
 !!! note "Example from CS2030S This Semester"
 
-    We can take another example from your labs on bank simulation.  In one of many possible designs, the subclasses of `Event`: `ArrivalEvent`, `DepartureEvent`, etc. are not used anywhere outside of `BankSimulation`.  They can be safely encapsulated within `BankSimulation` as inner classes, so that these classes can access the fields within the `BankSimulation` class, simplifying their implementation.
+    We can take another example from your programming exercise on bank simulation.  In one of many possible designs, the subclasses of `Event`: `ArrivalEvent`, `DepartureEvent`, etc. are not used anywhere outside of `BankSimulation`.  They can be safely encapsulated within `BankSimulation` as inner classes, so that these classes can access the fields within the `BankSimulation` class, simplifying their implementation.
 
 A nested class can be either static or non-static.  Just like static fields and static methods, a _static nested class_ is associated with the enclosing _class_, NOT an _instance_.  So, it can only access static fields and static methods of the enclosing class.  A _non-static nested class_, on the other hand, carries implicitly a reference to the enclosing object and can access all fields and methods of the enclosing instance.  A _non-static nested class_ is also known as an _inner class_. It cannot be instantiated without an enclosing instance.
 
@@ -78,6 +78,7 @@ class A {
  private class B {
    void foo() {
      this.x = 1; // error
+     x = 1; // ok
    }
  }
 }
@@ -290,7 +291,7 @@ void sortNames(List<String> names) {
 
 Will `sort` sorts in ascending order (i.e., use the value of `ascendingOrder` when the class is declared) or descending order (i.e., use the value of `ascendingOrder` when the class is instantiated)?
 
-To avoid such confusion, Java only allows a local class to access variables that are explicitly declared `final` or implicitly final (or _effectively_ final).  An implicitly final variable cannot be re-assigned after initialization.  Therefore, Java saves us from such a hair-pulling situation and disallows such code &mdash; `ascendingOrder` is not effectively final so the code above does not compile.
+To avoid such confusion, Java only allows a local class to access variables that are explicitly declared `final` or implicitly final (or _effectively_ final).  An effectively final variable is a variable that is assigned only once, even if the `final` keyword is not used.  Therefore, Java saves us from such a hair-pulling situation and disallows such code &mdash; `ascendingOrder` is not effectively final so the code above does not compile.
 
 **Breaking the Limitation of Effectively `final`.** &nbsp;&nbsp; The limitation of effectively final only happens because the value is of a primitive type.  So, if we capture the value and forbid re-assigning the value, there is nothing we can do to change the primitive value.
 
@@ -358,6 +359,23 @@ names.sort(cmp);
 ```
 
 Line 1 above looks just like what we do when we instantiate a class, except that we are instantiating an interface with a `{ .. }` body.
+
+You can think of anonymous class as a syntactic sugar for the following class.
+
+```java
+class MyComparator implements Comparator<String> {
+  public int compare(String s1, String s2) {
+    return s1.length() - s2.length();
+  }
+}
+```
+
+Then, the code above can also be rewritten to be the following.
+
+```java
+Comparator<String> cmp = new MyComparator();
+names.sort(cmp);
+```
 
 Like a local class, an anonymous class captures the variables of the enclosing scope as well &mdash; the same rules to variable access as local classes apply.
 

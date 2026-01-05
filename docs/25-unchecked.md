@@ -10,11 +10,11 @@
     - Use `@SuppressWarnings("unchecked")` correctly, minimally, and ethically.
     - Explain what raw types are, why they exist, and why they should generally be avoided in modern Java.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned that Java’s type system helps detect many errors at compile time, preventing failures such as `ClassCastException` at run time. Generics play a crucial role in achieving this safety. However, there are situations, especially when implementing generic data structures, where the compiler cannot fully verify type safety. In these cases, Java issues unchecked warnings rather than errors.
+    In earlier units, we learned that Java’s type system helps detect many errors at compile time, preventing failures such as `ClassCastException` at run time. Generics play a crucial role in achieving this safety. However, there are situations, especially when implementing generic data structures, where the compiler cannot fully verify type safety. In these cases, Java issues unchecked warnings rather than errors.
 
-This unit explores why unchecked warnings arise, what they mean, and how programmers should respond to them. We will see how type erasure, arrays, and raw types interact in subtle ways, and why the compiler sometimes has to rely on human reasoning instead of static checks. We will also discuss when (and when not) it is appropriate to suppress warnings, emphasizing both technical correctness and professional responsibility.
+    This unit explores why unchecked warnings arise, what they mean, and how programmers should respond to them. We will see how type erasure, arrays, and raw types interact in subtle ways, and why the compiler sometimes has to rely on human reasoning instead of static checks. We will also discuss when (and when not) it is appropriate to suppress warnings, emphasizing both technical correctness and professional responsibility.
 
 ## Creating Arrays with Type Parameters
 

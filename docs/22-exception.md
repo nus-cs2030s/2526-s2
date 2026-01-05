@@ -10,15 +10,15 @@
     - design methods that throw, handle, or propagate exceptions appropriately
     - apply good exception-handling practices without breaking abstraction barriers
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, you have already encountered runtime exceptions such as `NullPointerException`, `ClassCastException`, and `ArrayStoreException`. These exceptions are thrown automatically by Java when fundamental safety rules are violated, for example, invoking a method on null, performing an invalid cast, or storing an incompatible object into an array.
+    In earlier units, you have already encountered runtime exceptions such as `NullPointerException`, `ClassCastException`, and `ArrayStoreException`. These exceptions are thrown automatically by Java when fundamental safety rules are violated, for example, invoking a method on null, performing an invalid cast, or storing an incompatible object into an array.
 
-So far, when such an exception occurs, the program typically terminates with a stack trace. As programmers, however, we often want more control: to detect invalid situations earlier, provide clearer error messages, recover gracefully, or enforce constraints specific to our own abstractions.
+    So far, when such an exception occurs, the program typically terminates with a stack trace. As programmers, however, we often want more control: to detect invalid situations earlier, provide clearer error messages, recover gracefully, or enforce constraints specific to our own abstractions.
 
-This unit introduces exceptions as a programming construct. You will learn how to use `try`, `catch`, and `finally` to separate normal program logic from error handling, and how to define and throw your own exceptions to enforce the rules of your classes, just as Java does for its built-in abstractions.
+    This unit introduces exceptions as a programming construct. You will learn how to use `try`, `catch`, and `finally` to separate normal program logic from error handling, and how to define and throw your own exceptions to enforce the rules of your classes, just as Java does for its built-in abstractions.
 
-By the end of this unit, you should learn to use exceptions as a deliberate design tool for writing robust, well-structured programs.
+    By the end of this unit, you should learn to use exceptions as a deliberate design tool for writing robust, well-structured programs.
 
 ## A Motivating Example from a C program
 
@@ -94,6 +94,8 @@ try {
   // do something
 } catch (an exception parameter) {
   // handle exception
+} catch (another exception parameter) {
+  // can have more catch blocks
 } finally {
   // clean up code
   // regardless of whether an an exception occurs
@@ -115,20 +117,22 @@ try {
 
 which opens the file and reads an integer from it.  Thus the main task for the code is put together in one place, making it easier to read and understand (and thus less bug-prone).
 
+### `catch` Block
+
+Next we have a sequence of `catch` blocks.
+
 ```Java
   :
 catch (FileNotFoundException e) {
-    System.err.println("Unable to open " + filename + " " + e);
+  System.err.println("Unable to open " + filename + " " + e);
 } catch (InputMismatchException e) {
-    System.err.println("Unable to scan for an integer");
+  System.err.println("Unable to scan for an integer");
 } catch (NoSuchElementException e) {
-    System.err.println("No input found");
+  System.err.println("No input found");
 }
 ```
 
-### `catch` Block
-
-The error handling comes under the `catch` clauses, each handling a different type of exception.  In Java, exceptions are instances that are a subtype of the `Exception` class.  Information about an exception is encapsulated in an exception instance and is "passed" into the `catch` block.  In the example above, `e` is the variable containing an exception instance.
+The error handling comes under the `catch` blocks, each handling a different type of exception.  In Java, exceptions are instances that are a subtype of the `Exception` class.  Information about an exception is encapsulated in an exception instance and is "passed" into the `catch` block.  In the example above, `e` is the variable containing an exception instance.
 
 The catch blocks are checked in the order they appear in our program from top to bottom. The first catch block that has an exception type compatible with the type of the thrown exception (i.e. a subtype) is selected to handle the exception. This means the actual type of the exception object must be the same as, or a subclass of, the exception type specified in the catch block. Consider if we have `ExceptionX` <: `ExceptionY` and we have the following `catch` block:
 
@@ -144,7 +148,17 @@ The catch blocks are checked in the order they appear in our program from top to
 
 As such, we will never execute the second catch as `ExceptionX` will already be caught by `catch(ExceptionY e) { .. }`.  Indeed, the Java compiler will prevent this issue with a compilation error.
 
+```
+_.java:_: error: exception ExceptionX has already been caught
+        } catch(ExceptionX e) {
+          ^
+1 error
+```
 Now with the exception, we no longer rely on a special return value from a function nor a global variable to indicate exceptions.
+
+### `finally` Block
+
+_Finally_, we have the optional `finally` clause for housekeeping tasks.  Here, we close the `scanner` if it is opened.
 
 ```Java
   :
@@ -153,10 +167,6 @@ finally {
     scanner.close();
 }
 ```
-
-### `finally` Block
-
-_Finally_, we have the optional `finally` clause for housekeeping tasks.  Here, we close the `scanner` if it is opened.
 
 In cases where the code to handle the exceptions is the same, you can avoid repetition by combining multiple exceptions into one catch statement:
 ```Java
@@ -218,6 +228,7 @@ For checked exceptions, this contract is enforced by the compiler: any caller mu
 
 Unchecked exceptions, on the other hand, usually signal violated preconditions and are therefore not part of the method’s explicit contract, even though they may still occur at runtime.
 
+In Java, checked exceptions are subclasses of the class `Exception` that are not a subclass of `RuntimeException`.
 
 ## Passing the Buck
 
@@ -501,3 +512,5 @@ Do not use exceptions to handle normal program logic.  If you expect it to happe
 ## The `Error` class
 
 Java has another class called `Error` for situations where the program should terminate as generally there is no way to recover from the error. For instance, when the heap is full (`OutOfMemoryError`) or the stack is full (`StackOverflowError`).  Typically we don't need to create or handle such errors.  
+
+`Exception` and `Error` shares a common superclass called `Throwable`.  In fact, only objects that are instances of this class or its subclasses can be _thrown_ by the `throw` statement or _caught_ by the `catch` block.

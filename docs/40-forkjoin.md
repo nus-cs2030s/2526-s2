@@ -90,7 +90,7 @@ There are other ways we can combine and order the execution of `fork()`, `comput
 
 ## `ForkJoinPool`
 
-Let's now explore the idea behind how Java manages the thread pool with fork-join tasks.  The details are beyond the scope of this module, but it would be interesting to note a few key points, as follows:
+Let's now explore the idea behind how Java manages the thread pool with fork-join tasks.  The details are beyond the scope of this course, but it would be interesting to note a few key points, as follows:
 
 - Each thread has a deque[^1] of tasks.  
 - When a thread is idle, it checks its deque of tasks.  If the deque is not empty, it picks up a task at the head of the deque to execute (e.g., invoke its `compute()` method).  Otherwise, if the deque is empty, it picks up a task from the _tail_ of the deque of another thread to run.  The latter is a mechanism called _work stealing_.

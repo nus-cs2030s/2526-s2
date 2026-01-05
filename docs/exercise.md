@@ -101,7 +101,7 @@ You may assume that all input data are correct unless otherwise stated. Hence, y
 
 We encourage students to discuss and seek help from each other, from the lab tutors, or from an AI, if they are stuck.  However, do note that students are responsibile to ensure that they understand the resulting code they produce and the concepts behind them, and not just copying the code blindly.  
 
-The exercises are meant to help you learn and practice the concepts taught in the module.  The exercises do not contribute to the final grade and therefore there is no point in plagiarizing code to solve the questions.  
+The exercises are meant to help you learn and practice the concepts taught in the course.  The exercises do not contribute to the final grade and therefore there is no point in plagiarizing code to solve the questions.  
 
 All exercises are designed to be completed within half a day.  If you get stuck on an issue for longer than that, you should talk to others.
 

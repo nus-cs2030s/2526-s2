@@ -7,13 +7,13 @@
     - explain the two-step method invocation process in Java (compile-time method selection and run-time method dispatch)
     - predict which method implementation is executed for a given invocation, and explain why class methods are statically bound
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how overloading, overriding, and polymorphism allow a single method call to behave differently depending on the object it is invoked on. This enables flexible and extensible program designs, but it also raises an important question in a statically typed language like Java: If many decisions are made at compile time, how does Java support dynamic behavior at run time?
+    In earlier units, we learned how overloading, overriding, and polymorphism allow a single method call to behave differently depending on the object it is invoked on. This enables flexible and extensible program designs, but it also raises an important question in a statically typed language like Java: If many decisions are made at compile time, how does Java support dynamic behavior at run time?
 
-This unit answers that question by explaining how Java resolves method invocations. We will see that method invocation is a two-step process: one step performed during compilation, and another during execution. Each step uses different information and determines different aspects of the method call.
+    This unit answers that question by explaining how Java resolves method invocations. We will see that method invocation is a two-step process: one step performed during compilation, and another during execution. Each step uses different information and determines different aspects of the method call.
 
-Understanding this process explains why overloading is resolved at compile time, why overriding supports dynamic binding, and why class methods do not participate in dynamic binding. By the end of this unit, method invocation will no longer seem magical, but a precise and predictable mechanism.
+    Understanding this process explains why overloading is resolved at compile time, why overriding supports dynamic binding, and why class methods do not participate in dynamic binding. By the end of this unit, method invocation will no longer seem magical, but a precise and predictable mechanism.
 
 ## How does Dynamic Binding work?
 

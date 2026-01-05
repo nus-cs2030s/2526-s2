@@ -10,13 +10,13 @@
     - reason about how wrapping null inside `Maybe<T>` restores function purity by keeping return values within the declared codomain
     - use map and filter on `Maybe<T>` to eliminate explicit `null` checks and prevent `NullPointerException`
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how abstraction barriers protect internal state, how immutability simplifies reasoning, and how lambda expressions allow behavior to be passed around as values. We also saw how higher-order methods such as map and filter let us transform data without exposing its representation.
+    In earlier units, we learned how abstraction barriers protect internal state, how immutability simplifies reasoning, and how lambda expressions allow behavior to be passed around as values. We also saw how higher-order methods such as map and filter let us transform data without exposing its representation.
 
-In this unit, we bring these ideas together by studying `Box<T>` and `Maybe<T>`. These classes show how a container can remain fully encapsulated while still being highly flexible, by allowing clients to operate on hidden values using functions rather than direct access. In particular, `Maybe<T>` addresses a long-standing problem in Java: how to represent missing values without breaking function purity or relying on fragile null checks.
+    In this unit, we bring these ideas together by studying `Box<T>` and `Maybe<T>`. These classes show how a container can remain fully encapsulated while still being highly flexible, by allowing clients to operate on hidden values using functions rather than direct access. In particular, `Maybe<T>` addresses a long-standing problem in Java: how to represent missing values without breaking function purity or relying on fragile null checks.
 
-By the end of this unit, you will see how combining generics and lambda expressions enables us to build general, safe abstractions that scale beyond concrete data structures, and how `Maybe<T>` helps us write code that is both more expressive and less error-prone.
+    By the end of this unit, you will see how combining generics and lambda expressions enables us to build general, safe abstractions that scale beyond concrete data structures, and how `Maybe<T>` helps us write code that is both more expressive and less error-prone.
 
 ## Lambda as a Cross-Barrier State Manipulator
 

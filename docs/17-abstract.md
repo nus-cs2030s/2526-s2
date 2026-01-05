@@ -11,13 +11,13 @@
     - design class hierarchies that use abstract classes to support polymorphism safely
     - distinguish clearly between abstract and concrete classes and their roles
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we learned how inheritance and polymorphism allow us to write code that works at a higher level of abstraction.  For example, writing methods that operate on `Object`, or on a superclass such as `Shape`, rather than on a specific subclass like `Circle`. This allowed our programs to be more extensible and reusable.
+    In earlier units, we learned how inheritance and polymorphism allow us to write code that works at a higher level of abstraction.  For example, writing methods that operate on `Object`, or on a superclass such as `Shape`, rather than on a specific subclass like `Circle`. This allowed our programs to be more extensible and reusable.
 
-However, as we push abstraction further, we encounter a new problem: some classes are too abstract to be fully implemented.  In this unit, we introduce abstract classes, a language mechanism that allows us to express such incomplete abstractions explicitly. Abstract classes let us define what must be implemented by subclasses, while preventing misuse, such as instantiating objects that are conceptually incomplete. More importantly, abstract classes allow the compiler to enforce design constraints that would otherwise lead to subtle runtime bugs.
+    However, as we push abstraction further, we encounter a new problem: some classes are too abstract to be fully implemented.  In this unit, we introduce abstract classes, a language mechanism that allows us to express such incomplete abstractions explicitly. Abstract classes let us define what must be implemented by subclasses, while preventing misuse, such as instantiating objects that are conceptually incomplete. More importantly, abstract classes allow the compiler to enforce design constraints that would otherwise lead to subtle runtime bugs.
 
-This unit completes the abstraction story that began with inheritance and polymorphism by showing how Java helps us encode design intent directly into the type system.
+    This unit completes the abstraction story that began with inheritance and polymorphism by showing how Java helps us encode design intent directly into the type system.
 
 ## High-Level Abstraction
 
@@ -218,9 +218,17 @@ Shape s = new Shape();
 
 would result in an error.
 
+```
+_.java:_: error: Shape is abstract; cannot be instantiated
+    Shape s = new Shape();
+              ^
+1 error
+```
+
 Note that our simple example of `Shape` only encapsulates one abstract instance method.  An abstract class can contain multiple fields and multiple methods (including class methods).  Not all the methods have to be abstract.  As long as one of them is abstract, the class becomes abstract.
 
-To illustrate this, consider
+To illustrate this, consider the following implemetation of the abstract class `Shape`.
+
 ```Java
 abstract class Shape {
   private int numOfAxesOfSymmetry ;

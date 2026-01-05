@@ -10,13 +10,13 @@
     - trace the creation and destruction of stack frames during nested method invocations.
     - explain Java’s parameter passing semantics for primitive values and object references.
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we focused on what objects and methods do. In this unit, we turn our attention to where and how data is stored when a Java program runs.
+    In earlier units, we focused on what objects and methods do. In this unit, we turn our attention to where and how data is stored when a Java program runs.
 
-Understanding the distinction between the stack and the heap is essential for reasoning about object creation, method calls, parameter passing, and side effects. Many common programming misconceptions, such as why changing an object inside a method affects the caller, but changing a primitive does not, can be resolved by carefully tracing how memory is allocated and shared.
+    Understanding the distinction between the stack and the heap is essential for reasoning about object creation, method calls, parameter passing, and side effects. Many common programming misconceptions, such as why changing an object inside a method affects the caller, but changing a primitive does not, can be resolved by carefully tracing how memory is allocated and shared.
 
-This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behaviour precisely.
+    This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behaviour precisely.
 
 ## Heap and Stack
 

@@ -11,15 +11,15 @@
     - recognize situations where type inference leads to surprising or unsafe behaviour
     - diagnose and explain compilation errors caused by incompatible inference bounds
 
-## Introduction
+!!! abstract "Overview"
 
-In earlier units, we saw how Java’s type system helps prevent many classes of run-time errors by enforcing type correctness at compile time. We also learned that generic types and wildcards allow us to write flexible and reusable code—but often at the cost of additional type annotations.
+    In earlier units, we saw how Java’s type system helps prevent many classes of run-time errors by enforcing type correctness at compile time. We also learned that generic types and wildcards allow us to write flexible and reusable code—but often at the cost of additional type annotations.
 
-To reduce verbosity, Java allows programmers to omit some type arguments and rely on the compiler to infer them automatically. This process, known as type inference, attempts to determine which type arguments would make the program type-correct.
+    To reduce verbosity, Java allows programmers to omit some type arguments and rely on the compiler to infer them automatically. This process, known as type inference, attempts to determine which type arguments would make the program type-correct.
 
-While type inference can make code shorter and easier to read, it is not merely a convenience feature. It follows precise rules based on subtyping, bounds, and target types—and these rules can sometimes lead to results that surprise even experienced programmers.
+    While type inference can make code shorter and easier to read, it is not merely a convenience feature. It follows precise rules based on subtyping, bounds, and target types—and these rules can sometimes lead to results that surprise even experienced programmers.
 
-In this unit, we study how Java infers type arguments for generic methods and types, how these inferences are derived from constraints, and why understanding the inference process is essential for writing safe and predictable generic code.
+    In this unit, we study how Java infers type arguments for generic methods and types, how these inferences are derived from constraints, and why understanding the inference process is essential for writing safe and predictable generic code.
 
 ## Diamond Operator
 
@@ -108,7 +108,7 @@ Solving for these two constraints:
 ```
 T <: Object
 ```
-Therefore `T` can only have the type `Object`, so Java infers `T` to be `Object`.  The code above is equivalent to:
+The most specific type that `T` can be is `Object`, so Java infers `T` to be `Object`.  The code above is equivalent to:
 
 ```Java
 A.<Object>contains(strArray, 123);
@@ -147,7 +147,7 @@ We have a few more constraints to check:
 
 - Due to target typing, the return type of `T` must be a subtype of `Shape` (i.e. `T <: Shape`)
 - Due to the bound of the type parameter, `T` must be a subtype of `GetAreable` (i.e. `T <: GetAreable`)
-- `Seq<Circle>` must be a subtype of `Seq<? extends T>`, so `T` must be a supertype of `Circle` (i.e. `Circle <: T <: Object`)
+- Due to argument typing, `Seq<Circle>` must be a subtype of `Seq<? extends T>`, so `T` must be a supertype of `Circle` (i.e. `Circle <: T <: Object`)
 
 Solving for all three of these constraints:
 ```
@@ -163,7 +163,7 @@ Shape o = A.<Circle>findLargest(new Seq<Circle>(0));
 
 We now return to our `Circle` and `ColoredCircle` classes and the `GetAreable` interface. Recall that `Circle` implements `GetAreable` and `ColoredCircle` inherits from `Circle`.
 
-Now lets consider the following method signature of a generic method `foo`:
+Consider the following method signature of a generic method `foo`:
 
 ```Java
 public <T extends Circle> T foo(Seq<? extends T> seq)

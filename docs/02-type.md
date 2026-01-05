@@ -9,20 +9,20 @@
     - reason about subtyping among Java primitive types and determine whether an assignment or parameter passing is allowed.
     - apply the widening conversion rule ($S <: T$) to predict and explain compile-time type errors in Java programs.
 
-## Introduction
-As programs grow in size and complexity, programmers must manage an increasing number of data values and the operations performed on them. Writing correct programs is not just about syntax—it is about ensuring that operations on data are meaningful and safe.
+!!! abstract "Overview" 
+    As programs grow in size and complexity, programmers must manage an increasing number of data values and the operations performed on them. Writing correct programs is not just about syntax—it is about ensuring that operations on data are meaningful and safe.
 
-This unit is organised around a central question:
+    This unit is organised around a central question:
 
-> How does a programming language help prevent meaningless programs involving data?
+    > How does a programming language help prevent meaningless programs involving data?
 
-We begin with variables, which provide an abstraction over memory locations, allowing programmers to name and manipulate data without worrying about where it is stored. 
+    We begin with variables, which provide an abstraction over memory locations, allowing programmers to name and manipulate data without worrying about where it is stored. 
 
-A key goal of a programming language is _safety_, i.e., preventing programs from performing meaningless or invalid operations on variables during execution.  This goal can be achieved through tagging each variable with a _type_ that describes the kind of data it holds and the operations that can be performed on it.  A type-safe language ensures that operations are only applied to values for which they are meaningful.
+    A key goal of a programming language is _safety_, i.e., preventing programs from performing meaningless or invalid operations on variables during execution.  This goal can be achieved through tagging each variable with a _type_ that describes the kind of data it holds and the operations that can be performed on it.  A type-safe language ensures that operations are only applied to values for which they are meaningful.
 
-Programming languages differ in how and when they enforce these restrictions. In this unit, we contrast static vs. dynamic typing and strong vs. weak typing, focusing on how Java’s static and strong typing enables the compiler to detect certain errors before a program is run.
+    Programming languages differ in how and when they enforce these restrictions. In this unit, we contrast static vs. dynamic typing and strong vs. weak typing, focusing on how Java’s static and strong typing enables the compiler to detect certain errors before a program is run.
 
-We then examine Java’s primitive types and the concept of subtyping, which allows limited flexibility while preserving safety. Subtyping explains why some assignments are allowed and others are rejected, leading to the rule of widening type conversion used by the Java compiler.
+    We then examine Java’s primitive types and the concept of subtyping, which allows limited flexibility while preserving safety. Subtyping explains why some assignments are allowed and others are rejected, leading to the rule of widening type conversion used by the Java compiler.
 
 ## Data Abstraction: Variable
 
@@ -158,7 +158,7 @@ i = i + 1;
 
 | Kinds | Types | Sizes (in bits) |
 |-------|-------|-------|
-| Boolean | `boolean` | 1[^1] |
+| Boolean | `boolean` | JVM dependent[^1] |
 | Character | `char` | 16 |
 | Integral | `byte` | 8 | 
 |          | `short` | 16 | 
@@ -170,7 +170,7 @@ i = i + 1;
 [^1]: While a boolean conceptually represents a single bit of information, its storage size typically varies in practice due to hardware efficiency considerations.  Java specification leaves it unspecified and up to the JVM implementation.
 
 !!! info "Long and Float Constant"
-     By default, an integer literal (e.g., `888`) is assigned an `int` type. To differentiate between a `long` and an `int` constant, you can use the suffix `L` to denote that the value is expected to be of `long` type (e.g., `888L` is a `long`).  This is important for large values beyond the range of `int`.  On the other hand, if the constant is a floating-point constant, by default it is treated as type `double`.  You need to add the suffix `f` to indicate that the value is to be treated as a `float` type.
+     By default, an integer literal (e.g., `67`) is assigned an `int` type. To differentiate between a `long` and an `int` constant, you can use the suffix `L` to denote that the value is expected to be of `long` type (e.g., `67L` is a `long`).  This is important for large values beyond the range of `int`.  On the other hand, if the constant is a floating-point constant (e.g., `20.30`), by default it is treated as type `double`.  You need to add the suffix `f` to indicate that the value is to be treated as a `float` type (e.g., `20.30f` is a `float`).
 
 ## Subtypes
 
@@ -257,11 +257,11 @@ On Line 3, the Java compiler allows the value stored inside `i` to be copied to 
 
 This example shows how subtyping applies to type checking.  _Java allows a variable of type $T$ to hold a value from a variable of type $S$ only if $S <: T$_.  This step is called _widening type conversion_.  Such widening type conversion can happen during assignment or parameter passing.
 
-The term "widening" is easy to see for primitive types --  the subtype has a narrower range of values than the supertype. The opposite conversion is called _narrowing_ because the size is narrower.
+The term "widening" is easy to see for primitive types --  the subtype has a narrower range of values than the supertype. The opposite conversion is called _narrowing_ because the range of values is narrower.
 
-Some of the readers might notice that, in the example above, the value of `d` is 5.0, so, we can store the value as `5` in `i`, without any loss.  Or, in Line 3, we already copied the value stored in `i` to `d`, and we are just copying it back to `i`?   Since the value in `d` now can be represented by `i`, what is wrong with copying it back?  Why doesn't the compiler allow Line 4 to proceed?  
+Some of the readers might notice that, in the example above, the value of `d` is 5.0, so, we can store the value as `5` in `i`, without any loss.  Or, in Line 3, we already copied the value stored in `i` to `d`, and we are just copying it back to `i`?   Since the value in `d` now can be represented by `i`, what is wrong with copying it back?  Why doesn't the compiler allow Line 4 to proceed?
 
-The reason is that the compiler does not execute the code (which is when assigning 5.0 to `d` happens) and it (largely) looks at the code, statement-by-statement.  Thus, the line `i = d` is considered independently from the earlier code shown in the example.  In practice, Line 4 might appear thousands of lines away from earlier lines, or may even be placed in a different source file.  The values stored in `d` might not be known until run time (e.g., it might be an input from the user).
+The reason is that the compiler does not execute the code (which is when assigning 5.0 to `d` happens) and it (largely) looks at the code, statement-by-statement. Thus, the line `i = d` is considered independently from the earlier code shown in the example.  In practice, Line 4 might appear thousands of lines away from earlier lines, or may even be placed in a different source file.  The values stored in `d` might not be known until run time (e.g., it might be an input from the user).
 
 ## Additional Readings
 
