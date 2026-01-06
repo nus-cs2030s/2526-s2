@@ -192,7 +192,7 @@ The `Comparator` interface allows us to specify how to compare two elements, by 
 
 Suppose we have a list of strings, and we want to sort them in the order of their length, we can write the following method:
 
-```Java
+```Java title="sortNames v1 with Local Class"
 void sortNames(List<String> names) {
 
   class NameComparator implements Comparator<String> {
@@ -274,7 +274,7 @@ Capturing local variables or enclosing instances may extend their lifetime beyon
 
 Variable captures can be confusing.  Consider the following code:
 
-```Java
+```Java title="sortNames v2 with Sorting Order (Won't Compile)" hl_lines="2 5 12"
 void sortNames(List<String> names) {
   boolean ascendingOrder = true;
   class NameComparator implements Comparator<String> {
@@ -300,7 +300,7 @@ To avoid such confusion, Java only allows a local class to access variables that
 On the other hand, reference types can be mutated. So if we use our own implementation of `Bool` class below instead of `boolean` primitive type, we can modify the code above to allow the "value" in variable `ascendingOrder` to be changed. However, this change is via mutation and not re-assignment to the variable.
 
 
-```Java
+```Java title="sortNames v3 with Mutable Wrapper" hl_lines="2 5 12 16-18"
 void sortNames(List<String> names) {
   Bool ascendingOrder = new Bool(true);
   class NameComparator implements Comparator<String> {

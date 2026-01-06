@@ -38,7 +38,6 @@ Pair<String,Integer> p = new Pair<String,Integer>();
 We have been invoking 
 ```Java title="contains v0.7 (with wild cards)"
 class A {
-  // version 0.7 (with wild cards sequence)
   public static <S> boolean contains(Seq<? extends S> seq, S obj) {
     for (int i = 0; i < seq.getLength(); i++) {
       S curr = seq.get(i);
@@ -77,14 +76,14 @@ Type inference can have unexpected consequences.  Let's consider an [older versi
 
 ```Java title="contains v0.4 (with generics)"
 class A {
-    public static <T> boolean contains(T[] array, T obj) {
-      for (T curr : array) {
-        if (curr.equals(obj)) {
-          return true;
-        }
+  public static <T> boolean contains(T[] array, T obj) {
+    for (T curr : array) {
+      if (curr.equals(obj)) {
+        return true;
       }
-      return false;
     }
+    return false;
+  }
 }
 ```
 

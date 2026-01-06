@@ -36,7 +36,7 @@ Circle c2 = new Circle(p, 4);
 
 Let's say that we have the `moveTo` method in both `Circle` and `Point`, to move the circle and point respectively.
 
-```Java
+```Java title="Mutable Point and Circle"
 class Point {
   private double x;
   private double y;
@@ -95,7 +95,7 @@ Let's now see how immutability can help us resolve our problem.
 
 Let's start by making our `Point` class immutable.  We start by making the fields `final` to signal our intention that we do not intend to _assign_ another value to them.  Now that the `x` and `y` cannot be re-assigned (a new value or even the same value), to move a point, we shouldn't re-assign to the fields `x` and `y` anymore.  Instead, we return a new `Point` instance to prevent mutating the current instance, as follows:
 
-```Java
+```Java title="Immutable Point" hl_lines="1-3 10-12"
 final class Point {
   private final double x;
   private final double y;
@@ -121,7 +121,7 @@ Note that, to prevent subclasses from overriding methods in a way that breaks im
 
 Now, let's make `Circle` immutable:
 
-```Java
+```Java title="Immutable Circle" hl_lines="1-3 11-13"
 final class Circle {
   private final Point c;
   private final double r;
@@ -181,7 +181,7 @@ Making a class immutable allows us to safely share instances of the class, there
 
 Let's modify our `Point` class so that it creates a single copy of the origin and returns the same copy every time the origin is required.
 
-```Java
+```Java title="Immutable Point with shared ORIGIN" hl_lines="4 12-14"
 final class Point {
   private final double x;
   private final double y;
@@ -267,7 +267,7 @@ c.get(1) // returns 50
 
 A typical way to implement `subarray` is to allocate a new `T[]` and copy the elements over.  This operation can be expensive if our `ImmutableSeq` has millions of elements.  But, since our class is immutable and the internal field `array` is guaranteed not to mutate, we can safely let `b` and `c` refer to the same `array` from `a`, and only store the starting and ending index.
 
-```Java title="ImmutableSeq&lt;T&gt; v0.2 (with sharing)"
+```Java title="ImmutableSeq&lt;T&gt; v0.2 (with sharing)" hl_lines="2 3 17-21 23-28 30-32"
 class ImmutableSeq<T> {
   private final int start;
   private final int end;
@@ -311,7 +311,7 @@ We will explore concurrent execution of code towards the end of the course, but 
 
 When creating an immutable class, we need to be careful to distinguish between the keywords that help us avoid accidentally making things easily mutable and the actual concept of an immutable class.  For instance, it is _insufficient_ to simply declare all fields with `final` keywords.  Just because we cannot accidentally update the field, does not mean that the field is immutable.  Consider the same `Circle` above but with a getter for the center point and now imagine that the `Point` is mutable.
 
-```java
+```java title="Circle with Mutable Point" hl_lines="11-13"
 final class Circle {
   private final Point c;
   private final double r;
@@ -341,7 +341,7 @@ c.getCenter().moveTo(1, 1); // assume mutable Point
 
 On the other hand, it is not even _necessary_ to use the `final` keyword to make an immutable class.  We simply have to have a class that prevents any and all kinds of sharing by copying all the parameters before assigning them to the fields and copying all return values.  Assume that all classes have a correctly implemented `clone()` method.  Then the following `Circle` is immutable even with a getter and no `final` keyword on the fields.  We still need the `final` keyword on the class to disallow inheritance.
 
-```java
+```java title="Immutable Circle with Cloning" hl_lines="2 3 6 12"
 final class Circle {
   private Point c;
   private double r;

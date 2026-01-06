@@ -24,7 +24,7 @@ Let's consider first how we can represent an eagerly evaluated, finite list, rec
 
 A simple way is to treat the list as a recursive structure, containing a `head` and a `tail`, with the `tail` being a list itself.  We have a special terminating list called `Sentinel` that we use to terminate the EagerList.
 
-```Java
+```Java title="An Eagerly Evaluated Finite List"
 class EagerList<T> {
   private final T head;
   private final EagerList<T> tail;
@@ -153,7 +153,7 @@ Just as we saw in the previous unit, we can delay a computation by using the `Pr
 
 Instead of storing the head and tail of the list, we can think of an infinite list as consisting of two functions, the first is a function that generates the head, and the second is a function that generates the tail.  Our `InfiniteList` looks like this:
 
-```Java
+```Java title="InfiniteList v0.1"
 class InfiniteList<T> {
   private final Producer<T> head;
   private final Producer<InfiniteList<T>> tail;
@@ -242,7 +242,7 @@ evens.map(x -> x + 1).map(x -> x * 2).head(); // 2
 
 This section explains how `InfiniteList` works at runtime by tracing the chain of `Producer` objects created by successive calls to iterate and map. The goal is to understand when computations are triggered and how values flow through a lazy pipeline. Focus in particular on how a single call to `head()` causes a sequence of deferred computations to execute.  It is thus worthwhile to trace through the code and understand how `head()` works.  For simplicity, let's put all our code together for easy reference.
 
-```Java
+```Java title="InfiniteList v0.2 with generate, iterate, and map"
 class InfiniteList<T> {
   private final Producer<T> head;
   private final Producer<InfiniteList<T>> tail;

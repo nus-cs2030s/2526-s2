@@ -84,8 +84,7 @@ incrWithLog(absWithLog(Pair.of(-4, "")));
 
 Let's do it in a more OO way, by writing a class to replace `Pair`.
 
-```Java
-// version 0.1
+```Java title="Loggable v0.1"
 class Loggable {
   private final int value;
   private final String log;
@@ -176,8 +175,7 @@ to now compose the methods `incr` and `abs` together, along with the log message
 
 We started with an operation on `int`, but our `Loggable` class is fairly general and should be able to add a log message to any operation of any type.  We can make it so by making `Loggable` a generic class.
 
-```Java
-// version 0.2
+```Java title="Loggable v0.2 (Generic with flatMap)"
 class Loggable<T> {
   private final T value;
   private final String log;

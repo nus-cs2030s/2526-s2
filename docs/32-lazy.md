@@ -50,9 +50,7 @@ Lambda expressions, therefore, allows us to delay the execution of code, saving 
 
 Consider the following class:
 
-```Java
-// Version 0.1 (eager evaluation)
-
+```Java title="Logger v0.1 with Eager Evaluation"
 class Logger {
   enum LogLevel { INFO, WARNING, ERROR };
 
@@ -79,9 +77,7 @@ However, regardless of whether the log message will be printed, the method `Syst
 
 A better design is to wrap the message `msg` within a lambda expression so that it does not get evaluated eagerly when we pass it in as a parameter.  We can wrap the message with a `Producer<String>`.  The new `lazyLog` method looks like this:
 
-```Java
-// Version 0.2 (with Producer)
-
+```Java title="Logger v0.2 with Message Producer" hl_lines="6 8"
 class Logger {
   enum LogLevel { INFO, WARNING, ERROR };
 
@@ -109,7 +105,7 @@ We have so far seen one way of being lazy, i.e., procrastinating our computation
 
 While other languages such as Scala has native support for lazy variables, Java does not.  So let's build a simple one here.  (You will build a more sophisticated one in Lab 6) 
 
-```Java
+```Java title="Lazy<T> with Memoization"
 class Lazy<T> {
   private T value;
   private boolean evaluated;
@@ -133,9 +129,7 @@ class Lazy<T> {
 
 We can now rewrite our `Logger` as
 
-```Java
-// version 0.3 (with Lazy)
-
+```Java title="Logger v0.3 using Lazy<T>" hl_lines="6 8"
 class Logger {
   enum LogLevel { INFO, WARNING, ERROR };
 

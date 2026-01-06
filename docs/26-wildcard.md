@@ -110,7 +110,7 @@ A.<Shape,Circle>contains(circleSeq, shape);
 
 Let's consider another example.  Let's add two methods `copyFrom` and `copyTo`, to `Seq<T>` so that we can copy to and from one sequence to another.
 
-```Java title="Seq&lt;T&gt; v0.4 (with copy)"
+```Java title="Seq&lt;T&gt; v0.4 (with copy)" hl_lines="21-32"
 class Seq<T> {
   private T[] array;
 
@@ -231,7 +231,6 @@ Seq.java:32: error: method set in class Seq<T> cannot be applied to given types;
     T extends Object declared in class Seq
   where CAP#1 is a fresh type-variable:
     CAP#1 extends T from capture of ? extends T
-1 error
 ```
 
 Let's try not to understand what the error message means first, and think about what could go wrong if the compiler allows:
@@ -280,7 +279,7 @@ circleSeq.copyTo(shapeSeq);
 ```
 
 Our new `Seq<T>` is now
-```Java title="Seq&lt;T&gt; v0.5 (with flexible copy using wildcards)"
+```Java title="Seq&lt;T&gt; v0.5 (with flexible copy using wildcards)" hl_lines=21 28"
 class Seq<T> {
   private T[] array;
 
@@ -304,14 +303,14 @@ class Seq<T> {
   public void copyFrom(Seq<? extends T> src) {
     int len = Math.min(this.array.length, src.array.length);
     for (int i = 0; i < len; i++) {
-        this.set(i, src.get(i));
+      this.set(i, src.get(i));
     }
   }
 
   public void copyTo(Seq<? super T> dest) {
     int len = Math.min(this.array.length, dest.array.length);
     for (int i = 0; i < len; i++) {
-        dest.set(i, this.get(i));
+      dest.set(i, this.get(i));
     }
   }
 }
@@ -413,7 +412,7 @@ Intuitively, we can think of `Seq<?>`, `Seq<Object>`, and `Seq` as follows:
 
 Now, let's simplify our `contains` methods with the help of wildcards.  Recall that to add flexibility into the method parameter and allow us to search for a shape in a sequence of circles, we have modified our method into the following:
 
-```Java title="contains v0.6 (with Seq&lt;T&gt;)"
+```Java title="contains v0.6 (with Seq&lt;T&gt;)" hl_lines="2"
 class A { 
   public static <S,T extends S> boolean contains(Seq<T> seq, S obj) {
     for (int i = 0; i < seq.getLength(); i++) {
@@ -429,7 +428,7 @@ class A {
 
 Can we make this simpler using wildcards?  Since we want to search for an object of type `S` in a sequence of its subtype, we can remove the second parameter type `T` and change the type of `seq` to `Seq<? extends S>`:
 
-```Java title="contains v0.7 (with wild cards)"
+```Java title="contains v0.7 (with wild cards)" hl_lines="2"
 class A {
   public static <S> boolean contains(Seq<? extends S> seq, S obj) {
     for (int i = 0; i < seq.getLength(); i++) {

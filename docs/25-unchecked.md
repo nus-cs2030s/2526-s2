@@ -134,7 +134,7 @@ If we are sure (and only if we are sure) that the line
 
 is safe, we can thank the compiler for its warning and assure the compiler that everything is going to be fine.  We can do so with the `@SuppressWarnings("unchecked")` annotation.
 
-```Java title="Seq&lt;T&gt; v0.3 with @SuppressWarnings"
+```Java title="Seq&lt;T&gt; v0.3 with @SuppressWarnings" hl_lines="5-10"
 class Seq<T> {
   private T[] array;
 
@@ -184,7 +184,7 @@ String str = s.get(0);
 where the method `populateSeq` uses raw types:
 ```Java
 void populateSeq(Seq s) {
-	s.set(0, 1234);
+  s.set(0, 1234);
 }
 ```
 
