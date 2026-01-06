@@ -28,9 +28,7 @@ We can apply the principle of abstraction and encapsulation here, and create a n
 
 With the `Point` class, our `Circle` class looks like the following:
 
-```Java  title="Circle v0.5"
-import java.lang.Math;
-
+```Java  title="Circle v0.5 with Composition" hl_lines="7 13 14 28"
 /**
  * A Circle object encapsulates a circle on a 2D plane.  
  */
@@ -71,7 +69,7 @@ We have mentioned that classes model real-world entities in OOP.  The compositio
 
 Now let's build up another layer of abstraction and construct a 3D object &mdash; a cylinder.  A cylinder has a circle as its base and has a height value.  Using composition, we can construct a `Cylinder` class:
 
-```Java
+```Java title="Cylinder v0.1 with Composition"
 class Cylinder {
   private Circle base;
   private double height;
@@ -109,7 +107,7 @@ so, there is only one `Point` object, even though there are two circles.
 This is a common source of bugs and we will see how we can reduce the possibilities of such bugs later in this course, but let's first consider the following attempted fix.
 
 Let's suppose that instead of moving `p`, we add a `moveTo` method to the `Circle` instead:
-```Java
+```Java title="Circle v0.5a with moveTo Method" hl_lines="9-11"
 class Circle {
   private Point c;   // the center
   private double r;  // the length of the radius

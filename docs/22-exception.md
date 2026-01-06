@@ -32,7 +32,7 @@ One of the nuances of programming is having to write code to deal with exception
 
 In C, we usually have to write code like this:
 
-```C hl_lines="1 13"
+```C title="Handling Errors when Opening and Reading a File in C" hl_lines="1 13"
 fd = fopen(filename,"r");
 if (fd == NULL) {
   fprintf(stderr, "Unable to open file. ");
@@ -66,20 +66,20 @@ Finally, another issue is having to repeatedly clean up after an error &mdash; h
 
 Many modern programming languages support exceptions as a programming construct.  In Java, this is done with `try`, `catch`, `finally` keywords, and a hierarchy of `Exception` classes.  The `try`/`catch`/`finally` keywords group statements that check/handle errors together making code easier to read. The Java equivalent to the above is:
 
-```Java
+```Java title="Handling Exceptions when Opening and Reading a File in Java" hl_lines="2-4"
 try {
   reader = new FileReader(filename);
   scanner = new Scanner(reader);
   value = scanner.nextInt();
 }
 catch (FileNotFoundException e) {
-    System.err.println("Unable to open " + filename + " " + e);
+  System.err.println("Unable to open " + filename + " " + e);
 }
 catch (InputMismatchException e) {
-    System.err.println("Unable to scan for an integer");
+  System.err.println("Unable to scan for an integer");
 }
 catch (NoSuchElementException e) {
-    System.err.println("No input found");
+  System.err.println("No input found");
 }
 finally {
   if (scanner != null)
@@ -152,7 +152,6 @@ As such, we will never execute the second catch as `ExceptionX` will already be 
 _.java:_: error: exception ExceptionX has already been caught
         } catch(ExceptionX e) {
           ^
-1 error
 ```
 Now with the exception, we no longer rely on a special return value from a function nor a global variable to indicate exceptions.
 

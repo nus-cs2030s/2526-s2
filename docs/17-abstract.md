@@ -122,9 +122,7 @@ class Shape {
 
 and rewrite our `Circle`:
 
-```Java title="Circle v0.8 extending from Shape" hl_lines="6 23"
-import java.lang.Math;
-
+```Java title="Circle v0.8 extending from Shape" hl_lines="4 19-22"
 /**
  * A Circle object encapsulates a circle on a 2D plane.
  */
@@ -205,7 +203,7 @@ An `abstract` instance method cannot be implemented and therefore should not hav
 
 This is how we implement `Shape` as an abstract class.
 
-```Java
+```Java title="Shape v0.1"
 abstract class Shape {
   abstract public double getArea();
 }
@@ -222,14 +220,13 @@ would result in an error.
 _.java:_: error: Shape is abstract; cannot be instantiated
     Shape s = new Shape();
               ^
-1 error
 ```
 
 Note that our simple example of `Shape` only encapsulates one abstract instance method.  An abstract class can contain multiple fields and multiple methods (including class methods).  Not all the methods have to be abstract.  As long as one of them is abstract, the class becomes abstract.
 
 To illustrate this, consider the following implemetation of the abstract class `Shape`.
 
-```Java
+```Java title="Shape v0.2 with Non-abstract Method" hl_lines="2 3-5"
 abstract class Shape {
   private int numOfAxesOfSymmetry ;
 

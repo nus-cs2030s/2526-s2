@@ -63,9 +63,7 @@ Recall that in our `Circle` class (up to version 0.5) we do not have any `Circle
 
 The `Object::toString()` method is not very user-friendly.  Ideally, when we print a `Circle` object, say, for debugging, we want to see its center and its radius.  To do so, we can define our own `toString` method in `Circle`  (_i.e.,_ `Circle::toString()`).  Let's upgrade our `Circle` class to do this:
 
-```Java hl_lines="34-40" title="Circle v0.6, with toString"
-import java.lang.Math;
-
+```Java hl_lines="34-37" title="Circle v0.6, with toString"
 /**
  * A Circle object encapsulates a circle on a 2D plane.  
  */
@@ -134,7 +132,7 @@ We may exclude the class names when we want to talk about the method regardless 
 
 ## Method Overriding
 
-Coming back to our `Circle` v0.6.  What we just did when we defined `Circle::toString(`)` is called _method overriding_ in OOP.  Inheritance is not only good for extending the behavior of an existing class but through method overriding, we can _alter_ the behavior of an existing class as well.
+Coming back to our `Circle` v0.6.  What we just did when we defined `Circle::toString()` is called _method overriding_ in OOP.  Inheritance is not only good for extending the behavior of an existing class but through method overriding, we can _alter_ the behavior of an existing class as well.
 
 When a subclass defines an instance method with the same _method descriptor_ as an instance method in the parent class, we say that the instance method in the subclass _overrides_ the instance method in the parent class[^2].  In the example above, `Circle::toString` has overridden `Object::toString`.
 

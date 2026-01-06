@@ -54,9 +54,7 @@ To compare if two circles are _semantically_ the same, we need to override this 
 
 [^1]: If we override `equals()`, we should generally override `hashCode()` as well, but let's leave that for another lesson on another day.
 
-```Java title="Circle v0.7a with Overriding equals" hl_lines="41-51"
-import java.lang.Math;
-
+```Java title="Circle v0.7a with Overriding equals" hl_lines="39-49"
 /**
  * A Circle object encapsulates a circle on a 2D plane.
  */

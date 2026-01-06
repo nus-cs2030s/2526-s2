@@ -44,9 +44,7 @@ In the example above, the methods `add(int, int)` and `add(int, int, int)` are o
 
 Now let's consider our `Circle` class again. Our `Circle::contains(Point)` method allows us to check if a `Point` is within the radius of the current instance of the `Circle`. We would like to create a new method `Circle::contains(double, double)` which will allow us to check if an (`x`, `y`) coordinate (another valid representation of a point) is within our circle.
 
-```Java title="Circle v0.6a with Overloading `contains` Method"
-import java.lang.Math;
-
+```Java title="Circle v0.6a with Overloaded `contains` Method" hl_lines="14-22"
 class Circle {
   private Point c;
   private double r;
@@ -97,7 +95,7 @@ Because parameter names are not part of the method signature, swapping parameter
 
 As a constructor is also a method, it is possible to overload the class _constructor_ as well. As in the example below, we can see an overloaded constructor which gives us a handy way to instantiate a `Circle` object that is the unit circle.
 
-```Java title="Circle v0.6b with Overloading Constructor"
+```Java title="Circle v0.6b with Overloading Constructor" hl_lines="5-14"
 class Circle {
   private Point c;
   private double r;
@@ -128,7 +126,7 @@ It is also possible to overload `static` class methods in the same way as instan
 
 Similar to `super`, the `this` keyword can be used to invoke another constructor.  While `super` is used to invoke the constructor in the superclass, `this` invokes an overloaded constructor in the same class. This is particularly useful as it allows us to avoid duplicating code. For example, we can modify our overloaded constructor in the `Circle` class to invoke the primary constructor instead of directly initializing the instance variables.
 
-```Java title="Circle v0.6c with Overloaded Constructor using this()"
+```Java title="Circle v0.6c with Overloaded Constructor using this()" hl_lines="12"
 class Circle {
   private Point c;
   private double r;

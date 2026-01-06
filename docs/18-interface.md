@@ -47,7 +47,7 @@ The abstraction to do this is called an _interface_.  An interface is also a typ
 Since an interface models what an entity can do, the name usually ends with the -able suffix[^1].
 
 Now, suppose we want to create a type that supports the` getArea()` method, be it a shape, a geographical region, or a real estate property.  Let's call it `GetAreable`:
-```Java
+```Java title="Interface GetAreable v0.1 with explicit modifiers"
 interface GetAreable {
   public abstract double getArea();
 }
@@ -55,7 +55,7 @@ interface GetAreable {
 
 All methods declared in an interface are `public abstract` by default.  We could also just write the following:
 
-```Java
+```Java title="Interface GetAreable v0.2 with implicit modifiers"
 interface GetAreable {
   double getArea();
 }
@@ -65,7 +65,7 @@ Now, for every class that we wish to be able to call `getArea()` on, we tell Jav
 
 For instance, we can implement the class `Shape` as follows.
 
-```Java
+```Java title="Shape v0.3 Implements the Interface GetAreable" hl_lines="1"
 abstract class Shape implements GetAreable {
   private int numOfAxesOfSymmetry;
 
@@ -79,7 +79,7 @@ The `Shape` class will now have a `public abstract double getArea()` thanks to t
 
 We can have a concrete class implementing an interface too.
 
-```Java
+```Java title="Flat Implements the Interface GetAreable" 
 class Flat extends RealEstate implements GetAreable {
   private int numOfRooms;
   private String block;
@@ -204,7 +204,7 @@ This exact problem arose when Java transitioned from version 7 to version 8. The
 
 To address this, Java allows interfaces to include default methods—methods that provide a concrete implementation. Implementing classes automatically inherit these methods unless they choose to override them.
 
-```Java
+```Java title="Interface GetAreable v0.3 with Default Method"
 interface GetAreable {
   double getArea();
 

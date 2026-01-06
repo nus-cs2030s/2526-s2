@@ -246,7 +246,7 @@ class A {
 
 Let's try to make this method generic, by forcing the return type to be the same as the type of the elements in the input array,
 
-```Java title="findLargest v0.6 with Generics"
+```Java title="findLargest v0.6 with Generics (Won't Compile)"
 class A {
   public static <T> T findLargest(T[] array) {
     double maxArea = 0;
@@ -267,7 +267,7 @@ The code above won't compile, since the compiler cannot be sure that it can find
 
 Since we intend to use `findLargest` only in classes that implement the `GetAreable` interface and support the `getArea()` method, we can put a constraint on `T`.  We can say that `T` must be a subtype of `GetAreable` when we specify the type parameter:
 
-```Java title="findLargest v0.7 with Generics and Bounded Type Parameter"
+```Java title="findLargest v0.7 with Generics and Bounded Type Parameter" hl_lines="2"
 class A {
   public static <T extends GetAreable> T findLargest(T[] array) {
     double maxArea = 0;
@@ -290,7 +290,7 @@ We can use bounded type parameters for declaring generic classes as well.  For i
 
 Suppose we want to compare two `Pair` instances, by comparing the first element in the pair, we could do the following:
 
-```Java title="Pair v0.3 with Generics and Bounded Type Parameters"
+```Java title="Pair v0.3 with Generics and Bounded Type Parameters" hl_lines="1 18-21"
 class Pair<S extends Comparable<S>,T> implements Comparable<Pair<S,T>> {
   private S first;
   private T second;
@@ -343,3 +343,14 @@ for (Object o : array) {
 ```
 
 You will see the pairs are sorted by the first element.
+
+## Summary of Terms
+
+We introduce multiple new terms in this unit.  Here is a summary:
+
+| Term | Definition | Example | 
+|------|------------|---------|
+| Type Parameter | A placeholder for a type used in the definition of a generic class or method. | `S` and `T` in `Pair<S, T>` 
+| Generic Type | A class or interface that is parameterized by one or more type parameters. | `Pair<S,T>` | 
+| Type Argument | A concrete type or type parameter passed to a generic type or method when it is instantiated or invoked. | `String` and `Integer` in `Pair<String, Integer>`; `T` in `Pair<String, T>` when defining `DictEntry<T>` |
+| Parameterized Type | A generic type with specific type arguments. | `Pair<String,Integer>` | 

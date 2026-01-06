@@ -85,6 +85,102 @@ The generated code is similar to what we would write earlier, but this is genera
 
 Type erasure has several important implications.  We will explore some of them below, and a few others during recitation.  
 
+## Overloading Based on Type Arguments
+
+Suppose we have the following class.  The intention is to overload the method `foo` to accept either a pair of strings or a pair of integers.  This seems reasonable at the source level:
+```Java 
+class A {
+  void foo(Pair<Sring, String> p) {
+      // body omitted
+  }
+
+  void foo(Pair<Integer, Integer> p) {
+      // body omitted
+  }
+}
+```
+
+After type erasure, both methods have the same signature:
+```Java
+class A {
+  void foo(Pair p) {
+      // body omitted
+  }
+
+  void foo(Pair p) {
+      // body omitted
+  }
+}
+```
+and thus, the compiler will complain about duplicate methods.  This shows that method overloading based on different type arguments is not allowed in Java generics.
+
+## Using Type Parameters in Static Contexts
+
+Consider the following generic class:
+```Java title="Instance Field with Type Parameter"
+class B<T> { 
+  private T x;
+
+  public void setX(T x) { 
+    this.x = x; 
+  }
+
+  public T getX() { 
+    return this.x; 
+  }
+}
+```
+
+which can be used in the following way:
+```Java
+B<Integer> bInteger = new B<Integer>();
+bInteger.setX(67);
+Integer i = bInteger.getX();
+```
+
+If the caller tries to call
+```Java
+String s = bInteger.getX();
+```
+
+the compiler will report an error about type mismatch.  The type checking is done at compile time, before type erasure happens.  Crucially, the type argument `Integer` to `B<Integer>` is used to type check the call to `getX()`.
+
+What if `x` is a static variable?  Consider the following code:
+
+```Java title="Class Field with Type Parameter"
+class C<T> { 
+  private static T x;
+
+  public static void setX(T x) { 
+    C.x = x; 
+  }
+
+  public static T getX() { 
+    return C.x; 
+  }
+}
+```
+
+We can access class fields and class methods using only the class name, without creating an instance.
+```Java
+C.setX(67);
+String s = C.getX();
+```
+
+There is no type argument to `C` here, so the compiler is unable to type check the call to `getX()`.  To avoid this, Java does not allow using the type parameter `T` in a static context.  There is only one copy of the static variable `x` shared across all instantiations of `C<T>`, regardless of what type argument is used.  Thus, it does not make sense to have a static variable or static method that depends on the type parameter `T` of the class.
+
+As a result, it is necessary for a generic class method to declare its own type parameters.  For example:
+
+```Java title="Static Generic Method"
+class D<T> {
+  public static <T> T foo(T x) {
+    // body omitted
+  }
+}
+```
+
+Note that the type parameter `T` of the static method `foo` is independent of the type parameter `T` of the class `D`.
+
 ## Generics and Arrays Can't Mix
 
 Let's consider the hypothetical code below:

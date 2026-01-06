@@ -70,7 +70,7 @@ Another way to develop an intuition of the LSP is through the lens of testing. W
 
 Let's look at an example. We would like to model a restaurant booking system for a restaurant chain. Consider the following `Restaurant` class.  Every restaurant in the chain opens at 12 PM and closes at 10 PM, and has a singular method `canMakeReservation` which allows us to check if the restaurant is available for reservations at a certain `time`.  **The requirement given is that the system must be able to process a reservation during its opening hours.**
 
-```Java
+```Java title="The Restaurant Class"
 public class Restaurant {
   public static final int OPENING_HOUR = 1200;
   public static final int CLOSING_HOUR = 2200;
@@ -97,7 +97,7 @@ Note that these are simple `jshell` tests, in software engineering courses you w
 
 Let's now consider two subclasses of `Restaurant`, `LunchRestaurant` and `DigitalReadyRestaurant`. Our `LunchRestaurant` does not take reservations during peak hours (12 to 2 pm).
 
-```Java
+```Java title="The LunchRestaurant Class"
 public class LunchRestaurant extends Restaurant {
   private final int peakHourStart = 1200;
   private final int peakHourEnd = 1400;
@@ -128,7 +128,7 @@ Whilst the second test passes, the first test does not since it falls within the
 Let's suppose the restaurant chain starts to roll out an online reservation system for a subset of its restaurants.  These restaurants can take reservations at any time.
 We create a subclass `DigitalReadyRestaurant`, as follows:
 
-```Java
+```Java title="The DigitalReadyRestaurant Class"
 public class DigitalReadyRestaurant extends Restaurant {
 
   @Override
@@ -174,8 +174,12 @@ class Circle {
 }
 ```
 
+## Recapping the `final` Keyword
+
 We have now seen that the `final` keyword can be used in three places:
 
 1. In a class declaration to prevent inheritance.
 2. In a method declaration to prevent overriding.
 3. In a field declaration to prevent re-assignment.
+
+In fact, we can use `final` when declaring a local variable or parameter as well, to prevent re-assignment within the method body.

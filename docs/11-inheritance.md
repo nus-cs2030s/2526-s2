@@ -43,7 +43,7 @@ What should we do if we want to calculate the area of our colored circle?  Suppo
 
 A better alternative is to let `ColoredCircle` provide its own `getArea()` method and _forward_ its call to `Circle`.
 
-```Java title="ColoredCircle v0.2 (with Composition)"
+```Java title="ColoredCircle v0.2 (with Composition)" hl_lines="10-12"
 class ColoredCircle {
   private Circle circle;
   private Color color;
