@@ -60,7 +60,7 @@ As a concrete example, consider the `Maybe<T>` monad. Here, the side information
 
 The `Loggable<T>` monad, on the other hand, has side information as a log string.  The operation $\oplus$ is string concatenation.
 
-The `of` method of a monad takes a value and creates a new monad instance that encapsulates the value and initialize the side information.  We can view `of` as a function that maps from a value $x$ to a monad $(x, c_0)$.
+The `of` method of a monad takes a value and creates a new monad instance that encapsulates the value and initialize the side information.  We can view `of` as a function that maps from a value $x$ to a monad $(x, c_0)$, where $c_0$ is the initialized side information.
 
 ## Identity Laws
 
@@ -115,11 +115,21 @@ To express this in Java, let `Monad` be a type that is a monad and `monad` be an
 
 The left identity law says:
 
-- `Monad.of(x).flatMap(x -> f(x))` must be the same as `f(x)`
+- `Monad.of(x).flatMap(i -> f(i))` must be the same as `f(x)`
 
 The right identity law says:
 
-- `monad.flatMap(x -> Monad.of(x))` must be the same as `monad`
+- `monad.flatMap(i -> Monad.of(i))` must be the same as `monad`
+
+## Maybe<T> is Partially Well-Behaved
+
+We have seen that `Loggable<T>` obey the identity laws, with $\oplus$ being the string concatenation and the identity $c_0$ being the empty string.  `Maybe<T>` also obeys the identity laws, with $\oplus$ being the AND operation on binary values and $c_0$ being `true` (indicating presence of value).
+
+Now consider `Maybe<T>`.  We have seen that $\oplus$ is the AND operation on binary values.  The AND operation has `true` as its identity, but not `false`.  This means that `Maybe<T>` only obeys the identity laws only when the initialized side information is `true`, i.e., when we create a `Some<T>` instance.  If we create a `None` instance, the identity laws do not hold.  
+
+For instance, `Maybe.none().flatMap(x -> f(x))` equals to `Maybe.none()`, which is not always the same as `f(x)`.
+
+In other words, `Maybe<T>` is a monad with respect to `Maybe::some` and `Maybe::flatMap` operations, but not with respect to `Maybe::none` and `Maybe::flatMap`.
 
 ## Associative Law
 
