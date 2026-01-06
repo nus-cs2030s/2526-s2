@@ -62,7 +62,7 @@ Java provides more than one way to create a thread.  The `Thread` class also con
 
 Every thread in Java has a name. Printing out a thread's name is useful for inspecting the runtime behavior.  We can use the instance method `getName()` to find out the name of a thread, and the class method `Thread.currentThread()` to get the reference of the current running thread.
 
-```Java
+```Java hl_lines="1 3 10"
 System.out.println(Thread.currentThread().getName());
 new Thread(() -> {
   System.out.print(Thread.currentThread().getName());
