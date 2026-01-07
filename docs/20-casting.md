@@ -1,4 +1,4 @@
-# Unit 20: Run-Time Class Mismatch
+# Unit 20: Runtime Class Mismatch
 
 !!! abstract "Learning Objectives"
 
@@ -6,14 +6,14 @@
 
     - explain why narrowing type conversion requires explicit casting in Java
     - distinguish between compile-time type checking and runtime type checking in the presence of casts
-    - identify situations where a cast is syntactically valid but can fail at run time
+    - identify situations where a cast is syntactically valid but can fail at runtime
     - reason about how abstraction (interfaces and supertypes) can lead to runtime class mismatch errors
 
 !!! abstract "Overview"
 
     In earlier units, we learned how to write reusable and flexible code by programming to higher-level abstractions, such as interfaces and supertypes. This approach allows our code to work uniformly over many different concrete classes, improving extensibility and reuse.
 
-    However, abstraction also comes with a cost. When we deliberately “forget” the concrete class of an object and treat it as a more general type, we sometimes need to recover that concrete type later. In Java, doing so requires type casting, and incorrect casts can lead to errors that only appear at run time.
+    However, abstraction also comes with a cost. When we deliberately “forget” the concrete class of an object and treat it as a more general type, we sometimes need to recover that concrete type later. In Java, doing so requires type casting, and incorrect casts can lead to errors that only appear at runtime.
 
     In this unit, we examine how such runtime class mismatch errors arise, why the compiler cannot always prevent them, and what responsibilities fall on the programmer when casting is used.
 

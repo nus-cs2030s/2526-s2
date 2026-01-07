@@ -76,7 +76,7 @@ Otherwise, once the Java compiler determines the most specific method, it stores
 
 In the example above, the method descriptor `boolean equals(Object)` will be stored in the generated binaries.  Note that it does not include information about the class that implements this method.  The class from which this method implementation will be taken is determined in Step 2 during run time.
 
-## During Run Time
+## During Runtime
 
 During execution, when a method is invoked, the method descriptor from Step 1 is first retrieved.  Then, the runtime type of the target is determined.  Let the runtime type of the target be $R$.  Java then looks for an accessible method with the matching descriptor in $R$.  If no such method is found, the search will continue up the class hierarchy, first to the parent class of $R$, then to the grand-parent class of $R$, and so on, until we reach the root `Object`.  The first method implementation with a matching method descriptor found will be the one executed.
 
