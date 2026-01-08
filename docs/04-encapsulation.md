@@ -241,27 +241,42 @@ Sharing objects through references can lead to unintended side effects, and is a
 
 ## Special Reference Value: `null`
 
-All local variables in Java must be initialized before use.  The compiler will issue an error if the code attempts to use a local variable without initalization. 
+All local variables in Java must be initialized before use.  The compiler will issue an error if the code attempts to use a local variable without initalization.   For instance,
+
+```Java title="Using Uninitialized Local Variable"
+void foo() {
+  Circle c1;
+  c1.r = 10.0; // error: variable c1 might not have been initialized
+}
+```
+The line `c1.r = 10.0;` will lead to a compile-time error because `c1` is a local variable that has not been initialized.
 
 For fields, however, Java will auto-initialize them to default values.  For primitive fields, the default values are `0` for numeric types, `false` for `boolean`, and `'\u0000'` for `char`.  For reference fields, the default value is a special reference value `null`.
 
 A `null` reference means “this variable does not refer to any object”.  Attempting to access fields or methods through `null` fails because there is no object to operate on.
 
-A common error for beginners is to declare a reference variable and try to use it without instantiating an object:
+A common error for beginners is to declare a reference variable and try to use it without instantiating an object.  Consider the snippet below (assuming they are part of a class).
 
 ```Java title="Using Uninitialized Reference Field"
-Circle c1;    // field in a class is initialized to null
-  :
-c1.r = 10.0;  // changing the field lead to error
+class MyClass {
+  Circle c1;    // field in a class is initialized to null
+    :
+  void foo() {
+    c1.r = 10.0;  // changing the field lead to error
+  }
+}
 ```
 
-Line 2 would lead to a runtime error message
+The line `c1.r = 10.0;`  would lead to a runtime error message
 ```
 |  Exception java.lang.NullPointerException
 ```
 
 Remember to _always instantiate a reference variable_ before using it.
 
+!!! warning "JShell Caveat"
+
+    In JShell, reference variables declared at the top-level are automatically initialized to `null`.  This is different from local variables inside methods, which must be explicitly initialized before use.  Be aware of this difference when working in JShell.
 
 <!--
 !!! quote

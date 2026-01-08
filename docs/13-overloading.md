@@ -24,9 +24,7 @@
 
 In the previous unit, we introduced _method overriding_ &mdash; when a subclass defines an instance method with the same _method descriptor_ as an instance method in the parent class.
 
-In contrast, _method overloading_ occurs when a class has access to (either defined or inherited) two or more methods with the same name but a different _method signatures_[^1]. In other words, we create an overloaded method by changing the type, order, or number of parameters of the method while keeping the method name identical.
-
-[^1]: Note that this is not the same as the _method descriptor_. You cannot overload a method by changing only the return type.
+In contrast, _method overloading_ occurs when a class has access to (either defined or inherited) two or more methods with the same name but a different _method signatures_. In other words, we create an overloaded method by changing the type, order, or number of parameters of the method while keeping the method name identical.
 
 Let's consider an `add` method which allows us to add two numbers, and returns the result. What if we would like to create an `add` method to sum up three numbers?
 
@@ -92,6 +90,33 @@ Recall that overloading requires changing the order, number, and/or type of para
 ```
 
 Because parameter names are not part of the method signature, swapping parameter names does not produce a new method.  These two methods have the same method signature, and therefore `contains(double, double)` and `contains(double, double)` are not distinct methods.  The Java compiler will reject this code with an error indicating that the method is already defined.
+
+Note that the return type is part of the method descriptor, but not part of the method signature, so we cannot have two methods with the signature but different return types. For example, the following code will also be rejected by the Java compiler.
+
+```Java
+  public int add(int x, int y) {
+    return x + y;
+  }
+
+  public double add(int x, int y) {
+    return (double)(x + y);
+  }
+```
+
+On the other hand, we can have two overloaded methods with different return types:
+
+```Java
+  public int add(int x, int y) {
+    return x + y;
+  }
+
+  public double add(double x, double y) {
+    return x + y;
+  }
+```
+
+
+## Overloading Constructor
 
 As a constructor is also a method, it is possible to overload the class _constructor_ as well. As in the example below, we can see an overloaded constructor which gives us a handy way to instantiate a `Circle` object that is the unit circle.
 

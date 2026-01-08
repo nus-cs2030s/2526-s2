@@ -157,6 +157,10 @@ interface Transformer<T, R> {
 }
 ```
 
+!!! warning "JShell Caveat"
+
+    The `@FunctionalInterface` annotation is not supported in JShell.  You can still create functional interfaces without the annotation.
+
 A key advantage of a functional interface is that there is no ambiguity about which method is being overridden by an implementing subclass.
 
 For instance, consider:
