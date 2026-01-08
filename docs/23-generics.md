@@ -128,9 +128,19 @@ class Pair<S,T> {
 }
 ```
 
-We declare a generic type by specifying its type parameters between `<` and `>` when we declare the type.  By convention, we use a single capital letter to name each type parameter.  These type parameters are scoped within the definition of the type.  In the example above, we have a generic class `Pair<S,T>` (read "pair of S and T")  with `S` and `T` as type parameters.  We use `S` and `T` as the type of the fields `first` and `second`.  We ensure that `getFirst()` returns type `S` and `getSecond()` returns type `T`, so that the compiler will give an error if we mix up the types.
+We declare a generic type by specifying its type parameters between `<` and `>` when we declare the type.  Similar to how the parameters to a method can be used as variables within the method, type parameters can be used as _type variables_ . By convention, we use a single capital letter to name each type variable.  These type variables are scoped within the definition of the generic type.  
 
-Note that the constructor is still declared as `Pair` (without the type parameters).
+In the example above, we have a generic class `Pair<S,T>` (read "pair of S and T")  with `S` and `T` as type parameters.  This declaration of generic class also declares `S` and `T` as type variables. We can then use `S` and `T` as the type of the fields `first` and `second`.  We ensure that `getFirst()` returns type `S` and `getSecond()` returns type `T`, so that the compiler will give an error if we mix up the types.
+
+Note that the constructor for `Pair` is still declared as `Pair` (without the type parameters).
+
+Just like a variable must be declared before it is used, a type variable must be declared as a type parameter before it is used.  For instance, the following would result in a compilation error:
+
+```Java
+class A {
+    T x; // compilation error: T not declared
+}
+```
 
 Here is a summary of the two approaches towards writing generic code: 
 
@@ -211,7 +221,7 @@ class A {
 }
 ```
 
-The above shows an example of a _generic method_.  The type parameter `T` is declared within `<` and `>` and is added before the return type of the method.  This parameter `T` is then scoped within the whole method.
+The above shows an example of a _generic method_.  The type variable `T` is declared within `<` and `>` and is added before the return type of the method.  This variable `T` is then scoped within the whole method.
 
 To call a generic method, we need to pass in the type argument placed before the name of the method[^1].  For instance,
 ```Java
@@ -350,7 +360,8 @@ We introduce multiple new terms in this unit.  Here is a summary:
 
 | Term | Definition | Example | 
 |------|------------|---------|
-| Type Parameter | A placeholder for a type used in the definition of a generic class or method. | `S` and `T` in `Pair<S, T>` 
+| Type Variable | A placeholder for a type, declared in the definition of a generic class or method, and can be used throughout the code within scope. | `S` and `T` 
+| Type Parameter | Type variable used in the definition of a generic class or method. | `S` and `T` in `Pair<S, T>` 
 | Generic Type | A class or interface that is parameterized by one or more type parameters. | `Pair<S,T>` | 
-| Type Argument | A concrete type or type parameter passed to a generic type or method when it is instantiated or invoked. | `String` and `Integer` in `Pair<String, Integer>`; `T` in `Pair<String, T>` when defining `DictEntry<T>` |
+| Type Argument | A concrete type or type variable passed to a generic type or method when it is instantiated or invoked. | `String` and `Integer` in `Pair<String, Integer>`; `T` in `Pair<String, T>` when defining `DictEntry<T>` |
 | Parameterized Type | A generic type with specific type arguments. | `Pair<String,Integer>` | 

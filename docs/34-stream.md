@@ -124,7 +124,6 @@ Stream.of(1, 2, 3).reduce(0, (x, y) -> x + y);
 ```
 returns the sum of all elements in the stream.
 
-
 The method `reduce` takes in an identity value (`0` in the example above) and an accumulation function (`(x, y) -> x + y` above) and returns the reduced value.  The process of reduction is equivalent to the following pseudocode:
 
 ```

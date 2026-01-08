@@ -198,6 +198,25 @@ The multiplication example above meets the three rules:
 - `(x * y) * z` equals `x * (y * z)`
 - `u * (1 * t)` equals `u * t`
 
+Let's try to understand why we need the `accumulator` to be associative.
+
+There are three versions of `reduce` in `Stream`'s API. 
+
+- A `reduce` that takes in a single accumulator, using `null` as the identity.
+- A `reduce` that takes in an identity and an accumulator.
+- A `reduce` that takes in an identity, an accumulator, and a combiner.
+
+The `reduce` API with a single parameter is a special case of the one with two parameters, so let's focus on the `reduce` with two parameters. For instance, it is used as follows:
+```
+Stream.of(1,2,3,4).reduce(0, (x, y) -> x + y) 
+```
+
+No `combiner` is given in this variant of `reduce`. When we parallelize this `reduce` operation, the `accumulator` is used as the `combiner` as well. 
+
+This is why it is important for the accumulator to be associative. To be able to combine partial results, we need the result to be the same regardless of how we parallelize them. For example, for accumulator $f$, we need $f(f(a, b), f(c, d))$ to be the same as f(a, f(b, f(c, d)))$ and $f(f(f(a, b), c), d)$.
+
+Now, let's consider the version of `reduce` with three parameters. We must now specify a `combiner` explicitly. To ensure that we can combine the partial results in any order, the `combiner` must be associative.  But, in this case, it is no longer necessary that the accumulator is associative, as long as it is compatible with the combiner.
+
 ## Performance of Parallel Stream
 
 Let's go back to:
@@ -280,3 +299,5 @@ Stream.iterate(0, i -> i + 7)
       .filter(i -> i % 64 == 0)
       .forEachOrdered(i -> { });
 ```
+
+The _speedup_ is a measure of how fast the parallel version is compared to the sequential version.  It is defined as the time taken by the sequential version divided by the time taken by the parallel version.
