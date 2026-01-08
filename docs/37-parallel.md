@@ -180,13 +180,25 @@ list.parallelStream()
 
 #### Associativity
 
-The `reduce` operation is inherently parallelizable, as we can easily reduce each sub-stream and then use the `combiner` to combine the results.  Consider this example:
+The `reduce` operation is inherently parallelizable.  Java provides three versions of `reduce` in `Stream`'s API. 
+
+- A `reduce` that takes in a single accumulator, using `null` as the identity.
+- A `reduce` that takes in an identity and an accumulator.
+- A `reduce` that takes in an identity, an accumulator, and a combiner.
+
+With the most-general, three-parameter version of `reduce` allowing `reduce` to return a different type than the type of the elements in the stream.   The `combiner` here is useful for parallel reduction.  While the `accumulator` is used to reduce each sub-stream, the `combiner` is used to combine the partial results from the different sub-streams into the final result.  
+
+Consider this example:
 
 ```Java
 Stream.of(1,2,3,4).reduce(1, (x, y) -> x * y, (x, y) -> x * y);
 ```
 
-To allow us to run `reduce` in parallel, however, there are several rules that the `identity`, the `accumulator`, and the `combiner` must follow:
+In the case of two-parameter `reduce`, the `accumulator` is used both to reduce each sub-stream as well as to combine the partial results.
+
+For parallel streams, the result of `reduce` must be independent of how the stream is partitioned into sub-streams and the order in which the partial results are combined.  The result of parallel `reduce` must be the same as sequential `reduce`.
+
+To achieve this, the Java documentation gives are several rules that the `identity`, the `accumulator`, and the `combiner` must follow:
 
 - `combiner.apply(identity, i)` must be equal to `i`.
 - The `combiner` and the `accumulator` must be associative &mdash; the order of applying must not matter.
@@ -198,24 +210,9 @@ The multiplication example above meets the three rules:
 - `(x * y) * z` equals `x * (y * z)`
 - `u * (1 * t)` equals `u * t`
 
-Let's try to understand why we need the `accumulator` to be associative.
+Let's try to understand why the `accumulator` should be associative.  In the context of a two-parameter `reduce` API, the `accumulator` is used as the `combiner` as well.  To be able to combine partial results, we need the result to be the same regardless of how we parallelize them. For example, for accumulator $f$, we need $f(f(a, b), f(c, d))$ to be the same as f(a, f(b, f(c, d)))$ and $f(f(f(a, b), c), d)$.
 
-There are three versions of `reduce` in `Stream`'s API. 
-
-- A `reduce` that takes in a single accumulator, using `null` as the identity.
-- A `reduce` that takes in an identity and an accumulator.
-- A `reduce` that takes in an identity, an accumulator, and a combiner.
-
-The `reduce` API with a single parameter is a special case of the one with two parameters, so let's focus on the `reduce` with two parameters. For instance, it is used as follows:
-```
-Stream.of(1,2,3,4).reduce(0, (x, y) -> x + y) 
-```
-
-No `combiner` is given in this variant of `reduce`. When we parallelize this `reduce` operation, the `accumulator` is used as the `combiner` as well. 
-
-This is why it is important for the accumulator to be associative. To be able to combine partial results, we need the result to be the same regardless of how we parallelize them. For example, for accumulator $f$, we need $f(f(a, b), f(c, d))$ to be the same as f(a, f(b, f(c, d)))$ and $f(f(f(a, b), c), d)$.
-
-Now, let's consider the version of `reduce` with three parameters. We must now specify a `combiner` explicitly. To ensure that we can combine the partial results in any order, the `combiner` must be associative.  But, in this case, it is no longer necessary that the accumulator is associative, as long as it is compatible with the combiner.
+Now, let's consider three-parameter version of `reduce` where a `combiner` is given. To ensure that we can combine the partial results in any order, the `combiner` must be associative.  But, in this case, it is no longer necessary that the accumulator is associative, as long as it is compatible with the combiner.  In other words, the `accumulator` being associative is a sufficient but not necessary condition for the three-parameter `reduce` to be parallelizable.  As long as the `combiner` is associative and compatible with the `accumulator`, the three-parameter `reduce` can be parallelized.
 
 ## Performance of Parallel Stream
 
