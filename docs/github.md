@@ -65,7 +65,7 @@ It should show something like:
 
    - **Note**: Enter something meaningful to you to explain what this token is for
    - **Expiration**: Set a **Custom** duration that covers until the end of the semester (e.g., 15/05/2026)
-   - **Select scopes**: Select "**repo**" (all the subscooes will be selected automatically)
+   - **Select scopes**: Select "**repo**" (all the subscopes will be selected automatically)
 
 After setting the above, click on the "**Generate token**" button at the bottom of the page.  
 
