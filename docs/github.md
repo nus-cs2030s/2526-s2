@@ -8,7 +8,7 @@
 
 ## Purpose
 
-You will be using `git` (indirectly) for retrieving skeleton code and submitting completed assignments.  We will set up your accounts on a PE host below so that `git` will be associated with your GitHub account.  This is a one-time setup.  You don't have to do this for every assignment.
+You will be using `git` (indirectly) for retrieving skeleton code and submitting completed assignments.  We will set up your accounts on a PE host below so that `git` will be associated with your GitHub account.  This is a one-time setup.  You don't have to do this for every programming exercise.
 
 ## 1. Setting up `.gitconfig`
 
@@ -27,7 +27,7 @@ For example,
 ```
 git config --global user.name "Ah Beng"
 git config --global user.email "ahbeng@example.com"
-git config --global github.user "ahbeng123"
+git config --global github.user "ahbeng67"
 ```
 
 After the above, you can check if the configuration is set correctly by running the following commands:
@@ -49,106 +49,37 @@ It should show something like:
     name = Ah Beng
     email = ahbeng@example.com
 [github]
-    user = ahbeng123
+    user = ahbeng67
 ```
 
 ## 2. Setting up Password-less Login
 
-### Basic of SSH Keys
+1. Login to [GitHub.com](https://www.github.com) using your account.  Ensure that you are using the account you registered for CS2030S.
 
-SSH uses _public-key cryptography_ for authentication.  The keys come in pairs: a public key and a private key.  The private key must be kept safe and known only to you.  You should keep the private key in your PE account, and not share it with others.
+2. Go to the URL [https://github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens). Alternatively, Click on Your Profile Avatar -> Settings -> Developer Settings -> Personal Access Tokens 
 
-To authenticate yourself to another host or service, you configure the host/service with your public key.  When it is time for you to log in, your private key is "matched"[^1] with your public key.  Since only you know your private key, the service or the host can be sure that you are you and not someone else.
-
-Suppose you want to log in from host _X_ to host _Y_ without a password.  You generate a pair of keys on _X_, then keep the private keys on _X_ and store the public keys on _Y_.  If you want to [set up SSH Keys](environments.md#setting-up-ssh-keys) so that you can log into a PE host from your computer without a password, for example, you generate the pair of keys on your computer (_e.g., X_) and then copy the public key to a PE host.
-
-Our goal now is to authenticate ourselves to GitHub from the PE host.  So, _X_ is the PE host, and _Y_ is GitHub.
-
-### Generating SSH keys
-
-The steps are explained in detail on [GitHub Docs](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).  Here is a summary of the steps that you should follow:
-
-On any of the PE hosts, run
-```
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
-where `your_email@example.com` is the email you used when you signed up for your GitHub account (i.e., the same one you entered in `.gitconfig`).
-
-The command will prompt you where to save the key.  Just press ++enter++ to save into the default location, which is `$HOME/.ssh/id_ed25519`.
-
-You will then be prompted for a passphrase.  Since our goal is to automate assignment submission without needing to type anything, you should enter an empty passphrase.  This increases the security risk, but then, we are working with lab assignments, not a top-secret project.  So empty passphrase will do.
-
-You should see something like this:
-```
-ooiwt@pe119:~$ ssh-keygen -t ed25519 -C "ooiwt@comp.nus.edu.sg"
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/home/o/ooiwt/.ssh/id_ed25519):
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /home/o/ooiwt/.ssh/id_ed25519.
-Your public key has been saved in /home/o/ooiwt/.ssh/id_ed25519.pub.
-The key fingerprint is:
-SHA256:Br3wg7mplVuPyuDz8yZVDSh8Mn5ls5+yPZhTvGzmAkk ooiwt@comp.nus.edu.sg
-The key's randomart image is:
-+--[ED25519 256]--+
-|   .   .         |
-|    = o.=        |
-|   . =oo.=.      |
-|   .E=.=o...     |
-|  ..Bo=ooS. .    |
-| . =o+.++ o      |
-|  + +o = +       |
-|   oo = O        |
-|    .=oB..       |
-+----[SHA256]-----+
-```
-
-### Adding Your PE Host Public Key to Your GitHub Account
+   The page should say "Fine-grained personal access tokens" at the top.
 
 
-The next step involves logging into GitHub.com: click on your avatar in the top right corner, and choose "Settings".  Then choose "SSH and GPG keys" on the sidebar.
+3. Click on "**Generate new token**" (on the top-right).  You will be asked to enter the following information:
 
-Then, click either "New SSH key" or "Add SSH key".  Enter an appropriate title for the key (e.g., "PE Hosts").
+   - **Token name**: Enter something meaningful to you, such as "CS2030S"
+   - **Description**: Enter something descriptive to help you remember what this token is for (e.g., For CS2030S labs and exercises)
+   - **Resources owner**: Ensure that your GitHub username is selected.
+   - **Expiration**: Set a **Custom** duration that covers until the end of the semester (e.g., 15/05/2026)
+   - **Repository access**: Select "**All repositories**"
+   - **Permissions**: Click **Add permissions** and set the following:
+     - Under "**Contents**", select "**Read and write**"
+     - Under "**Metadata**", select "**Read-only**"
 
-Next, you need to paste your public key into the text box.  Go back to your terminal and run 
+   After setting the above, click on the "**Generate token**" button at the bottom of the page.
 
-```
-cat ~/.ssh/id_ed25519.pub
-```
+4. Your personal access token will be created.  Copy-paste this to somewhere safe and private. We will be using it in the next step.
 
-Remember that `cat` just dumps the content of the file to the standard output.  Now, you need to copy the content of the file displayed on the terminal, which is your public key, and paste it into the text box in the browser.  Your key should start with `ssh-ed22519` and end with your email address.  For instance, this is the exact text that I copy-pasted:
-```
-ssh-ed25519 AAAZC3NzaC1lZDI1NTE8AAAAIDdmwMpRrhRB95u7CTahehtBEeOdhSxDQdlpCxBK3KCP ooiwt@comp.nus.edu.sg
-```
 
-I showed the above as an example, don't use my public key for your GitHub.  Otherwise, I will have access to your account.
+## 3. Accept and Retrieve a Test Skeleton from GitHub
 
-After entering the title and key above, click the green "Add SSH key" button to add the key you entered.  If prompted, confirm your GitHub password.
-
-These steps are explained in detail on [GitHub Docs](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
-
-## 3. Checking Your Authentication Settings
-
-To check if you can connect to `git@github.com` using SSH keys, run:
-```
-ssh -T git@github.com
-```
-
-If everything is set up correctly, you will see the message
-```
-Hi ooiwt! You've successfully authenticated, but GitHub does not provide shell access.
-```
-
-Otherwise, you should see
-```
-git@github.com: Permission denied (publickey).
-```
-
-or other error messages.
-
-Note that you need to connect with the username `git`.  Do not use your GitHub username (e.g., do not use `ssh -T ooiwt@github.com`)
-
-## 4. Accept and Retrieve a Test Skeleton from GitHub
+### 3.1 Accept the Test Assignment
 
 We have created an empty lab for you to test if you can correctly retrieve future lab files from GitHub.  Complete the following steps:
 
@@ -158,23 +89,43 @@ We have created an empty lab for you to test if you can correctly retrieve futur
 
 - Click the accept button.  Wait a bit and then refresh until you see a "You're ready to go" message.
 
-- Now, on your PE host, run
+### 3.2 Configure the PE Host to Store Your Credentials
 
+Now, on your PE host, run
 ```Bash
-~cs2030s/get setup-test
+git config --global credential.helper store
 ```
 
+This step ensures that your GitHub credentials (username and personal access token) will be stored securely on the PE host so that you don't have to enter them every time you interact with GitHub.
+
+### 3.3 Retrieve the Test Skeleton
+
+Now, run
+```Shell
+/opt/course/cs2030s/get setup-test
+```
+
+### 3.4 Authentication
+You will then be asked for your username and password.
+
+For the username, enter your **github username**.  For the password, paste your personal access token.  Note that there will be nothing shown on the screen when you type your token.  Just paste it and press Enter.
+
+### 3.5 Results
 If everything works well, you should see:
 
 ```
 Cloning into 'setup-test-<username>'...
-remote: Enumerating objects: 3, done.
-remote: Counting objects: 100% (3/3), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 3 (delta 0), reused 2 (delta 0), pack-reused 0
-Receiving objects: 100% (3/3), done.
+Username for 'https://github.com': <username>
+Password for 'https://<username>@github.com': <token>
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (5/5), done.
+remote: Total 9 (delta 1), reused 6 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (9/9), done.
+Resolving deltas: 100% (1/1), done.
 ```
-
 Change your working directory into `setup-test-<username>` and look at the directory content.  It should contain a file `README.md`. 
 
-[^1]: I skipped many cool details here.  This topic is part of CS2105 and CS2107.  Interested students can search for various articles and videos online about how public-key cryptography is used for authentication.
+If you have followed the steps above correctly, any subsequent cloning of github repository does not require username and password to be inserted anymore.  Only Steps 3.1 and 3.3 need to be repeated for each programming exercise (but with different links and different exercise ID).  
+
+You can test by accepting ex0 and cloning it once it is ready.

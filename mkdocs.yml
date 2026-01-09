@@ -45,6 +45,24 @@ nav:
       - 37. Parallel Streams: '37-parallel.md'
       - 38. Threads: '38-thread.md'
       - 39. Asynchronous Programming: '39-async.md'
+  - Programming Guide:
+    - Programming Environments: 'environments.md'
+    - GitHub Setup: 'github.md'
+    - Unix CLI:
+      - Background: 'unix/background.md'
+      - Essentials: 'unix/essentials.md'
+      - Advanced: 'unix/advanced.md'
+    - Vim: 
+      - Background: 'vim/philosophy.md'
+      - Setup: 'vim/setup.md'
+      - Lessons: 'vim/quick-lessons.md'
+      - Tips: 'vim/operations.md'
+      - Extensions: 'vim/plugins.md'
+    - Micro: 
+      - Tips: 'micro/operations.md'
+    - Java Guide: 
+      - Coding Style: 'style.md'
+
 theme: 
   name: material
   features: 
