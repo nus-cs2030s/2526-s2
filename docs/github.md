@@ -56,26 +56,22 @@ It should show something like:
 
 - Login to [GitHub.com](https://www.github.com) using your account.  Ensure that you are using the account you registered for CS2030S.
 
-- Go to the URL [https://github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens). Alternatively, Click on Your Profile Avatar -> Settings -> Developer Settings -> Personal Access Tokens 
+- Go to the URL [https://github.com/settings/tokens](https://github.com/settings/tokens). Alternatively, Click on Your Profile Avatar -> Settings -> Developer Settings -> Personal Access Tokens -> Tokens (classic)
 
-   The page should say "Fine-grained personal access tokens" at the top.
+   The page should say "Personal access tokens (classic)" at the top.
 
 
-- Click on "**Generate new token**" (on the top-right).  You will be asked to enter the following information:
+- Click on "**Generate new token**" (on the top-right), then **Generate new token (classic)**  You will be asked to enter the following information:
 
-   - **Token name**: Enter something meaningful to you, such as "CS2030S"
-   - **Description**: Enter something descriptive to help you remember what this token is for (e.g., For CS2030S labs and exercises)
-   - **Resources owner**: Ensure that your GitHub username is selected.
+   - **Note**: Enter something meaningful to you to explain what this token is for
    - **Expiration**: Set a **Custom** duration that covers until the end of the semester (e.g., 15/05/2026)
-   - **Repository access**: Select "**All repositories**"
-   - **Permissions**: Click **Add permissions** and set the following:
-     - Under "**Contents**", select "**Read and write**"
-     - Under "**Metadata**", select "**Read-only**"
+   - **Select scopes**: Select "**repo**" (all the subscooes will be selected automatically)
 
 After setting the above, click on the "**Generate token**" button at the bottom of the page.  
 
 Your personal access token will be created.  Copy-paste this to somewhere safe and private. We will be using it in the next step.
 
+Students who are actively using GitHub for other work and prefer to have finer control over the token permissions may choose to create fine-grain personal access token instead, and configure its permission to your personal preference.   
 
 ## 3. Accept and Retrieve a Test Skeleton from GitHub
 
@@ -83,7 +79,7 @@ Your personal access token will be created.  Copy-paste this to somewhere safe a
 
 We have created an empty lab for you to test if you can correctly retrieve future lab files from GitHub.  Complete the following steps:
 
-- Click here [https://classroom.github.com/a/35k4fcsd](https://classroom.github.com/a/35k4fcsd).  You should see a page that looks like the following:
+- Click here [https://classroom.github.com/a/mdTUrnes](https://classroom.github.com/a/mdTUrnes) to accept the assignment.  You should see the following page:
 
 ![accept](figures/accept-assignment-demo.png){: style="width:500px"}
 
