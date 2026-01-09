@@ -110,7 +110,7 @@ Some common error messages you may receive when you `ssh` and what they mean:
 
 ## Setting up SSH Keys
 
-The next step is not required but is a time-saver and a huge quality-of-life improvement.  _You need to be familiar with basic Unix commands_, including how to copy files to remote hosts (using `scp`), how to check/change file permissions (using `ls -l` and `chmod`), and how to open, edit, and save a file using `vim.  If you are still not comfortable with these commands, make sure you play with the [basic Unix commands](unix/essentials.md) and [`vim`](vim/index.md).  You can come back and complete this step later. 
+The next step is not required but is a time-saver and a huge quality-of-life improvement.  _You need to be familiar with basic Unix commands_, including how to copy files to remote hosts (using `scp`), how to check/change file permissions (using `ls -l` and `chmod`), and how to open, edit, and save a file using `vim`.  If you are still not comfortable with these commands, make sure you play with the [basic Unix commands](unix/essentials.md) and [`vim`](vim/index.md).  You can come back and complete this step later. 
 
 Our goal here is to set up a pair of public/private keys for authentication so that you do not need to type your password every time you log into a PE host.
 
