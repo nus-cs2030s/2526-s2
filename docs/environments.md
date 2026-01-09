@@ -124,18 +124,18 @@ Keep the private key `id_rsa` on your local machine in the hidden `~/.ssh` direc
 
 The following are the steps to copy `id_rsa.pub` to the PE hosts.
 
-    - On a PE host, create a directory named `.ssh` in your home directory if it does not already exist.
+- On a PE host, create a directory named `.ssh` in your home directory if it does not already exist.
 
-    - Edit the file named `authorized_keys` under the `.ssh` directory.
+- Edit the file named `authorized_keys` under the `.ssh` directory.
 
-    ```Shell
-    vim ~/.ssh/authorized_keys
-    ```
+```Shell
+vim ~/.ssh/authorized_keys
+```
 
-    - Once in vim, enter INSERT mode, and copy-and-paste the content of `id_rsa.pub` from the local machine into `authorized_keys` using your terminal copy-and-paste feature (the actual keys to copy and to paste depends on your OS and Terminal).  Make sure that the content is pasted as a single line without any extra spaces.  Save `authorized_keys` and exit vim.
+- Once in vim, enter INSERT mode, and copy-and-paste the content of `id_rsa.pub` from the local machine into `authorized_keys` using your terminal copy-and-paste feature (the actual keys to copy and to paste depends on your OS and Terminal).  Make sure that the content is pasted as a single line without any extra spaces.  Save `authorized_keys` and exit vim.
 
 
-    - Make sure that the permission for `.ssh` both on the local machine and on PE is set to `700` and the files `~/.ssh/id_rsa` on the local machine and `~/.ssh/authorized_keys` on the remote machine are set to `600`.  See the guide on using [`ls`](unix/essentials.md#ls-list-content-of-a-directory) and [`chmod`](unix/essentials.md#file-permission-management) if you are unsure how to do this.
+- Make sure that the permission for `.ssh` both on the local machine and on PE is set to `700` and the files `~/.ssh/id_rsa` on the local machine and `~/.ssh/authorized_keys` on the remote machine are set to `600`.  See the guide on using [`ls`](unix/essentials.md#ls-list-content-of-a-directory) and [`chmod`](unix/essentials.md#file-permission-management) if you are unsure how to do this.
 
 Once set up, you need not enter your password every time you run `ssh pelogin` from your personal computer.
 
