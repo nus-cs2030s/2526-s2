@@ -84,7 +84,7 @@ As the PE hosts are meant to simulate the practical exam environments, `scp` and
 
 Some common error messages you may receive when you `ssh` and what they mean:
 
-1. > `ssh: Could not resolve hostname pe1xx.comp.nus.edu.sg`
+1. > `ssh: Could not resolve hostname pelogin.comp.nus.edu.sg`
 
     `ssh` cannot recognize the name `pelogin`. Likely, you tried to connect to the PE hosts directly from outside of the SoC network.
 
