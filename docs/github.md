@@ -54,14 +54,14 @@ It should show something like:
 
 ## 2. Setting up Password-less Login
 
-1. Login to [GitHub.com](https://www.github.com) using your account.  Ensure that you are using the account you registered for CS2030S.
+- Login to [GitHub.com](https://www.github.com) using your account.  Ensure that you are using the account you registered for CS2030S.
 
-2. Go to the URL [https://github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens). Alternatively, Click on Your Profile Avatar -> Settings -> Developer Settings -> Personal Access Tokens 
+- Go to the URL [https://github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens). Alternatively, Click on Your Profile Avatar -> Settings -> Developer Settings -> Personal Access Tokens 
 
    The page should say "Fine-grained personal access tokens" at the top.
 
 
-3. Click on "**Generate new token**" (on the top-right).  You will be asked to enter the following information:
+- Click on "**Generate new token**" (on the top-right).  You will be asked to enter the following information:
 
    - **Token name**: Enter something meaningful to you, such as "CS2030S"
    - **Description**: Enter something descriptive to help you remember what this token is for (e.g., For CS2030S labs and exercises)
@@ -72,9 +72,9 @@ It should show something like:
      - Under "**Contents**", select "**Read and write**"
      - Under "**Metadata**", select "**Read-only**"
 
-   After setting the above, click on the "**Generate token**" button at the bottom of the page.
+After setting the above, click on the "**Generate token**" button at the bottom of the page.  
 
-4. Your personal access token will be created.  Copy-paste this to somewhere safe and private. We will be using it in the next step.
+Your personal access token will be created.  Copy-paste this to somewhere safe and private. We will be using it in the next step.
 
 
 ## 3. Accept and Retrieve a Test Skeleton from GitHub
@@ -108,7 +108,7 @@ Now, run
 ### 3.4 Authentication
 You will then be asked for your username and password.
 
-For the username, enter your **github username**.  For the password, paste your personal access token.  Note that there will be nothing shown on the screen when you type your token.  Just paste it and press Enter.
+For the username, enter your **GitHub username**.  For the password, paste your **token** from Step 2 above.  Note that there will be nothing shown on the screen when you type your token.  Just paste it and press Enter.
 
 ### 3.5 Results
 If everything works well, you should see:
