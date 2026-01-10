@@ -5,7 +5,7 @@
 
 ## Java version
 
-Java is a language that continues to evolve.  A new version is released every six months.  For CS2030S, we will _only_ use Java 21, the most recent version with long-term support.  Specifically, we use `javac 21.0.9` on Ubuntu 20.04.6.
+Java is a language that continues to evolve.  A new version is released every six months.  For CS2030S, we will _only_ use Java 21.  Specifically, we use `javac 21.0.9` on Ubuntu 20.04.6.
 
 ## PE Hosts
 
