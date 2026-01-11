@@ -532,10 +532,11 @@ class: top
 ```Java
 byte b = 10;
 int l = 10;
-b = l; // Error
-l = b; // OK
+b = l; // ok?
+l = b; // ok
 ```
 
+--
 The compiler checks based on the compile-time type only.
 
 ---
