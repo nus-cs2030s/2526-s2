@@ -15,7 +15,7 @@ We have created a `.vimrc` file, with CS2030S defaults, for your use.  This is t
 To copy this file to your home directory on the PE nodes,
 
 ```Bash
-$ cp ~cs2030s/.vimrc ~
+$ cp /opt/course/cs2030s/.vimrc ~
 ```
 
 You can ask `vim` to automatically back up the files that you edit.  This has been a lifesaver for me on multiple occasions.
@@ -51,7 +51,7 @@ Additional `vim` extensions are installed under `~/.vim`.  To install these "off
 
 ```Bash
 mkdir -p ~/.vim
-cp -r ~cs2030s/.vim/* ~/.vim
+cp -r /opt/course/cs2030s/.vim/* ~/.vim
 ```
 
 You can test out the different color schemes according to the [instructions](plugins.md) to check if you have set up the extensions correctly.  The default CS2030S `.vimrc` uses the `molokai` color schemes.

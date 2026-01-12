@@ -327,7 +327,7 @@ To automatically check for style violations, we use a tool called [`checkstyle`]
 Example of how to run:
 
 ```
-java -jar ~cs2030s/bin/checkstyle.jar -c ~cs2030s/bin/checkstyle.xml *.java
+java -jar /opt/course/cs2030s/bin/checkstyle.jar -c /opt/course/cs2030s/bin/checkstyle.xml *.java
 ```
 
 The exercises and exams may have different stylecheck configurations.  See the corresponding instructions in the exercises/exam papers.
