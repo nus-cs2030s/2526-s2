@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
 
 <!-- CHANGE TITLE -->
-<title>CS2030S AY24/25 S2 Lecture 1</title>
+<title>CS2030S AY25/26 S2 Lecture 1</title>
 <meta charset="utf-8">
 </head>
 <body>
@@ -351,7 +351,7 @@ class: top,center
 ---
 class: top,center
 
-### The `jshell` Runtime
+### The `jshell` Interpreter
 
 <img src="figures/cs2030s-lec01/cs2030s-lec01.011.png" width="800">
 
@@ -529,7 +529,7 @@ class: top
 byte b = 10;
 int i = 1000;
 b = i; // error
-i = b; // oK
+i = b; // ok
 ```
 
 ---
@@ -540,12 +540,12 @@ class: top
 ```Java
 byte b = 10;
 int i = 10;
-b = i; // ok?
+b = i; // still error even though i is 10
 i = b; // ok
 ```
 
 --
-The compiler checks based on the compile-time type only.
+The compiler checks based on the compile-time type only, not the value of the variables.
 
 ---
 class: top
@@ -653,10 +653,10 @@ The return type and the parameter type(s) enforces what kinds of inputs are allo
 
 ```Java
 short x = 1;
-foo(x); // ok?
+foo(x); // ok
 
 long y = 1;
-foo(y); // ok?
+foo(y); // error
 ```
 
 ---
@@ -729,7 +729,7 @@ We use the dot notation to access the field or call the method of an object.
 
 ```Java
 Circle c = new Circle();
-c.r = 10;
+c.radius = 10;
 double area = c.getArea();
 ```
 
@@ -755,9 +755,9 @@ class: top
 ```Java
 Circle c1 = new Circle();
 Circle c2 = c1;
-System.out.println(c2.r); // print 0
-c1.r = 10.0;
-System.out.println(c2.r); // print 10.0
+System.out.println(c2.radius); // print 0
+c1.radius = 10.0;
+System.out.println(c2.radius); // print 10.0
 ```
 ]
 
@@ -770,7 +770,7 @@ What happens if we don't initialise a reference field?
 class A {
   Circle c1;
    :
-  c1.r = 10.0;  // NullPointerException
+  c1.radius = 10.0;  // NullPointerException
 }
 ```
 
