@@ -88,7 +88,7 @@ Some common error messages you may receive when you `ssh` and what they mean:
 
     `ssh` cannot recognize the name `pelogin`. Likely, you tried to connect to the PE hosts directly from outside of the SoC network.
 
-2. > `Connection closed by 192.168.48.xxx port 22`
+2. > `error : Unable to allocate resources : Invalid account or account/partition combination specified`
 
     You have connected to the PE host, but you are kicked out because you have no permission to use the host.
 
