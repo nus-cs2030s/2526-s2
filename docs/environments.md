@@ -51,9 +51,9 @@ After the command above, follow the instructions on the screen.  The first time 
 
 ### Accessing The PE Hosts from Outside SoC
 
-The PE hosts can only be accessed from within the School of Computing networks.  If you want to access it from outside, you need to connect through SoC VPN (:material-alpha-d-circle: in Figure 1).
+The PE hosts can only be accessed from within the School of Computing networks.  If you want to access it from outside the network, you need to connect through SoC VPN (:material-alpha-d-circle: in Figure 1).  {++Note that even if you are physically within SoC, but you are connected to the Internet through mobile network tethering, the NUS_GUEST WiFi network, or any other external networks, you still need to connect through SoC VPN.  To connect to the School of Computing network within the premise of School of Computing, you need to connect to NUS_STU.++}
 
-First, you need to set up a Virtual Private Network (VPN) (See [instructions here](https://dochub.comp.nus.edu.sg/cf/guides/network/vpn)).  The staff at the IT helpdesk in COM1, Level 1, will be able to help you with setting up if needed.  You can also contact them via the NUS IT RT system at [https://rt.comp.nus.edu.sg](https://rt.comp.nus.edu.sg).
+First, you need to set up a Virtual Private Network (VPN) (See [instructions here](https://dochub.comp.nus.edu.sg/cf/guides/network/vpn/start)).  The staff at the IT helpdesk in COM1, Level 1, will be able to help you with setting up if needed.  You can also contact them via the NUS IT RT system at [https://rt.comp.nus.edu.sg](https://rt.comp.nus.edu.sg).
 
 !!! note "SoC VPN vs NUS VPN"
 
