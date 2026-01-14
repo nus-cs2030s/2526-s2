@@ -85,6 +85,8 @@ We have created an empty lab for you to test if you can correctly retrieve futur
 
 - Click the accept button.  Wait a bit and then refresh until you see a "You're ready to go" message.
 
+{++If you see an error message saying "Repository Access Issue", check your email for an invitation message from github-classroom.  Click the link in the email to accept the invitation.  After accepting the invitation, go back to the link above and refresh the page again.  You should see a "You're ready to go message.++}
+
 ### 3.2 Configure the PE Host to Store Your Credentials
 
 Now, on your PE host, run
