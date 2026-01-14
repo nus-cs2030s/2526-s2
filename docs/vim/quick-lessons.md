@@ -15,7 +15,7 @@ Here is a quick walkthrough to get a taste of `vim`.
 Download the following file for practice using `vim` in this session.
 
 ```Bash
-$ cp ~cs2030s/jfk.txt .
+$ cp /opt/course/cs2030s/jfk.txt .
 ```
 
 The file named `jfk.txt` should be copied to your currentw orking directory.  You can check that the file is created by typing the following
