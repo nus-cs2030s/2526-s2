@@ -1,4 +1,6 @@
-# CS2030S Exercise Guide
+# Guide to Programming Exercises
+
+Programming exercises aim to help you practice the concepts taught in the course.  They are designed to be completed within a day.  You are encouraged to discuss and seek help from others if you get stuck.  However, you should ensure that you understand the resulting code and the concepts behind them, and not just copying the code blindly.
 
 ## GitHub Setup 
 
@@ -29,26 +31,34 @@ A repo will be created automatically for you.
 !!! warning "WARNING"
     Do not interact with the repo directory using GitHub or other `git` commands.
 
-
 ### 2. Read and Understand the Exercise Task
 
 The exercise task will be given in a link on Canvas.
 
 Read through the question carefully before starting to complete the task.
 
-
 ### 3. Get a Copy on PE Hosts
 
-Run the command `~cs2030s/get exX` (where X is the exercise number) to clone a copy of the exercise on your home directory.  You will see a new directory named something like `exX-username` created, with the skeleton files inside.
+Run the command `/opt/course/cs2030s/get exX` (where X is the exercise number) to clone a copy of the exercise on your home directory.  You will see a new directory named something like `exX-username` created, with the skeleton files inside.
 
 You need to edit, compile, run, and test your code on the PE hosts.
 
 !!! warning "WARNING"
     Do not edit your code directly on GitHub.
 
+### 4. Check You Work
+
+You can following the instructions in the exercise task to compile and test your code locally on the PE hosts.  
+
+For a more comphensive check, you can run the command `/opt/courss/cs2030s/check exX` (where X is the exercise number).  This will run a series of style checks, compilation checks, and test cases on your code.  
+
 ### 4. Submit a Copy 
 
-When you are ready to submit, run `~cs2030s/submit exX` (where X is the exercise number).  This will submit a copy to GitHub.  You can submit multiple times, but only the last copy will be graded.
+When you are ready to submit, run `/opt/courss/cs2030s/submit exX` (where X is the exercise number).  This will do the following:
+
+- Runs `/opt/course/cs2030s/check` on your code
+- Generate a report 
+- Submit a copy of the code and the report to GitHub.  You can submit multiple times, but only the last copy will be processed by the tutor .
 
 !!! warning "WARNING"
     Do not use `git push` or other `git` commands to submit your code to GitHub.
