@@ -31,37 +31,40 @@ A repo will be created automatically for you.
 !!! warning "WARNING"
     Do not interact with the repo directory using GitHub or other `git` commands.
 
-### 2. Read and Understand the Exercise Task
-
-The exercise task will be given in a link on Canvas.
-
-Read through the question carefully before starting to complete the task.
-
 ### 3. Get a Copy on PE Hosts
 
 Run the command `/opt/course/cs2030s/get exX` (where X is the exercise number) to clone a copy of the exercise on your home directory.  You will see a new directory named something like `exX-username` created, with the skeleton files inside.
 
-You need to edit, compile, run, and test your code on the PE hosts.
+#### Read the Task
 
-The task statement for each exercise is given in a file named `exX-task.md` in the exercise directory.  You can open it using the command `view exX-task.md` or `/opt/course/cs2030s/bin/glow exX-task.md`.  Alternatively, you can view it through the web browser on your GitHub repository.  We suggest that you get use to viewing it on the command line, as you will need to do so during the practical exams.
+- The exercise task will be given in a markdown file named `exX-task.md` in the exercise directory.
+- You can open it using the command `view exX-task.md` or `/opt/course/cs2030s/bin/glow exX-task.md`.  Alternatively, you can view it through the web browser on your GitHub repository.  We suggest that you get use to viewing it on the command line, as you will need to do so during the practical exams.
+- Read through the question carefully before starting to complete the task.
+
+#### Solving the Task
+
+You need to edit, compile, run, and test your code on the PE hosts.
 
 !!! warning "WARNING"
     Do not edit your code directly on GitHub.
 
-### 4. Check You Work
+#### Testing your Code
 
-For a more comphensive check, you can run the command `/opt/courss/cs2030s/check exX` (where X is the exercise number).  This will run a series of style checks, compilation checks, and test cases on your code.  
+In CS2030S exercises, there are two types of test cases: unit tests to test individual classes or methods, and integration tests to test the whole program.  The task statements will indicate which type of tests are provided for each exercise.
 
-!!! warning "WARNING"
- 
-    In some exercises, some support files are provided to you as part of the skeleton code.  The task statements will clearly state that you are not supposed to modify these files.  If you run the `check` command, it may restore these files to their original versions.
+- The unit tests are given as part of the skeleton code in a file named `exX-test.jar`.  The command to run the unit tests is given in the task statements.
+
+- The integration tests are given as input and expected output files in the `tests` sub-directory.  The command to run the integration tests is given in the task statements.  Typically, you run `/opt/course/cs2030s/test-main exX` to run the integration tests.
+
+Students typically go through the edit-compile-test cycle multiple times to complete the exercise.
+
 
 ### 4. Submit a Copy 
 
 When you are ready to submit, run `/opt/courss/cs2030s/submit exX` (where X is the exercise number).  This will do the following:
 
 - Reformat your code according to the style guide 
-- Runs `/opt/course/cs2030s/check` on your code
+- Runs a checker on your code (see details below)
 - Generate a report 
 - Submit a copy of the code and the report to GitHub.  You can submit multiple times, but your tutor is only obligated to read the last copy submitted before the deadline (in the git branch named `feedback`)
 
@@ -74,11 +77,26 @@ When you are ready to submit, run `/opt/courss/cs2030s/submit exX` (where X is t
     ```shell
     alias get="/opt/course/cs2030s/get"
     alias submit="/opt/course/cs2030s/submit"
-    alias check="/opt/course/cs2030s/check"
     ```
+
+#### Pre-submission Check 
+
+The pre-submission check runs the following to properly validate your code before submission:
+
+1. It checks if your code compiles without errors.
+2. It runs all unit tests and integration tests (where applicable). 
+3. It checks if your code follows the style guide (we used `checkstyle` with a custom configuration)
+4. It runs a linter to check for common mistakes (we used `pmd` with a custom configuration)
+
+!!! warning "WARNING"
+ 
+    In some exercises, some support files are provided to you as part of the skeleton code.  The task statements will clearly state that you are not supposed to modify these files.  If you run the `check` command, it may restore these files to their original versions.
+
+If you want to run the checker on your own without submission, run `/opt/course/cs2030s/check exX` (where X is the exercise number).  
 
     After this, you can simply run `get exX`, `submit exX`, or `check exX`.  To setup these aliases automatically, you can put the three lines above in your `~/.bash_profile` (it will take effect the next time you log in).  
 
+You should fix any compilation errors, test failures, style errors, or linter warnings before submission.
 
 ### 5. Receiving Feedback
 
