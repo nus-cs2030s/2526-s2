@@ -66,7 +66,29 @@ When you are ready to submit, run `/opt/courss/cs2030s/submit exX` (where X is t
 - Reformat your code according to the style guide 
 - Runs a checker on your code (see details below)
 - Generate a report 
-- Submit a copy of the code and the report to GitHub.  You can submit multiple times, but your tutor is only obligated to read the last copy submitted before the deadline (in the git branch named `feedback`)
+- Submit a copy of the code and the report to GitHub.  
+
+You can submit multiple times, but your tutor is only obligated to read the last copy submitted before the deadline.
+
+If your submission is successful, you will see an output like this:
+```
+submitting <exercise> for <your name>
+reformatting Java files...done
+compiling...done
+testing individual classes...done
+testing Main...done
+linting...done
+checking style...done
+generating report...done
+submitting...
+updating master branch...
+  :
+  :
+pushing to GitHub...
+submitted.
+```
+
+If your code generates any warning or error during the pre-submission check, the errors will be displayed on the terminal.  You should fix them and submit again.
 
 !!! warning "WARNING"
     Do not use `git push` or other `git` commands to submit your code to GitHub.
@@ -107,7 +129,7 @@ The tutors will provide feedback on your submission via Github after the deadlin
 
 ### 6. Feedback Report and Achievement Badges
 
-A file named `feedback.md` that contains auto-graded output as well as links to your tutor's feedback will be placed into your GitHub repo.  
+A file named `feedback.md` that contains auto-graded output will be placed into your GitHub repo after your submission.  
 
 We will assign an achievement badge, which can be one of the following:
 
@@ -126,7 +148,7 @@ If you accidentally break your repo by running `git` commands on it or edit it d
 
 ## Timeline
 
-The exercise is usually due on Tuesday afternoon, in the week following its released.  You must submit each exercise before the deadline to receive feedback from your tutors and your achievement badge.
+The exercise is usually due on Tuesday afternoon, in the week following its released.  You must submit each exercise before the deadline to receive feedback from your tutors.
 
 The tutors have the right to refuse to read and give feedback on late submissions.
 
