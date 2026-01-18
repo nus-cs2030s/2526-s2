@@ -43,25 +43,42 @@ Run the command `/opt/course/cs2030s/get exX` (where X is the exercise number) t
 
 You need to edit, compile, run, and test your code on the PE hosts.
 
+The task statement for each exercise is given in a file named `exX-task.md` in the exercise directory.  You can open it using the command `view exX-task.md` or `/opt/course/cs2030s/bin/glow exX-task.md`.  Alternatively, you can view it through the web browser on your GitHub repository.  We suggest that you get use to viewing it on the command line, as you will need to do so during the practical exams.
+
 !!! warning "WARNING"
     Do not edit your code directly on GitHub.
 
 ### 4. Check You Work
 
-You can following the instructions in the exercise task to compile and test your code locally on the PE hosts.  
-
 For a more comphensive check, you can run the command `/opt/courss/cs2030s/check exX` (where X is the exercise number).  This will run a series of style checks, compilation checks, and test cases on your code.  
+
+!!! warning "WARNING"
+ 
+    In some exercises, some support files are provided to you as part of the skeleton code.  The task statements will clearly state that you are not supposed to modify these files.  If you run the `check` command, it may restore these files to their original versions.
 
 ### 4. Submit a Copy 
 
 When you are ready to submit, run `/opt/courss/cs2030s/submit exX` (where X is the exercise number).  This will do the following:
 
+- Reformat your code according to the style guide 
 - Runs `/opt/course/cs2030s/check` on your code
 - Generate a report 
-- Submit a copy of the code and the report to GitHub.  You can submit multiple times, but only the last copy will be processed by the tutor .
+- Submit a copy of the code and the report to GitHub.  You can submit multiple times, but your tutor is only obligated to read the last copy submitted before the deadline (in the git branch named `feedback`)
 
 !!! warning "WARNING"
     Do not use `git push` or other `git` commands to submit your code to GitHub.
+
+!!! tips "Alias"
+    You may shorten the commands by creating aliases:
+
+    ```shell
+    alias get="/opt/course/cs2030s/get"
+    alias submit="/opt/course/cs2030s/submit"
+    alias check="/opt/course/cs2030s/check"
+    ```
+
+    After this, you can simply run `get exX`, `submit exX`, or `check exX`.  To setup these aliases automatically, you can put the three lines above in your `~/.bash_profile` (it will take effect the next time you log in).  
+
 
 ### 5. Receiving Feedback
 
