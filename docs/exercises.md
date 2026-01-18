@@ -38,7 +38,7 @@ Run the command `/opt/course/cs2030s/get exX` (where X is the exercise number) t
 #### Read the Task
 
 - The exercise task will be given in a markdown file named `exX-task.md` in the exercise directory.
-- You can open it using the command `view exX-task.md` or `/opt/course/cs2030s/bin/glow exX-task.md`.  Alternatively, you can view it through the web browser on your GitHub repository.  We suggest that you get use to viewing it on the command line, as you will need to do so during the practical exams.
+- You can open it using the command `view exX-task.md` or `/opt/course/cs2030s/bin/glow -p exX-task.md`.  Alternatively, you can view it through the web browser on your GitHub repository.  We suggest that you get use to viewing it on the command line, as you will need to do so during the practical exams.
 - Read through the question carefully before starting to complete the task.
 
 #### Solving the Task
