@@ -101,6 +101,15 @@ table thead {
   flex: 50%;
 }
 
+.left-column {
+	width: 45%; /* Adjust width as needed */
+	float: left;
+}
+.right-column {
+	width: 45%; /* Adjust width as needed */
+	float: right;
+}
+
 /* print filling whole paper */
 @media print {
   .remark-slide-scaler {
