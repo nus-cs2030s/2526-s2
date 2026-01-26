@@ -73,7 +73,7 @@ class: middle, center
 - The compile-time type (CTT) of $x$ is the type declared for $x$ in the program text.
 
 --
-- The runtime type (RTT) of $x$ is type of the object that $x$ refers to at runtime.
+- The runtime type (RTT) of $x$ is the type of the object that $x$ refers to at runtime.
 
 --
 - In Java, if $x$ != `null`, RTT($x$) $<:$ CTT($x$) must hold at runtime
@@ -152,7 +152,7 @@ RTT(`cc`) $<:$ `ColoredCircle` at runtime?
 .smaller[
 RTT(`c`) $<:$ `Circle` at run-time.  
 
-Possible to have a RTT(`c`) = $T <:$ `Circle` but $T \not <:$ `ColoredColor`
+Possible to have a RTT(`c`) = $T <:$ `Circle` but $T \not <:$ `ColoredCircle`
 
 **Answer:** No
 ]
@@ -183,7 +183,7 @@ RTT(`cc`) $<:$ `ColoredCircle` at runtime?
 .smaller[
 RTT(`c`) $<:$ `Circle` at run-time.  
 
-Possible to have a RTT(`c`) = $T <:$ `Circle` but $T \not <:$ `ColoredColor`
+Possible to have a RTT(`c`) = $T <:$ `Circle` but $T \not <:$ `ColoredCircle`
 
 But human says $T <:$ `ColoredCircle` at run-time, and _it is possible_ that human is right.
 
@@ -245,9 +245,6 @@ Only cast when we are absolutely sure we are right.
 ---
 ### Recap: Overriding
 
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
 ---
 ### Recap: Overriding
 
@@ -261,9 +258,6 @@ obj.toString();
 
 ---
 ### Overriding `equals` (not)
-
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Overriding `equals` (not)
@@ -310,9 +304,6 @@ A subclass can override a method defined in its superclass by providing a new im
 
 ---
 ### Overriding `equals` (properly)
-
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Overriding `equals` (properly)
@@ -386,26 +377,14 @@ Let's assume we only overload with
 ---
 ### Finding a point in an array of points
 
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
 ---
 ### Finding a circle in an array of circles
-
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Finding a object in an array of objects
 
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
 ---
 ### Now add more types
-
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Polymorphism 
@@ -543,21 +522,12 @@ Note: this property only concerns the opening hours.
 ---
 ### Other Restaurant Types
 
-- `Kopitiam` : doesn't not take reservation
+- `Kopitiam` : does not take reservation
 - `DigitalReadyRestaurant` : can take reservation 24/7
 
-$\phi$(`Kopitiam`): ?
+$\phi$(`Kopitiam`): violates
 
-$\phi$(`DigitalReadyRestaurant`): ?
-
----
-### Alt Behavior of `Restaurant` (Poll 2)
-
-- $\phi$(`Restaurant`): `canMakeReservation(time)` returns `false` if `time` falls outside the opening hours.
-
-- $\phi$(`Kopitiam`): ?
-
-- $\phi$(`DigitalReadyRestaurant`): ?
+$\phi$(`DigitalReadyRestaurant`): OK
 
 ---
 ### Power of Polymorphism
@@ -572,20 +542,12 @@ $\phi$(`DigitalReadyRestaurant`): ?
 ---
 ### Find Largest Areas Among Circles
 
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
 ---
 ### Find Largest Areas Among Objects
-
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Find Largest Areas Among Shapes
 
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 .small[
@@ -604,9 +566,6 @@ abstract class Shape {
 
 ---
 ### Find Largest Areas Among Things
-
-<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 .small[
@@ -720,7 +679,7 @@ class: bottom
 .tiny[
 Version: v1.0
 
-Last Updated: Sat Jan 25 18:00:00 +08 2025
+Last Updated: Mon 26 Jan 2026 14:00:24 +08
 ]
 </textarea>
 
