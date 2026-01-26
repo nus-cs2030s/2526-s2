@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 3</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+
+### Announcements
+
+- Students with timetable clashes for PE1 should file a ticket 
+  - Please select the correct category in RT
+
+- Labs and recitations start this week
+
+---
+### Catch-Up Session 1
+
+- Optional Q&A session this coming Saturday, 10 AM - 12 PM
+
+- No new content will be taught
+
+- Face-to-face session (no recording)
+
+- Sign up via Canvas Calendar
+
+- Venue: TBD
+
+---
+### In-lab Practicals
+
+.small[
+- To simulate the practical exams, you will receive a `plab` account via email for the lab practicals this week.  Do not share this account with anyone.  No open access to the Internet.
+
+- The account is usable only during the your allocated lab session
+
+- Given a task to complete in 45 minutes.  This week's task: (i) manipulate files with Unix CLI, and (ii) write a simple Java class 
+]
+
+---
+class: middle, center
+
+## Lecture 3
+
+### 26 January 2026
+
+---
+### Recap: Inheritance and Subtyping
+
+- if $S$ inherits from $T$, then $S <: T$
+
+--
+- Subtyping is transitive: if $R <: S$ and $S <: T$, then $R <: T$
+
+---
+### Recap: Typing of a Variable
+
+- The compile-time type (CTT) of $x$ is the type declared for $x$ in the program text.
+
+--
+- The runtime type (RTT) of $x$ is type of the object that $x$ refers to at runtime.
+
+--
+- In Java, if $x$ != `null`, RTT($x$) $<:$ CTT($x$) must hold at runtime
+
+---
+### Subtyping with Reference Types (Poll 1)
+
+`ColoredCircle` $<:$ `Circle`
+
+.small[```Java
+void fooCC(ColoredCircle cc) { .. }
+
+void fooC(Circle cc) { .. }
+
+Circle c;
+ColoredCircle cc;
+
+fooC(cc); // any compilation error?
+fooCC(c); // any compilation error?
+```]
+
+---
+### Class Hierarchy
+
+
+---
+class: wide
+### Why Widening Conversion is OK
+
+.left-column[
+
+.smaller[```Java
+// ColoredCircle <: Circle
+Circle c;
+ColoredCircle cc;
+  :
+c = cc;
+```
+
+**Compiler**: Can guarantee 
+RTT(`cc`) $<:$ `Circle` at runtime?
+]
+]
+
+.right-column[
+.smaller[
+At run-time, RTT(`cc`) $<:$ `ColoredCircle`
+
+By transitivity, RTT(`cc`) $<:$ `Circle`
+
+**Answer:** Yes
+]
+]
+
+---
+class: wide
+
+### Why Narrowing Conversion is NOT OK
+
+.left-column[
+
+.smaller[```Java
+// ColoredCircle <: Circle
+Circle c;
+ColoredCircle cc;
+  :
+cc = c;
+```
+
+**Compiler**: Can guarantee 
+RTT(`cc`) $<:$ `ColoredCircle` at runtime?
+]
+]
+
+.right-column[
+.smaller[
+RTT(`c`) $<:$ `Circle` at run-time.  
+
+Possible to have a RTT(`c`) = $T <:$ `Circle` but $T \not <:$ `ColoredColor`
+
+**Answer:** No
+]
+]
+
+
+---
+class: wide
+
+### Narrowing Conversion with Proper Casting 
+
+.left-column[
+
+.smaller[```Java
+// ColoredCircle <: Circle
+Circle c;
+ColoredCircle cc;
+  :
+cc = (ColoredCircle) c;
+```
+
+**Compiler**: Can guarantee 
+RTT(`cc`) $<:$ `ColoredCircle` at runtime?
+]
+]
+
+.right-column[
+.smaller[
+RTT(`c`) $<:$ `Circle` at run-time.  
+
+Possible to have a RTT(`c`) = $T <:$ `Circle` but $T \not <:$ `ColoredColor`
+
+But human says $T <:$ `ColoredCircle` at run-time, and _it is possible_ that human is right.
+
+**Answer:** Can't guarantee, but let's allow it
+]
+]
+
+---
+class: wide
+
+### Narrowing Conversion with Improper Casting 
+
+.left-column[
+
+.smaller[```Java
+// ColoredCircle <: Circle
+Point p;
+ColoredCircle cc;
+  :
+cc = (ColoredCircle) p;
+```
+
+**Compiler**: Can guarantee 
+RTT(`cc`) $<:$ `ColoredCircle` at runtime?
+]
+]
+
+.right-column[
+.smaller[
+RTT(`p`) $<:$ `Point` at run-time.  
+
+Human says RTT(`p`) $<:$ `ColoredCircle` at run-time, and that's not possible.
+
+**Answer:** No
+]
+]
+
+---
+class: wide
+
+### Narrowing Conversion with Proper Casting 
+
+.smaller[```Java
+// ColoredCircle <: Circle
+// TransparentCircle <: Circle
+Circle c = new TransparentCircle();
+ColoredCircle cc;
+  :
+cc = (ColoredCircle) c;
+```
+
+**Compiler**: Let's trust the programmer.
+
+**Runtime**: Error since RTT(`c`) $\not <:$ `ColoredCircle`
+]
+--
+Only cast when we are absolutely sure we are right.
+
+---
+### Recap: Overriding
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Recap: Overriding
+
+.smaller[```Java
+Object obj = new Object();
+obj.toString();
+
+obj = new Point(0, 0);
+obj.toString();
+```]
+
+---
+### Overriding `equals` (not)
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Overriding `equals` (not)
+
+.smaller[```Java
+Point p1 = new Point(0, 0);
+Point p2 = new Point(0, 0);
+Point p3 = new Point(1, 1);
+
+p1.equals(p2); 
+p2.equals(p3);
+```]
+
+---
+### Overriding `equals` (not)
+
+.smaller[```Java
+Object o1 = new Point(0, 0);
+Object o2 = new Point(0, 0);
+Object o3 = new Point(1, 1);
+
+o1.equals(o2); 
+o2.equals(o3);
+```]
+
+---
+### Overloading
+
+Two accessible methods in the same class with the same name but different method signatures.
+
+.small[
+```Java
+public boolean equals(Point p) {
+    return this.x == p.x && this.y == p.y;
+}
+```
+]
+
+
+---
+### Recap
+
+A subclass can override a method defined in its superclass by providing a new implementation with the _same method signature_
+
+---
+### Overriding `equals` (properly)
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Overriding `equals` (properly)
+
+.smaller[```Java
+Object o1 = new Point(0, 0);
+Object o2 = new Point(0, 0);
+Object o3 = new Point(1, 1);
+
+o1.equals(o2); 
+o2.equals(o3);
+```]
+
+---
+### New Notations 
+
+- Method signature: 
+    - `Class::method(ParamTypes)`
+
+- Method descriptor: 
+    - `ReturnType Class::method(ParamTypes)`
+
+---
+class: wide
+### Which Method is Called?
+.tiny[```Java
+Object oo = new Object();
+Object op = new Point(0, 0);
+Point  pp = new Point(0, 0);
+```
+]
+
+.tiny[
+| `Point::equals(..)` | `oo.equals(oo)`  | `op.equals(op)`  | `pp.equals(pp)`  |
+|--------------------------------|--------------------------|--------------------------|
+|  None                      | `Object::equals(Object)` | `Object::equals(Object)` | `Object::equals(Object)` |
+|  `Point::equals(Point)`    | `Object::equals(Object)` | `Object::equals(Object)`   | `Point::equals(Point)`    |
+|  `Point::equals(Object)`   | `Object::equals(Object)`  | `Point::equals(Object)`  | `Point::equals(Object)`  |
+]
+
+---
+We can overload and override at the same time
+
+.smaller[
+```Java
+// Overloading
+public boolean equals(Point p) {
+    return this.x == p.x && this.y == p.y;
+}
+
+@Override
+public boolean equals(Object obj) {
+  if (obj instanceof Point) {  // RTT(obj) <: Point
+    Point p = (Point) obj;
+    return (p.x == this.x && p.y == this.y);
+  }
+  return false;
+}
+```
+]
+
+---
+### Why is overriding useful?
+
+Let's assume we only overload with 
+
+- `Point:equals(Point)`
+- `Circle::equals(Circle)`
+- etc.
+
+---
+### Finding a point in an array of points
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Finding a circle in an array of circles
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Finding a object in an array of objects
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Now add more types
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Polymorphism 
+
+.smaller[
+```Java
+boolean contains(Object[] array, Object obj) {
+  for (Object curr : array) {
+    if (curr.equals(obj)) { // <-- polymorphic call
+      return true;
+    }
+  }
+  return false;
+}
+```
+]
+
+---
+### Method Invocation Process 
+
+Java determines which method implementation to execute by using a two step process.
+
+- Step 1: At _compile-time_, determine the method descriptor to be invoked.
+
+- Step 2: At _runtime_, determine the actual method implementation to be executed.
+
+---
+### Step 1: At compile-time
+
+- Among the accessible and valid methods in the CTT of target, find the most specific method descriptor.
+
+- Store this method descriptor in the generated bytecode
+
+---
+.smaller[
+```Java
+boolean equals(Point p) { .. }
+
+@Override
+boolean equals(Object p) { .. }
+```
+]
+
+A method $M$ is more specific than a method $N$ if the arguments to $M$ can be passed to $N$ without compilation error. 
+
+The method `equals(Point)` is more specific than the method `equals(Object)`.
+
+---
+### Step 2: At run-time
+
+- Search for an accessible method with the matching descriptor starting at the RTT of the target, 
+and then its parent, grandparent, ...  (up the class hierarchy)
+
+- Invoke the first matching descriptor found
+
+---
+class: wide
+### Which Method is Called?
+.tiny[```Java
+Object op = new Point(0, 0);
+Point  pp = new Point(0, 0);
+```
+]
+
+.tiny[
+| `Point::equals(..)` | `op.equals(op)`  | `pp.equals(pp)`  |
+|--------------------------------|--------------------------|--------------------------|
+|  `Point::equals(Point)`  only  | `Object::equals(Object)`   | `Point::equals(Point)`    |
+|  `Point::equals(Object)` only | `Point::equals(Object)`  | `Point::equals(Object)`  |
+]
+
+---
+### Liskov Substitution Principle (LSP)
+
+Let $\phi(x)$ be a property provable about objects $x$ of type $T$. Then $\phi(y)$ should be true for objects $y$ of type $S$ where $S <: T$.
+
+---
+### Liskov Substitution Principle (LSP)
+
+If $S$ is a subclass of $T$, then an object of type $T$ can be replaced by that of type $S$ without changing the _desirable property_ of the program
+
+For a given expected behavior of the superclass, a _subclass_ should not break this expectation.
+
+---
+### Expected Behavor of `Course`
+
+$\phi$(`Course`): if `marksToGrade` does not return `'A'`, `'B'`, `'C'`, then the student must retake the course.
+
+---
+### Example 
+
+.smaller[
+```Java
+void displayGrade(Course c, double marks) {
+  char grade = c.marksToGrade(marks);
+  if (grade == 'A')) {
+    System.out.println("well done");
+  else if (grade == 'B') {
+    System.out.println("good");
+  else if (grade == 'C') {
+    System.out.println("ok");
+  } else {
+    System.out.println("retake again");
+  }
+}
+```
+]
+
+---
+
+### `CSCUCourse`
+
+`marksToGrade` of `CSCUCourse` returns either `S` or `U` only.
+
+Does the property hold?
+
+$\phi$(`CSCUCourse`): if `marksToGrade` does not return `'A'`, `'B'`, `'C'`, then the student must retake the course.
+
+---
+### `CSCUCourse`
+
+What would this print?
+
+```Java
+displayGrade(new CSCUCourse(), 100);
+```
+
+---
+### Expected Behavior of `Restaurant`
+
+$\phi$(`Restaurant`): `canMakeReservation(time)` returns `true` if `time` falls within the opening hours.
+
+Note: this property only concerns the opening hours.
+
+---
+### Other Restaurant Types
+
+- `Kopitiam` : doesn't not take reservation
+- `DigitalReadyRestaurant` : can take reservation 24/7
+
+$\phi$(`Kopitiam`): ?
+
+$\phi$(`DigitalReadyRestaurant`): ?
+
+---
+### Alt Behavior of `Restaurant` (Poll 2)
+
+- $\phi$(`Restaurant`): `canMakeReservation(time)` returns `false` if `time` falls outside the opening hours.
+
+- $\phi$(`Kopitiam`): ?
+
+- $\phi$(`DigitalReadyRestaurant`): ?
+
+---
+### Power of Polymorphism
+
+- We can write general code that works for all possible subtypes of a class (including subtypes that does not exist yet)
+
+- But everyone must adhere to the "contract" on the expected behavior 
+
+--
+- We can declare a class as `final` to prevent inheritance and a method as `final` to prevent overriding
+
+---
+### Find Largest Areas Among Circles
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Find Largest Areas Among Objects
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Find Largest Areas Among Shapes
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+.small[
+```Java
+abstract class Shape {
+    private int numOfAxesOfSymmetry ;
+
+    public boolean isSymmetric() {
+        return numOfAxesOfSymmetry > 0;
+    }
+
+    public abstract double getArea();
+}
+```
+]
+
+---
+### Find Largest Areas Among Things
+
+<iframe src="http://localhost:7681?fontSize=24&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+.small[
+```Java
+interface GetAreable {
+    public abstract double getArea();
+}
+```
+]
+
+---
+class:wide
+### Implementing an Interface
+
+.small[
+```Java
+class Circle extends Shape implements GetAreable {
+  :
+  public double getArea() {
+    :
+  }
+  :
+}
+```
+]
+
+---
+### Subtyping for Interfaces
+
+If class `C` implements interface `I` then `C` $<:$ `I` 
+
+---
+
+A class can extend at most one class
+
+.smaller[
+```Java
+// error
+class Circle extends Shape, RoundyThing { ... } 
+```
+]
+
+---
+A class can implement zero or more interfaces
+
+.smaller[
+```Java
+// OK
+class Circle extends Shape 
+  implements GetAreable, GetPerimeterable { ... } 
+```
+]
+
+---
+An interface can extend zero or more interfaces
+
+.smaller[
+```Java
+// OK
+interface Measurable extends GetAreable, GetPerimeterable { ... } 
+```
+]
+
+---
+class: wide
+### Narrowing Conversion with Casting 
+
+.left-column[
+
+.smaller[```Java
+// Point </: GetAreable
+Point p;
+GetAreable ga;
+  :
+ga = (GetAreable) p;
+```
+
+**Compiler**: Can guarantee 
+RTT(`p`) $<:$ `GetAreable` at runtime?
+]
+]
+
+--
+
+.right-column[
+.smaller[
+RTT(`p`) $<:$ `Point` at runtime.  
+
+Human says RTT(`p`) $<:$ `GetAreable` at run-time, and _that's possible_.
+
+**Answer:** Can't guarantee, but let's allow it.
+]
+]
+
+---
+### Reminders
+
+.small[
+- Deadline from Homework Last Week
+    - Tuesday noon: Exercise 0
+    - Wednesday midnight: Quizzes on Vim,  PE Environment
+
+- New Homework This Week
+    - Exercise 1 (due next Tuesday noon)
+    - Wednesday midnight: Quiz on Lecture 3
+]
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Sat Jan 25 18:00:00 +08 2025
+]
+</textarea>
+
+<script src="https://thisisadi.yoga/remark/js/remark.js" type="text/javascript"></script>
+<script src="https://thisisadi.yoga/remark/plugins/qanvas/init.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+  qanvas: {
+  		pensize: 2
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+  slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim: filetype=markdown
