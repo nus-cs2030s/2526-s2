@@ -47,6 +47,7 @@ nav:
       - 39. Asynchronous Programming: '39-async.md'
   - Programming Guide:
     - Programming Environments: 'environments.md'
+    - Exercises : 'exercises.md'
     - GitHub Setup: 'github.md'
     - Unix CLI:
       - Background: 'unix/background.md'

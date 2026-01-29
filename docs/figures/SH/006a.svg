@@ -18,8 +18,8 @@
    <rect x="415" y="250" width="200" height="35" fill="#1b3e6b"/>
    <rect x="415" y="285" width="200" height="80" fill="#2563a8"/>
    <text x="515" y="274" class="value" text-anchor="middle">Point</text>
-   <text x="435" y="310" class="value">x: 1.0</text>
-   <text x="435" y="340" class="value">y: 1.0</text>
+   <text x="435" y="310" class="value">x: 0.0</text>
+   <text x="435" y="340" class="value">y: 0.0</text>
  </g>
  <g>
    <rect x="415" y="50" width="200" height="35" fill="#1b3e6b"/>
