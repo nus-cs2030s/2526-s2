@@ -13,12 +13,21 @@
 </head>
 <body>
 <textarea id="source">
----
 class: middle, center
 
 ## CS2030<sub>s</sub>
 
 ### Programming Methodology II
+
+---
+### Announcements
+
+- In-Lab Practical 1: Graded and marks will be posted on Canvas later this week
+
+    - Task 1 (0.5 marks) and Task 2 (0.5 marks)
+
+- PE1 session allocation will be posted later this week
+
 ---
 class: middle, center
 
@@ -45,9 +54,6 @@ class: middle, center
 
 ---
 ### Recap: Circle
-
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Example: Reading from a File
@@ -115,9 +121,6 @@ try {
 
 ---
 ### Demo: FileReader
-
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 .smaller[
@@ -391,11 +394,11 @@ class E1 extends RuntimeException {}
 class E2 extends E1 {}
 
 class Main {
-  void methodB() {
+  static void methodB() {
     throw new E1();
   }
 
-  void methodA() {
+  static void methodA() {
     try {
       methodB();
     } catch (E2 e) {
@@ -430,11 +433,11 @@ class E1 extends RuntimeException {}
 class E2 extends E1 {}
 
 class Main {
-  void methodB() {
+  static void methodB() {
     throw new E1();
   }
 
-  void methodA() {
+  static void methodA() {
     try {
       methodB();
     } catch (E2 e) {
@@ -465,9 +468,6 @@ class Main {
 
 ---
 ### Creating Our Own Exception
-
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Do NOT catch-them-all!
@@ -521,18 +521,17 @@ try {
 }
 ```
 ]
+---
+background-image: url(figures/vim-workshop.jpg)
+
+---
+[Sign-up for Hacker School](https://hckr.cc/2526s2-hackerschool-vim)
 
 ---
 ### Recap: Contains method
 
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
 ---
 ### Contains method for primitive types
-
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 <iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html" width="100%", height="80%">
@@ -541,8 +540,6 @@ try {
 ---
 ### Make each primitive type a class
 
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 
 ---
@@ -595,8 +592,6 @@ Double d3 = 5;  // sorry
 ---
 ### Contains using Wrapper Classes
 
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Java wrapper classes are immutable
@@ -609,8 +604,6 @@ i = i + 1;  // <-- a new instance
 ---
 ### Overhead of Wrapper Classes
 
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Complex Types
@@ -638,15 +631,11 @@ For reference types $S$ and $T$, if $S <: T$, then $S[] <: T[]$
 ---
 ### `Point[]` $<:$ `Object[]`
 
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 
 ---
 ### Java is not completely type safe
 
-<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 class: bottom
@@ -676,7 +665,7 @@ var slideshow = remark.create({
 	},
 	ratio: '16:9',
 	highlightStyle: 'ir-black',
-  slideNumberFormat: 'CS2030S AY24/25 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+  slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
 });
  // Setup MathJax
   MathJax.Hub.Config({
