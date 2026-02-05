@@ -1,0 +1,16 @@
+<svg "http://www.w3.org/2000/svg" width="240" height="110" viewBox="0 0 240 110" role="img">
+ <style>
+   .stroke { stroke: var(--svg-stroke, currentColor); stroke-width: 1; }
+   .label { fill: var(--svg-text, currentColor); font-family: "Roboto", "Arial", sans-serif; font-size: 24; }
+   .title-label { fill: var(--svg-text, currentColor); font-family: "Roboto", "Arial", sans-serif; font-size: 30; font-weight: 700; }
+   .value { fill: #e0e0e0; font-family: "Menlo", "Consolas", monospace; font-size: 22; }
+   .label-value { fill: var(--svg-text, currentColor); font-family: "Menlo", "Consolas", monospace; font-size: 22; }
+ </style>
+ <g>
+   <rect x="15" y="10" width="200" height="35" fill="#1b3e6b"/>
+   <rect x="15" y="45" width="200" height="80" fill="#2563a8"/>
+   <text x="115" y="34" class="value" text-anchor="middle">ClassName</text>
+   <text x="115" y="70" class="value" text-anchor="middle">field1: value1</text>
+   <text x="115" y="95" class="value"text-anchor="middle">field2: value2</text>
+ </g>
+</svg>
