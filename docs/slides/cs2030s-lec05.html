@@ -1,0 +1,842 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 5</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+### Midterm
+
+2 March 2026, Monday 12 PM - 2 PM.
+
+Check: Canvas -> Midterm Test Information
+
+- **Scope:** Units 1-27, Exercises 0-3, Problem Sets 1-4
+
+- **Mode:** Pen and paper  
+
+- **Length:** 70 minutes
+
+---
+### PE1
+
+7 March 2025, Saturday 12 PM - 3 PM; 3 - 6 PM.
+
+Check: Canvas -> PE1 Test Information
+
+- **Scope:** Units 1-27, Exercises 0-3, Problem Sets 1-4
+
+- **Length:** 90 minutes
+
+---
+class: middle, center
+
+## Lecture 5
+
+### 9 February 2026
+
+---
+### "Wider" Types $\rightarrow$ More General Method
+
+.smaller[
+```Java
+boolean contains(Object[] array, Object obj) {
+  for (Object curr : array) {
+    if (curr.equals(obj)) {
+      return true;
+    }
+  }
+  return false;
+}
+```
+]
+
+---
+### "Wider" Types $\rightarrow$ More General Method
+
+.smaller[
+```Java
+double findLargestArea(GetAreable[] array) {
+  double maxArea = 0;
+  for (GetAreable curr : array) {
+    double area = curr.getArea();
+    if (area > maxArea) {
+      maxArea = area;
+    }
+  }
+  return maxArea;
+}
+```
+]
+
+---
+### "Wider" Types $\rightarrow$ More General Method
+
+.smaller[
+```Java
+GetAreable findLargestItem(GetAreable[] array) {
+  double maxArea = 0;
+  GetAreable maxObj = null;
+  for (GetAreable curr : array) {
+    double area = curr.getArea();
+    if (area > maxArea) {
+      maxArea = area;
+      maxObj = curr;
+    }
+  }
+  return maxObj;
+}
+```
+]
+
+---
+### "Wider" Types $\rightarrow$ More General Class
+
+.smaller[
+```Java
+class Pair {
+  private Object first;
+  private Object second;
+
+  public Pair(Object first, Object second) {
+    this.first = first;
+    this.second = second;
+  }
+  public Object getFirst() { 
+    return this.first; 
+  }
+  public Object getSecond() { 
+    return this.second;
+  }
+}
+```
+]
+
+---
+### Wide Types are Not Useful
+
+.smaller[
+```Java
+Point origin = new Point(0, 0);
+Circle[] circles = new Circle[] {
+  new Circle(origin, 1), new Circle(origin, 2),
+};
+
+GetAreable largest = findLargestItem(circles);
+
+largest.getArea();        // compilation ok
+largest.contains(origin); // compilation error
+```
+]
+
+---
+### We are sure it's a Circle
+
+.smaller[
+```Java
+Point origin = new Point(0, 0);
+Circle[] circles = new Circle[] {
+  new Circle(origin, 1), new Circle(origin, 2),
+};
+
+Circle largest = (Circle) findLargestItem(circles);
+
+largest.getArea();        // compilation ok
+largest.contains(origin); // compilation ok
+```
+]
+
+---
+### How About This?
+
+.smaller[
+```Java
+GetAreable[] items = new GetAreable[] {
+  new Circle(new Point(0,0), 4), 
+  new Square(6)
+};
+
+??? largest = (???) findLargestItem(items);
+  :
+```
+]
+
+---
+### Human Casting can be Error-Prone
+
+.smaller[
+```Java
+Pair p = new Pair("hello", 4);
+Integer i = (Integer) p.getFirst(); // run-time error
+```
+]
+
+---
+### Abstract Types Are Too General
+
+- What we have: 
+    - `Object` can be *any* type but can be *different types* in different places.
+
+- What we need: 
+    - $T$ can be *any* type, but it is the *same type* everywhere.
+
+---
+### Type Variable
+
+- A *type variable* is a placeholder for a type.
+
+- Everywhere the variable is used, it refers to the *same type*.
+
+- Classes and methods can be *parameterised* by type variables.
+
+---
+.smaller[
+```Java
+class Pair<S, T> {
+  private S first;
+  private T second;
+
+  public Pair(S first, T second) {
+      this.first = first;
+      this.second = second;
+  }
+
+  public S getFirst() { 
+    return this.first; 
+  }
+
+  public T getSecond() { 
+    return this.second;
+  }
+}
+```
+]
+
+---
+### Initializing Type Variables
+
+When we create a `Pair`, we specify the actual types to use for `S` and `T`.
+
+.small[
+```Java
+Pair<String, Integer> p;
+
+p = new Pair<String, Integer>("hello", 4);
+```
+]
+
+---
+### Type Checking with Generics
+
+.small[
+```Java
+Pair<String, Integer> p;
+
+p = new Pair<String, Integer>("hello", 4);
+
+String s = p.getFirst();  // no need to cast
+Integer i = p.getFirst(); // compile error
+```
+]
+
+---
+### Terminology
+
+- `Pair<S, T>` is a *generic type* with type parameters `S` and `T`.
+
+- `Pair<String, Integer>` is a *parameterised type*.  
+
+- `String` and `Integer` are *type arguments*.
+
+---
+### Passing Type Variables to Another Generic Type
+
+.smaller[
+```Java
+class DictEntry<T> extends Pair<String, T> {
+  :
+}
+```
+]
+---
+### Generic Methods
+
+.smaller[
+```Java
+public static <T> boolean contains(T[] array, T obj) {
+  for (T curr : array) {
+    if (curr.equals(obj)) {
+      return true;
+    }
+  }
+  return false;
+}
+```
+]
+---
+.smaller[
+```Java
+String[] array = new String[] { "hello", "world" };
+
+Container.<String>contains(array, "bye"); // compile ok
+
+Container.<String>contains(array, 123);   // compile error
+```
+]
+
+---
+### Scope of Type Variables
+
+.smaller[
+```Java
+class A<T> {
+  T x;
+
+  public <T> void foo(T y) {
+    :
+  }
+}
+```
+]
+
+The type variable `T` in class `A` is different from the type variable `T` in method `foo`.
+
+---
+### Bounded Type Parameters
+
+<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Comparable&lt;T&gt;
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html" width="100%" height="80%">
+</iframe>
+
+---
+### Sorting Arrays
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#sort(T%5B%5D)" width="100%" height="80%">
+</iframe>
+
+---
+### Comparing Pairs
+
+<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+class: middle,center
+
+## Type Erasure
+
+---
+### How to implement generics
+
+- *Code Specialisation* (C#, C++, Rust): generate a new class for every new type argument.
+
+```Java
+class Pair_String_Integer { .. }
+class Pair_Double_Boolean { .. }
+  :
+```
+
+---
+### How to implement generics
+
+- *Code Sharing* (Java): erase type arguments and type parameters **after type checking**
+
+- Generics is introduced in Java 5.  Erasure is used to maintain backward compatibility with pre-Java 5 code.
+
+- "Erasure" not only erase traces of generics, but also insert casts and bridge methods to preserve type safety.
+
+---
+class: wide
+
+### Type variables: Replaced by bounds
+.left-column[
+.tiny[
+```Java
+// Before
+class Pair<S, T> {
+  private S first;
+  private T second;
+
+  public Pair(S s, T t) {
+    this.first = s;
+    this.second = t;
+  }
+
+  public S getFirst() { 
+    return this.first; 
+  }
+
+  public T getSecond() { 
+    return this.second; 
+  }
+}
+```
+]]
+
+.right-column[
+.tiny[
+```Java
+// After
+class Pair {
+  private Object first;
+  private Object second;
+
+  public Pair(Object s, Object t) {
+    this.first = s;
+    this.second = t;
+  }
+
+  public Object getFirst() { 
+    return this.first; 
+  }
+
+  public Object getSecond() { 
+    return this.second; 
+  }
+}
+```
+]]
+
+---
+class: wide
+### Type variables: Replaced by bounds
+
+.left-column[
+.tiny[
+```Java
+// Before
+class Pair<S, T extends GetAreable> {
+  private S first;
+  private T second;
+
+  public Pair(S s, T t) {
+    this.first = s;
+    this.second = t;
+  }
+
+  public S getFirst() { 
+    return this.first; 
+  }
+
+  public T getSecond() { 
+    return this.second; 
+  }
+}
+```
+]]
+
+.right-column[
+.tiny[
+```Java
+// After
+class Pair {
+  private Object first;
+  private GetAreable second;
+
+  public Pair(Object s, GetAreable t) {
+      this.first = s;
+      this.second = t;
+  }
+
+  public Object getFirst() { 
+    return this.first;
+  }
+
+  public GetAreable getSecond() {
+    return this.second;
+  }
+}
+```
+]]
+---
+### Type arguments: Removed, with casts inserted
+
+.smaller[
+```Java
+// Before
+Pair<String, Long> p = new Pair<String, Integer>("hi", 4);
+Integer i = p.getSecond();
+```
+]
+
+.smaller[
+```Java
+// After
+Pair p = new Pair("hi", 4);
+Integer i = (Integer) p.getSecond();
+```
+]
+
+---
+### Overload Based on Type Arguments
+
+.left-column[
+.tiny[
+```Java
+// Before
+class A {
+  void foo(Pair<Long, Long> p) {
+    // body omitted
+  }
+
+  void foo(Pair<Bank, Bank> p) {
+    // body omitted
+  }
+}
+```
+]]
+
+.right-column[
+.tiny[
+```Java
+// After
+class A {
+  void foo(Pair p) {
+    // body omitted
+  }
+
+  void foo(Pair p) {
+    // body omitted
+  }
+}
+```
+]]
+
+---
+### Using Type Parameters in Static Context
+
+.tiny[
+```Java
+class C<T> { 
+  private static T x;
+    :
+}
+```
+]
+
+.tiny[
+```Java
+C<Integer> c = new C<Integer>();
+C<String> d = new C<String>();
+```
+]
+
+What is the type of `C.x`? 
+
+---
+### Array of Generics
+
+.smaller[
+```Java
+Pair<String, Integer>[] pArray;
+pArray = new Pair<String, Integer>[2];
+
+Object[] oArray = pArray;
+oArray[0] = new Pair<Double, Boolean>(3.14, true);
+
+String str = pArray[0].getFirst();
+```
+
+Note: Not valid Java
+]
+
+---
+### Can't mix array and generics
+
+.small[
+```Java
+new Pair<String,Integer>[2]; // error
+
+new Pair<S,T>[2];            // error
+
+new T[2];                    // error
+```
+]
+
+---
+### Method Overriding
+
+.left-column[
+.tiny[
+```Java
+// Before
+class Box<T> {
+  void get(T t) {
+    // body omitted  
+  }
+}
+
+class MyBox extends Box<String> {
+  @Override
+  void get(String s) {
+    // body omitted
+  }
+}
+```
+]]
+
+.right-column[
+.tiny[
+```Java
+// After
+class Box {
+  void get(Object t) {
+    // body omitted  
+  }
+}
+
+class MyBox extends Box {
+  @Override
+  void get(String s) {
+    // body omitted
+  }
+}
+```
+]]
+
+---
+### Bridging Method
+
+.left-column[
+.tiny[
+```Java
+// Before
+class Box<T> {
+  void get(T t) {
+    // body omitted  
+  }
+}
+
+class MyBox extends Box<String> {
+  @Override
+  void get(String s) {
+    // body omitted
+  }
+}
+```
+]]
+
+.right-column[
+.tiny[
+```Java
+// After
+class Box {
+  void get(Object t) {
+    // body omitted  
+  }
+}
+
+class MyBox extends Box {
+  @Override
+  void get(Object s) {
+    this.get((String) s);
+  }
+
+  void get(String s) {
+    // body omitted
+  }
+}
+```
+]]
+---
+### Checking for cast correctness
+
+.small[
+```Java
+void foo(Object o) {
+   String s = (String) o; 
+}
+```
+]
+
+The compiler noted to the Java runtime that it trusted the human on this cast.
+
+It asks the runtime to double-check if `o` is indeed a `String`.
+
+
+---
+### Unchecked cast warnings
+
+.small[
+```Java
+<T> void foo(Object o) {
+   T s = (T) o;  // warn unchecked cast
+}
+```
+]
+
+The compiler noted to the Java runtime that it trusted the human on this cast.
+
+It asks the runtime to double-check if `o` is indeed a .. ?
+
+---
+### Raw types
+
+Generic type without type arguments
+
+.smaller[
+```Java
+Pair p = new Pair<String, Integer>("hello", 4);
+Pair<String, Integer> p = new Pair("hello", 4);
+```
+]
+
+Not type safe!
+
+---
+### Creating `Seq<T>`
+
+<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Not Type Safe
+
+.left-column[
+.tiny[
+```Java
+// Before
+Seq<String> seq;
+Object[] array;
+
+seq = new Seq<String>(2);
+array = seq.getArray();
+
+array[0] = 5;
+String s = seq.get(0);
+```
+]
+]
+
+.right-column[
+.tiny[
+```Java
+// After
+Seq seq;
+Object[] array;
+
+seq = new Seq(2);
+array = seq.getArray();
+
+array[0] = 5;
+String s = (String) seq.get(0);
+```
+]
+]
+
+---
+### Making `Seq<T>` Safe
+
+<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Removing Warnings
+
+<iframe src="http://localhost:7681?fontSize=22&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Unchecked Warnings
+
+- The compiler warns us about unchecked operations for a reason.
+
+- Do not suppress the warnings unless you are sure it is type safe.
+
+- Suppressing warnings should be done as narrowly as possible. (In CS2030S, only at the variable assignment level)
+
+---
+### Not Type Safe
+
+.smaller[
+```Java
+vod setSeq(Seq s) {
+  s.set(0, 1234); // Is 1234 the right type?
+}
+```
+]
+
+Avoid raw types!
+
+---
+### Temporarily Allowed
+
+Checking for RTT(obj)
+
+.small[
+```Java
+obj instanceof Seq
+```
+]
+
+Allocating an array
+
+.small[
+```Java
+new Seq[];
+```
+]
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Sun Feb 9 13:15:00 +08 2025
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+  slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown
