@@ -36,10 +36,10 @@ Many major companies enforce coding styles, and some have published them.  For C
 
     ```Java
     if (x == 0) {
-        x++;
-        for (i = 0; i < x; i++) {
-            x += i;
-        }
+      x++;
+      for (i = 0; i < x; i++) {
+        x += i;
+      }
     }
     ```
 
