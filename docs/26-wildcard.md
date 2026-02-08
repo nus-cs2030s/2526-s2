@@ -279,7 +279,7 @@ circleSeq.copyTo(shapeSeq);
 ```
 
 Our new `Seq<T>` is now
-```Java title="Seq&lt;T&gt; v0.5 (with flexible copy using wildcards)" hl_lines=21 28"
+```Java title="Seq&lt;T&gt; v0.5 (with flexible copy using wildcards)" hl_lines="21 28"
 class Seq<T> {
   private T[] array;
 
