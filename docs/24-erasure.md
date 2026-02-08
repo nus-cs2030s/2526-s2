@@ -287,12 +287,12 @@ In the case of `StringBox`,
 class StringBox extends Box {
   // compiler-generated bridge method
   void get(Object s) {
-    return get((String) s);   
+    this.get((String) s);   
   }
 
   // programmer-defined method
   void get(String s) {
-    return "hello";
+    // body omitted
   }
 }
 ```
