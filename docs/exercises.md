@@ -61,7 +61,7 @@ Students typically go through the edit-compile-test cycle multiple times to comp
 
 ### 4. Submit a Copy 
 
-When you are ready to submit, run `/opt/courss/cs2030s/submit exX` (where X is the exercise number).  This will do the following:
+When you are ready to submit, run `/opt/course/cs2030s/submit exX` (where X is the exercise number).  This will do the following:
 
 - Reformat your code according to the style guide 
 - Runs a checker on your code (see details below)
