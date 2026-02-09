@@ -18,20 +18,28 @@ class: middle, center
 ### Programming Methodology II
 
 ---
-### Recitation on Day 2 of CNY (Wednesday)
+class: wide
+### No Recitation on Day 2 of CNY (Wednesday)
 
-- You can attend any sessions on Thursday (19 February 2026)
+Makeup recitations:
+
+- Friday 20 February 2026
+   
+- 9 - 10 AM; 10 - 11 AM; 11 - 12 PM; 12 - 1 PM; 2 - 3 PM
+
+- COM3 SR32
+
+- Sign up via Canvas Calendar (50 slots per session)
+
+- We will create new sessions if these are full.
 
 ---
-### Makeup Recitations
+class: wide
+### No Recitation on Day 2 of CNY (Wednesday)
 
-- If you cannot attend any session on Thursday, you can attend a makeup recitation on Friday.
+If none of the slots on Friday works for you:
 
-- Makeup recitations:
-    - Friday 20 February 2026
-    - 9 - 10 AM; 10 - 11 AM; 11 - 12 PM; 12 - 1 PM; 2 - 3 PM
-    - COM3 SR32
-    - Sign up via Canvas Calendar (50 slots per session)
+- You can attend any sessions on Thursday (19 February 2026)
 
 ---
 ### Exercise 3 and Quiz for Lecture 6
@@ -92,12 +100,14 @@ boolean contains(Object[] array, Object obj) {
 ```Java
 double findLargestArea(GetAreable[] array) {
   double maxArea = 0;
+
   for (GetAreable curr : array) {
     double area = curr.getArea();
     if (area > maxArea) {
       maxArea = area;
     }
   }
+
   return maxArea;
 }
 ```
@@ -111,6 +121,7 @@ double findLargestArea(GetAreable[] array) {
 GetAreable findLargestItem(GetAreable[] array) {
   double maxArea = 0;
   GetAreable maxObj = null;
+
   for (GetAreable curr : array) {
     double area = curr.getArea();
     if (area > maxArea) {
@@ -118,11 +129,26 @@ GetAreable findLargestItem(GetAreable[] array) {
       maxObj = curr;
     }
   }
+
   return maxObj;
 }
 ```
 ]
 
+---
+### "Wider" Types $\rightarrow$ More General Class
+
+.smaller[
+```Java
+class Queue {
+  private Object[] items;
+    
+  public boolean enq(Object o) { .. }
+  public Object  deq() { .. }
+    :
+}
+```
+]
 ---
 ### "Wider" Types $\rightarrow$ More General Class
 
@@ -201,7 +227,9 @@ GetAreable[] items = new GetAreable[] {
 .smaller[
 ```Java
 Pair p = new Pair("hello", 4);
-Integer i = (Integer) p.getFirst(); // run-time error
+
+String s = (String) p.getFirst();   // compile ok
+Integer i = (Integer) p.getFirst(); // compile ok; rt error
 ```
 ]
 
@@ -831,7 +859,7 @@ class: bottom
 .tiny[
 Version: v1.0
 
-Last Updated: Sun Feb 9 13:15:00 +08 2025
+Last Updated: Mon  9 Feb 2026 10:55:35 +08
 ]
 </textarea>
 
