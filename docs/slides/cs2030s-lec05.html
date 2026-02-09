@@ -18,6 +18,27 @@ class: middle, center
 ### Programming Methodology II
 
 ---
+### Recitation on Day 2 of CNY (Wednesday)
+
+- You can attend any sessions on Thursday (19 February 2026)
+
+---
+### Makeup Recitations
+
+- If you cannot attend any session on Thursday, you can attend a makeup recitation on Friday.
+
+- Makeup recitations:
+    - Friday 20 February 2026
+    - 9 - 10 AM; 10 - 11 AM; 11 - 12 PM; 12 - 1 PM; 2 - 3 PM
+    - COM3 SR32
+    - Sign up via Canvas Calendar (50 slots per session)
+
+---
+### Exercise 3 and Quiz for Lecture 6
+
+- Deadline extended to Friday 20 February 2026.
+
+---
 ### Midterm
 
 2 March 2026, Monday 12 PM - 2 PM.
@@ -196,7 +217,7 @@ Integer i = (Integer) p.getFirst(); // run-time error
 ---
 ### Type Variable
 
-- A *type variable* is a placeholder for a type.
+- A *type variable* is a placeholder for a reference type.
 
 - Everywhere the variable is used, it refers to the *same type*.
 
@@ -271,6 +292,15 @@ class DictEntry<T> extends Pair<String, T> {
 }
 ```
 ]
+
+---
+### Generic Types are Invariant
+
+`S` <: `T`, but
+
+ - `A<S>` $\not <:$ `A<T>`
+ - `A<T>` $\not <:$ `A<S>`
+
 ---
 ### Generic Methods
 
@@ -327,7 +357,7 @@ The type variable `T` in class `A` is different from the type variable `T` in me
 </iframe>
 
 ---
-### Sorting Arrays
+### Sorting Pairs
 
 <iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#sort(T%5B%5D)" width="100%" height="80%">
 </iframe>
