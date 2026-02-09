@@ -190,7 +190,7 @@ largest.contains(origin); // compilation error
 ]
 
 ---
-### We are sure it's a Circle
+### Cast If We Need More Specific Type
 
 .smaller[
 ```Java
@@ -512,8 +512,8 @@ class Pair {
   private GetAreable second;
 
   public Pair(Object s, GetAreable t) {
-      this.first = s;
-      this.second = t;
+    this.first = s;
+    this.second = t;
   }
 
   public Object getFirst() { 
@@ -532,7 +532,7 @@ class Pair {
 .smaller[
 ```Java
 // Before
-Pair<String, Long> p = new Pair<String, Integer>("hi", 4);
+Pair<String, Integer> p = new Pair<String, Integer>("hi", 4);
 Integer i = p.getSecond();
 ```
 ]
