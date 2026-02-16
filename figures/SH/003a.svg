@@ -1,0 +1,20 @@
+    <svg xmlns="http://www.w3.org/2000/svg" width="854" height="450" viewBox="0 0 854 450" role="img">
+      <style>
+        .stroke { stroke: var(--svg-stroke, currentColor); stroke-width: 1; }
+        .label { fill: var(--svg-text, currentColor); font-family: "Roboto", "Arial", sans-serif; font-size: 24; }
+        .title-label { fill: var(--svg-text, currentColor); font-family: "Roboto", "Arial", sans-serif; font-size: 30; font-weight: 700; }
+        .value { fill: #e0e0e0; font-family: "Menlo", "Consolas", monospace; font-size: 22; }
+        .label-value { fill: var(--svg-text, currentColor); font-family: "Menlo", "Consolas", monospace; font-size: 22; }
+      </style>
+      <!-- STACK: main frame -->
+      <rect x="55" y="260" width="220" height="100" fill="none" class="stroke"/>
+      <text x="60" y="250" class="label">main</text>
+      <!-- main: p -> Ø -->
+      <text x="105" y="305" class="label">p</text>
+      <rect x="140" y="280" width="110" height="55" fill="#2563a8"/>
+      <text x="195" y="310" class="value" text-anchor="middle" font-style="italic">ϕ</text>
+      <!-- bottom labels -->
+      <text x="165" y="400" class="title-label" text-anchor="middle">Stack</text>
+      <text x="560" y="400" class="title-label" text-anchor="middle">Heap</text>
+      <line x1="340" y1="0" x2="340" y2="400" class="stroke"/>
+    </svg>

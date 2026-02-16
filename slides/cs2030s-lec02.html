@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 2</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+---
+class: middle, center
+
+## Lecture 2
+
+### 19 January 2026
+
+---
+class: middle, center
+
+## Administrative Matters
+
+---
+class: top,wide
+### Reminders
+
+- Quizzes on Lecture 1 and Course Policy due on Wed 21 Jan, 11:59 PM
+
+- Setup GitHub account, link to it on PE hosts, and let us know your username
+
+- Unix/Vim clinics this week.  Stay tuned for announcements 
+
+- Use [RT](https://mysoc.nus.edu.sg/app/cs2030s) for admin questions and for contacting the teaching team
+
+---
+class:top, wide
+
+### Lab and Recitation Registration
+
+- Academic staff are *not* in charge of this process.
+
+- The add/swap period ends on Mon, 19 Jan, 5pm. If you do not secure a slot:
+
+	- Please submit an appeal through CourseReg under the Add/Change Tutorial Class category. 
+
+	- Register for any slot that has availability and does not clash with your timetable. 
+
+---
+
+class: top
+
+### PE1 and PE2 dates confirmed
+
+.small[
+Assessment         | Date         | Time
+:------------------|:-------------|:-------------
+Midterm            | Mon, 2 Mar   | 12 - 2 PM
+Practical Exam 1   | Sat, _**7 Mar**_   | 12 - 6 PM
+Practical Exam 2   | Sat, _**11 Apr**_  | 12 - 6 PM
+Final              | Wed, 29 Apr  | 1 - 3 PM
+
+]
+
+---
+class: middle, center
+
+## Lecture 2
+
+### 19 January 2026
+
+---
+class: top,left
+
+### Topics to cover today:
+
+- Information Hiding, Tell Don't Ask
+- Class fields and methods
+- Composition
+- The Heap and the Stack
+- Inheritance
+- Overriding
+
+(Unit 5 to Unit 12)
+
+---
+class: top
+
+### Recap
+
+.smaller[```Java
+class Circle {
+	double x;
+	double y;
+	double radius;
+  
+	double getArea() {
+	  return 3.141592653589793 * radius * radius;
+	}
+}
+```]
+
+---
+
+### Recap
+
+---
+
+### Initializing Objects
+
+---
+
+### WCGW?
+
+---
+class: top,left
+
+### Information Hiding
+
+- Avoid exposing internal representation of an object to the outside world
+
+- Java provides _access modifiers_ keywords to allow programmers to control access to class members (fields and methods)
+
+---
+class: top,left
+
+### Java Access Modifiers
+
+.smaller[
+| Accessed from | `private` | `public` | default | `protected`
+|---------------|---------|--------|--------|-----------|
+| Inside the class  | Yes | Yes | Banned | Banned |
+| Outside the class | No  | Yes | Banned | Banned |
+
+We will revisit the default and `protected` modifiers in later lectures.
+]
+
+---
+
+### Circle with Information Hiding
+
+---
+
+### Constructor
+
+---
+class: top
+
+New Java keyword: **this**
+
+```Java
+this.x = x;
+```
+
+Not always required when the context is clear, but CS2030S strongly recomemnds using it to make the context clear.
+
+---
+class: top,left
+
+### Constructor
+
+.smaller[```Java
+public Circle(double x, double y, double radius) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+}
+```]
+
+---
+### Accessors and Mutators 
+
+---
+class: top,left
+
+### Checking if a point is in a circle
+
+.small[```Java
+double cX = c.getX();
+double cY = c.getY();
+double cR = c.getR();
+boolean isInCircle = ((x - cX) * (x - cX) + 
+                      (y - cY) * (y - cY)) 
+                     <= cR * cR;
+```]
+---
+class: top,left
+
+### Tell, Don't Ask
+
+.small[```Java
+boolean isInCircle = c.contains(x, y);
+```]
+
+Side note: `c` is called the _target_ of method invocation `contains`
+
+---
+### 3.141592653589793?
+
+---
+class: top,left
+
+### Class Fields
+
+- Fields that belong to the class as a whole, not to any particular object
+
+- Declared using the `static` keyword
+
+- Can be access through the class name
+
+- Can be used without creating any instance of the class
+
+---
+class: top,left
+
+### Class Methods
+
+- Methods that use _only_ class fields for operations
+
+- Declared using the `static` keyword
+
+- Can be used without creating any instance of the class
+
+---
+class: top,left
+
+### Constant Variables/Fields
+
+- Variables or fields that cannot be changed after initialization
+
+- Declared using the `final` keyword
+
+---
+class: top,left
+
+### Example 
+
+.smaller[```Java
+class Math {
+	:
+	public static final double PI = 3.141592653589793;
+	:
+	:
+}
+```]
+
+---
+### Example: Number of Circles
+
+---
+class: top,left
+
+### Examples
+
+.smaller[```Java
+class Circle {
+  private static int numOfCircles = 0;
+
+  public Circle(...) {
+	Circle.numOfCircles = Circle.numOfCircles + 1;
+	...
+  }
+
+  public static int getNumOfCircles() {
+    return Circle.numOfCircles;
+  }
+}
+```
+]
+---
+class: top, left
+
+### `main`
+
+.small[```Java
+public static void main(String[] args) {
+	System.out.println("Hello World!");
+}
+```
+]
+---
+class: top,center
+
+### Composition: The "has-a" relationship
+
+---
+class: top.center
+
+### Stack and Heap
+
+.left-column[
+.tiny[```Java
+Point p = new Point(0, 0);
+Circle c1 = new Circle(p, 5);
+Circle c2 = new Circle(p, 10);
+Circle c3 = c2;
+```
+]]
+
+---
+class: top,center
+
+### Inheritance: is-a relationship
+
+---
+class: top
+
+### Our first subtyping rule for Reference Types
+
+If `S` inherits from `T`, then `S` $<:$ `T`.
+
+Reminder:  Subtyping is Reflexive and Transitive
+
+---
+class: top,wide
+
+### Subtyping with Reference Types
+
+If `ColoredCircle` $<:$ `Circle`
+
+.small[```Java
+ColoredCircle c = new Circle(p, 0); // error
+Circle c = new ColoredCircle(p, 0, blue); // OK
+```]
+
+---
+### `Object` is the supertype of all classes
+
+---
+### `toString` and `equals`
+
+---
+### Method Overriding 
+
+- A subclass can provide a specific implementation of a method that is already defined in its superclass.
+
+- We can only override instance methods (non-static methods) with the same _method signature_ (name, number, type, and order of parameters).
+
+---
+### `@Override` annotation
+
+- Prevent mistakes when overriding methods
+
+- Optional in Java but required in CS2030S
+
+---
+### Homework this week
+
+- Quizzes: 
+    - Lecture 2 (Due Wed 11:59 PM)
+	- Programming Environment (Due next Wed 11:59 PM)
+	- Vim (Due next Wed 11:59 PM)
+
+- Problem Set 0 
+
+- Exercise 0
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Mon 19 Jan 2026 13:50:53 +08
+]
+</textarea>
+
+<script src="https://thisisadi.yoga/remark/js/remark.js" type="text/javascript"></script>
+<script src="https://thisisadi.yoga/remark/plugins/qanvas/init.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	qanvas: {
+  		pensize: 2
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 6</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+
+### Reminders:
+
+- Makeup Recitations this Friday
+
+- Lab as usual this Thursday
+
+- Deadlines for Exercise 3 and Quiz posted to this Friday
+
+---
+
+### Announcements:
+
+- Past-Year Midterm and PE1 Test Papers
+
+- Mid-Semester Feedback Survey
+
+---
+class: middle, center
+
+## Lecture 6
+
+### 16 February 2026
+
+---
+### Recap: Terminology
+
+- `Seq<T>` is a *generic type* with *type parameter* `T`.
+
+- `Seq<String>` is a *parameterised type* with *type argument* `String`.
+
+---
+### Recap: Subtyping
+
+A type $T$ is a _subtype_ of $S$ ($T <: S$) if:
+
+> code written for variables of type $S$ can also be used for variables of type $T$ (without type errors)
+
+---
+### Recap: Variance of Types
+
+Let $C(T)$ be a complex type based on type $T$. 
+
+We say a complex type $C$ is:
+
+- _covariant_ if $S <: T$ implies $C(S) <: C(T)$
+
+- _contravariant_ if $T <: S$ implies $C(S) <: C(T)$
+
+- _invariant_ if $C$ is neither covariant nor contravariant
+
+---
+### Recap
+
+Java arrays are covariant: 
+> `S` $<:$ `T` $\implies$ `S[]` $<:$ `T[]`.
+
+Java generics are invariant: 
+> `S` $<:$ `T` $\implies$ `A<S>` $\not <:$ `A<T>`
+
+> `S` $<:$ `T` $\implies$ `A<T>` $\not <:$ `A<S>`
+
+---
+What would be a supertype of `Seq<Circle>`, `Seq<Integer>`, `Seq<Counter>`?
+
+NOT `Seq<Object>` because generics is invariant.
+
+---
+### Introducing Wildcards
+
+`?` is a wildcard _type argument_ that is a stand-in for an unknown/"don't care" type.
+
+For all types `T`, `Seq<T>` $<:$ `Seq<?>`
+
+.small[
+```Java
+void print(Seq<?> seq) {
+  for (int i = 0; i < seq.getLength(); i++) {
+    System.out.println(seq.get(i));
+  }
+}
+```
+]
+
+---
+### Other uses of wildcards
+
+Checking for RTT(obj)
+
+.small[
+```Java
+obj instanceof Seq<?>
+```
+]
+
+Allocating an array
+
+.small[
+```Java
+new Seq<?>[];
+```
+]
+
+---
+### Contains with `Seq<T>`
+
+
+---
+### Making `Seq<T>` more flexible
+
+
+---
+### Copying `Seq<T>` 
+
+
+---
+class: wide
+### Variance of Upper-Bounded Wildcards 
+
+- For any `S`, `A<S>` $<:$ `A<? extends S>`
+
+- `S` $<:$ `T` $\implies$ 
+     `A<? extends S>` $<:$ `A<? extends T>`
+
+- Example:
+
+    - `Seq<Circle>` $<:$ `Seq<? extends Circle>`
+
+    - `Seq<? extends Circle>` $<:$ `Seq<? extends Shape>`
+
+---
+
+---
+class: wide
+### Variance of Lower-Bounded Wildcards
+
+- For any `S`, `A<S>` $<:$ `A<? super S>`
+
+- `S` $<:$ `T` $\implies$  `A<? super T>` $<:$ `A<? super S>`
+
+- Example: 
+
+    - `Seq<Shape>` $<:$ `Seq<? super Shape>`
+
+    - `Seq<? super Shape>` $<:$ `Seq<? super Circle>`
+---
+
+---
+class: wide
+#### Puzzle
+
+.left-column[
+<img src="img/fruitbox.png" width="90%">
+]
+
+.right-column[
+.small[
+We have three boxes, with the following rules:
+
+- Box 1 can hold only fruits
+- Box 2 can hold only mandarins
+- Box 3 can hold only pineapples
+]]
+
+---
+class: wide
+
+.left-column[
+<img src="img/wildcardbox.png" width="90%">
+]
+
+.right-column[
+.small[
+You are given one of the three boxes, but you don't know which one.  You open the box and take out something.
+
+Which of the following statement is guaranteed to correct?
+ 
+- You took out a pineapple
+- You took out a mandarin
+- You took out a fruit
+]
+]
+
+---
+class: wide
+
+.left-column[
+<img src="img/wildcardbox.png" width="90%">
+]
+
+.right-column[
+.small[
+You put something back into the box, without violating the box's rules.
+
+What did you just put in?
+ 
+- You put in a pineapple
+- You put in a mandarin
+- You put in a fruit
+- None of the above (there is always a possibiity of violating the rule).
+]
+]
+
+---
+class: wide
+
+.left-column[
+<img src="img/superbox.png" width="90%">
+]
+
+.right-column[
+.small[
+We have three boxes, with the following rules:
+
+- Box 1 can hold any object
+- Box 2 can hold only fruits
+- Box 3 can hold only pineapples
+]]
+
+---
+class: wide
+
+.left-column[
+<img src="img/wildcardbox.png" width="90%">
+]
+
+.right-column[
+.small[
+You are given one of the three boxes, but you don't know which one.  You open the box and take out something.
+
+Which of the following statement is guaranteed to correct?
+ 
+- You took out a pineapple
+- You took out a mandarin
+- You took out a fruit
+- You took out an object
+]
+]
+
+---
+class: wide
+
+.left-column[
+<img src="img/wildcardbox.png" width="90%">
+]
+
+.right-column[
+.small[
+You put something back into the box, without violating the box's rules.
+
+What did you just put in?
+ 
+- You put in a pineapple
+- You put in a mandarin
+- You put in a fruit
+- You put in an object
+]
+]
+
+---
+### `? extends T`
+
+- Used as _producer_: can only get values out of the collection, but cannot put values in.
+
+- `Box<? extends Fruit>`: can only get `Fruit` out of the box, but cannot put anything in.
+
+---
+### Put a `Fruit` into `A<? extends Fruit>`
+
+.smaller[
+```Java
+void foo(Seq<? extends Fruit> seq, Fruit fruit) {
+  seq.set(0, fruit);
+}
+```
+]
+
+--
+.smaller[
+```Java
+foo(new Seq<Banana>(1), new Durian()); // not ok
+```
+]
+
+---
+### `? super T`
+
+- Used as _consumer_: can only put values into the collection, but cannot get values out.
+
+- `Box<? super Fruit>`: can only put `Fruit` into the box, but cannot get anything out.
+
+---
+### Get a `Fruit` from `A<? super Fruit>`
+
+.smaller[
+```Java
+Fruit foo(Seq<? super Fruit> seq) {
+  return seq.get(0);
+}
+```
+]
+
+--
+.smaller[
+```Java
+Seq<Object> seq = new Seq<Object>(1);
+seq.set(0, "hello");
+
+Fruit fruit = foo(seq);
+```
+]
+
+---
+### PECS
+
+Producer `extends`; Consumer `super`
+
+---
+class:wide
+### Common Mistakes
+
+`?` is a stand-in for **type arguments** only
+
+.small[
+```Java
+class A<?> { // ❌ stand-in for type parameter
+}
+```
+]
+
+.small[
+```Java
+? x;         // ❌ stand-in for type variable
+```
+]
+
+---
+### Common Mistakes
+
+`?` is not a type.
+
+.small[
+```Java
+new A<?>();  // ❌ 
+```
+]
+
+.small[
+```Java
+class B extends A<?> { }  // ❌ 
+```
+]
+
+---
+### Common Uses of Wildcards
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" width="100%" height="80%">
+
+---
+### Diamond Operator `<>`
+
+.small[
+```Java
+Pair<String, Integer> p;
+p = new Pair<String, Integer>();
+```
+]
+
+can be written as:
+
+.small[
+```Java
+Pair<String, Integer> p;
+p = new Pair<>();
+```
+]
+
+---
+### Calling Generic Methods
+
+.small[
+```Java
+Container.<Circle>contains(circleSeq, circle);
+```
+]
+
+can be written as:
+
+.small[
+```Java
+Container.contains(circleSeq, circle);
+```
+]
+
+---
+### Type Inference
+
+Infer type argument automatically.  If there are multiple types that match, pick the _most specific one_.
+
+Example:
+
+`Short` $<:$ `T` $<:$ `Object` $\implies$ `T` $:=$ `Short`
+
+---
+### Type Inference
+
+If there is no lower bound, then the compiler will infer the _most specific common supertype_.
+
+Example:
+
+`T` $<:$ `Event` $\implies$ `T` $:=$ `Event`
+
+---
+class: wide
+.small[
+```Java
+Container.contains(circleSeq, shape);
+```
+]
+
+.small[
+```Java
+<S> boolean contains(Seq<? extends S> seq, S obj)
+```
+]
+
+--
+
+1st arg: `Seq<Circle>` $<:$ `Seq<? extends S>`
+
+--
+
+`Circle` $<:$ `S`
+
+---
+class: wide
+.small[
+```Java
+Container.contains(circleSeq, shape);
+```
+]
+
+.small[
+```Java
+<S> boolean contains(Seq<? extends S> seq, S obj)
+```
+]
+
+--
+
+Second argument: `Shape` $<:$ `S`
+
+
+---
+class: wide
+.small[
+```Java
+Container.contains(circleSeq, shape);
+```
+]
+
+.small[
+```Java
+<S> boolean contains(Seq<? extends S> seq, S obj)
+```
+]
+
+`Circle` $<:$ `S` and `Shape` $<:$ `S` $\implies$ `Shape` $<:$ `S`
+
+`S` is inferred to be `Shape`
+
+---
+class: wide
+.small[
+```Java
+Container.contains(stringArray, 123);
+```
+]
+
+.small[
+```Java
+<T> boolean contains(T[] seq, T obj)
+```
+]
+
+--
+
+1st arg: `String[]` $<:$ `T[]` $\implies$ `String` $<:$ `T`
+
+--
+
+2nd arg: `Integer` $<:$ `T`
+
+--
+
+`Object` $<:$ `T` $\implies$ `T` inferred to be `Object`
+
+---
+class: wide
+
+.small[
+```Java
+findLargest(new Seq<Circle>(0));
+```
+]
+
+.small[
+```Java
+<T extends GetAreable> T findLargest(Seq<? extends T> 
+                                     seq);
+```
+]
+-- 
+`Seq<Circle>` $<:$ `Seq<? extends T>` $\implies$ `Circle` $<:$ `T`<br>
+
+--
+
+Type bound: `T` $<:$ `GetAreable`<br>
+
+--
+
+`Circle` $<:$ `T` $<:$ `GetAreable` $\implies$ `T` $:=$ `Circle`<br>
+
+---
+class: wide
+
+.small[
+```Java
+Shape s = findLargest(new Seq<Circle>(0));
+```
+]
+
+.small[
+```Java
+<T extends GetAreable> T findLargest(Seq<? extends T> 
+                                     seq);
+```
+]
+-- 
+
+`Circle` $<:$ `T` $<:$ `GetAreable` 
+
+--
+
+Return typing: `T` $<:$ `Shape`
+
+--
+
+`Circle` $<:$ `T` $<:$ `Shape` $\implies$ `T` $:=$ `Circle`
+
+---
+class: wide
+
+.small[
+```Java
+ColoredCircle s = findLargest(new Seq<Circle>(0));
+```
+]
+
+.small[
+```Java
+<T extends GetAreable> T findLargest(Seq<? extends T> 
+                                     seq);
+```
+]
+-- 
+
+`Circle` $<:$ `T` $<:$ `GetAreable` 
+
+--
+
+Return typing: `T` $<:$ `ColoredCircle`
+
+--
+
+Compiler error: `Circle` $<:$ `T` $<:$ `ColoredCircle` is not possible 
+
+---
+class: wide
+
+.small[
+```Java
+Container.contains(shapeSeq, "Hello");
+```
+]
+
+.small[
+```Java
+<S> boolean contains(Seq<? extends S> seq, S obj);
+```
+]
+
+---
+class: wide
+
+.small[
+```Java
+Container.contains(shapeSeq, "Hello");
+```
+]
+
+.small[
+```Java
+<S> boolean contains(Seq<? extends S> seq, S obj);
+```
+]
+-- 
+
+- 1st arg: `Seq<Shape>` $<:$ `Seq<? extends S>` $\implies$ `Shape` $<:$ `S`
+
+- 2nd arg: `String` $<:$ `S`
+
+- `Object` $<:$ `S` $\implies$ `S` inferred to be `Object`
+
+---
+background-color: #993333
+```Java
+Year cny = new Year<Horse>();
+cny.setHappy(true);
+```
+
+---
+
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Mon 16 Feb 2026 07:45:00 +08
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+  slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown

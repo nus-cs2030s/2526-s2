@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="854" height="450" viewBox="0 0 854 450" role="img">
+ <style>
+   .stroke { stroke: var(--svg-stroke, currentColor); stroke-width: 1; }
+   .label { fill: var(--svg-text, currentColor); font-family: "Roboto", "Arial", sans-serif; font-size: 24; }
+   .title-label { fill: var(--svg-text, currentColor); font-family: "Roboto", "Arial", sans-serif; font-size: 30; font-weight: 700; }
+   .value { fill: #e0e0e0; font-family: "Menlo", "Consolas", monospace; font-size: 22; }
+   .label-value { fill: var(--svg-text, currentColor); font-family: "Menlo", "Consolas", monospace; font-size: 22; }
+ </style>
+ <rect x="55" y="190" width="220" height="188" fill="none" class="stroke"/>
+ <text x="60" y="180" class="label">main</text>
+  <!-- main:y -->
+ <text x="104" y="225" class="label">y</text>
+ <rect x="140" y="200" width="110" height="40" fill="#2563a8"/>
+ <text x="195" y="225" class="value" text-anchor="middle">5.0</text>
+ <!-- main:x -->
+ <text x="104" y="266" class="label">x</text>
+ <rect x="140" y="242" width="110" height="40" fill="#2563a8"/>
+ <text x="195" y="266" class="value" text-anchor="middle">5.0</text>
+  <!-- main:p2 -->
+ <text x="104" y="307" class="label">p2</text>
+ <rect x="140" y="284" width="110" height="40" fill="#2563a8"/>
+ <text x="195" y="307" class="value" text-anchor="middle">●</text>
+ <!-- main:p1 -->
+ <text x="105" y="353" class="label">p1</text>
+ <rect x="140" y="326" width="110" height="40" fill="#2563a8"/>
+ <text x="195" y="350" class="value" text-anchor="middle">●</text>
+ <g>
+   <rect x="415" y="250" width="200" height="35" fill="#1b3e6b"/>
+   <rect x="415" y="285" width="200" height="80" fill="#2563a8"/>
+   <text x="515" y="274" class="value" text-anchor="middle">Point</text>
+   <text x="435" y="310" class="value">x: 5.0</text>
+   <text x="435" y="340" class="value">y: 5.0</text>
+ </g>
+ <g>
+   <rect x="415" y="50" width="200" height="35" fill="#1b3e6b"/>
+   <rect x="415" y="85" width="200" height="80" fill="#2563a8"/>
+   <text x="515" y="74" class="value" text-anchor="middle">Point</text>
+   <text x="435" y="110" class="value">x: 1.0</text>
+   <text x="435" y="140" class="value">y: 1.0</text>
+ </g>
+ <defs>
+   <marker id="arrowHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+     <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff0000"/>
+   </marker>
+ </defs>
+ <line x1="199" y1="304" x2="413" y2="100" stroke="#ff0000" stroke-width="2" marker-end="url(#arrowHead)"/>
+ <line x1="199" y1="347" x2="413" y2="300" stroke="#ff0000" stroke-width="2" marker-end="url(#arrowHead)"/>
+ <text x="165" y="400" class="title-label" text-anchor="middle">Stack</text>
+ <text x="520" y="400" class="title-label" text-anchor="middle">Heap</text>
+ <line x1="340" y1="0" x2="340" y2="400" class="stroke"/>
+</svg>
