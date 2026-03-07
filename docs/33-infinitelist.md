@@ -357,7 +357,7 @@ The method calls `iterate` and `map` only set up the producers that call other p
 
 ## Filtering A Lazy List
 
-Filtering an `InfiniteList` is more subtle than mapping it. In an eagerly evaluated list, filtering naturally proceeds element by element until the list ends. In a lazy setting, however, neither the head nor the tail should be evaluated prematurely. A naive translation of the eager filter implementation will therefore break laziness and lead to incorrect behaviour.  The following naive version does not work.
+Filtering an `InfiniteList` is more subtle than mapping it. In an eagerly evaluated list, filtering naturally proceeds element by element until the list ends. In a lazy setting, however, neither the head nor the tail should be evaluated prematurely. A naive translation of the eager filter implementation will therefore break laziness and lead to incorrect behavior.  The following naive version does not work.
 
 ```Java
   // wrong

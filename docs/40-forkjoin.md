@@ -5,7 +5,7 @@
     Students should
 
     - understand the task deque and work stealing
-    - understand the behaviour of `fork` and `join` (and `compute`)
+    - understand the behavior of `fork` and `join` (and `compute`)
     - be able to order `fork` and `join` efficiently
     - be able to use `RecursiveTask`
 

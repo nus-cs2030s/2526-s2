@@ -12,7 +12,7 @@
 !!! abstract "Overview" 
     As programs grow in size and complexity, programmers must manage an increasing number of data values and the operations performed on them. Writing correct programs is not just about syntax—it is about ensuring that operations on data are meaningful and safe.
 
-    This unit is organised around a central question:
+    This unit is organized around a central question:
 
     > How does a programming language help prevent meaningless programs involving data?
 
@@ -199,7 +199,7 @@ Considering the range of values that the primitive types can take, Java defines 
 - `byte` <: `short` <: `int` <: `long` <: `float` <: `double`
 - `char` <: `int`
 
-Graphically, we can draw the subtyping relationship as an arrow from subtype to supertype.  In the case of Java primitive types, we can visualise the subtyping relationship as follows:
+Graphically, we can draw the subtyping relationship as an arrow from subtype to supertype.  In the case of Java primitive types, we can visualize the subtyping relationship as follows:
 
 <p>
 --8<-- "docs/figures/primitive-subtype.svg"

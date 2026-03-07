@@ -8,7 +8,7 @@
     - explain what type inference is and why Java supports it for generic methods and types
     - identify the sources of type constraints (method arguments, bounds, and target typing) used during inference
     - manually derive the inferred type arguments in common generic method calls
-    - recognize situations where type inference leads to surprising or unsafe behaviour
+    - recognize situations where type inference leads to surprising or unsafe behavior
     - diagnose and explain compilation errors caused by incompatible inference bounds
 
 !!! abstract "Overview"

@@ -16,7 +16,7 @@
 
     Understanding the distinction between the stack and the heap is essential for reasoning about object creation, method calls, parameter passing, and side effects. Many common programming misconceptions, such as why changing an object inside a method affects the caller, but changing a primitive does not, can be resolved by carefully tracing how memory is allocated and shared.
 
-    This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behaviour precisely.
+    This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behavior precisely.
 
 ## Heap and Stack
 
