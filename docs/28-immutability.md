@@ -222,7 +222,7 @@ final class ImmutableSeq<T> {
   @SafeVarargs
   public static <T> ImmutableSeq<T> of(T... items) {
     // We need to copy to ensure that it is truly immutable
-    @SuppressWarnings("unchecked");
+    @SuppressWarnings("unchecked")
     T[] arr = (T[]) new Object[items.length];
     for (int i = 0; i < items.length; i++) {
       arr[i] = items[i];
@@ -276,7 +276,7 @@ class ImmutableSeq<T> {
   @SafeVarargs
   public static <T> ImmutableSeq<T> of(T... items) {
     // We need to copy to ensure that it is truly immutable
-    @SuppressWarnings("unchecked");
+    @SuppressWarnings("unchecked")
     T[] arr = (T[]) new Object[items.length];
     for (int i = 0; i < items.length; i++) {
       arr[i] = items[i];

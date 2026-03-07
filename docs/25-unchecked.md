@@ -68,7 +68,7 @@ Note: Recompile with -Xlint:unchecked for details.
 
 Let's do what the compiler tells us, and compile with the `-Xlint:unchecked` flags.
 ```
-$ javac -`lint:unchecked Seq.java
+$ javac -Xlint:unchecked Seq.java
 Seq.java:6: warning: [unchecked] unchecked cast
     array = (T[]) new Object[size];
                   ^

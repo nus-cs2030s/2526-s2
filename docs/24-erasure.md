@@ -90,7 +90,7 @@ Type erasure has several important implications.  We will explore some of them b
 Suppose we have the following class.  The intention is to overload the method `foo` to accept either a pair of strings or a pair of integers.  This seems reasonable at the source level:
 ```Java 
 class A {
-  void foo(Pair<Sring, String> p) {
+  void foo(Pair<String, String> p) {
       // body omitted
   }
 

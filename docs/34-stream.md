@@ -24,7 +24,7 @@ Java provides its own version of functional interfaces that are comparable to ou
 | `Producer<T>::produce`        | [`Supplier<T>::get`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html#get&#40;&#41;)                |
 | `Consumer<T>::consume`        | [`Consumer<T>::accept`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html#accept&#40;T&#41;)         |
 | `Transformer<T, R>::transform` | [`Function<T, R>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html#apply&#40;T&#41;)         |
-| `Transformer<T, T>::transform` | [`UnaryOp<T>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/UnaryOperator.html)                        |
+| `Transformer<T, T>::transform` | [`UnaryOperator<T>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/UnaryOperator.html)                        |
 | `Combiner<S, T, R>::combine`    | [`BiFunction<S, T, R>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html#apply&#40;T,U&#41;) |
 
 Besides, some of the abstractions we have built have similar counterparts in Java as well:
