@@ -36,7 +36,7 @@ double findLargest(Shape[] array) {
 }
 ```
 
-The only requirement for this method to compile and run correctly is that the element type provides a `getArea()` method.  While `Shape` that we defined in the previous unit meets this requirement, it does not have to be.  We could pass in an array of countries or an array of HDB flats.  It would be inapprpriate to model a `Country` or a `Flat` as a subclass of `Shape`, since inheritance models the IS-A relationship.
+The only requirement for this method to compile and run correctly is that the element type provides a `getArea()` method.  While `Shape` that we defined in the previous unit meets this requirement, it does not have to be.  We could pass in an array of countries or an array of HDB flats.  It would be inappropriate to model a `Country` or a `Flat` as a subclass of `Shape`, since inheritance models the IS-A relationship.
 
 To resolve this, we will look at an abstraction that _models what an entity can do_, possibly across different class hierarchies.
 

@@ -104,7 +104,7 @@ double findLargest(Shape[] array) {
       maxArea = area;
     }
   }
-  return maxShape;
+  return maxArea;
 }
 ```
 
@@ -171,6 +171,7 @@ class Circle extends Shape {
       Circle circle = (Circle) obj;
       return (circle.c.equals(this.c) && circle.r == this.r);
     }
+    return false;
   }
 }
 ```

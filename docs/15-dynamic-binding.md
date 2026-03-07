@@ -53,7 +53,7 @@ Let's generalize the compile-time type of the target to $C$.  To determine the m
 
 In the example above, we look at the class `Object`, and there is only one method called `equals`.  The method can be correctly invoked with one argument of type `Object` and returns a `boolean`.  Therefore, the method descriptor `boolean equals(Object)` is chosen.
 
-What if more than one methods can correctly accept the argument?  In this case, we choose the _most specific_ one.  Intuitively, a method $M$ is more specific than method $N$ if the arguments to $M$ can be passed to $N$ without compilation error.  You can also see it as preferring the ethod whose parameter types are the "closest" to the argument's compile-time type.  
+What if more than one methods can correctly accept the argument?  In this case, we choose the _most specific_ one.  Intuitively, a method $M$ is more specific than method $N$ if the arguments to $M$ can be passed to $N$ without compilation error.  You can also see it as preferring the method whose parameter types are the "closest" to the argument's compile-time type.  
 
 For example, let's say a class `Circle` implements:
 
@@ -95,10 +95,10 @@ boolean contains(Object[] array, Object obj) {
 
 Let's say that `curr` points to a `Circle` object during runtime.  Suppose that the `Circle` class does not override the method `equals` in `Object`.  As a result, Java cannot find a matching method descriptor `boolean equals(Object)` in the method `Circle`.  It then looks for the method in the parent of `Circle`, which is the class `Object`.  It finds the method `boolean Object::equals(Object)` with a matching descriptor.  Thus, the method `boolean Object::equals(Object)` is executed.
 
-Now, suppose that `Circle` overrides the method `boolean Object::equals(Object)` with its own `boolean Circle::equals(Object)` method.  Since Java starts searching from the class `Circle`, it finds the method `boolean Circle::equals(Object)` that matches the descriptor.  In this case, `curr.target(obj)` will invoke the method `boolean Circle::equals(Object)` instead.
+Now, suppose that `Circle` overrides the method `boolean Object::equals(Object)` with its own `boolean Circle::equals(Object)` method.  Since Java starts searching from the class `Circle`, it finds the method `boolean Circle::equals(Object)` that matches the descriptor.  In this case, `curr.equals(obj)` will invoke the method `boolean Circle::equals(Object)` instead.
 
 This search works because Java guarantees that a method that overrides another must have the compatible method descriptor, ensuring that the runtime lookup is type-safe.
 
 ## Invocation of Class Methods
 
-The description above applies to instance methods.  Class methods, on the other hand, do not support dynamic binding.  The method to invoke is resolved statically during compile time and is fixed at compie time.  The same process in Step 1 is taken, but during run time, Java will always invoke the method defined in the compile-time type of the target, ignore the runtime type.
+The description above applies to instance methods.  Class methods, on the other hand, do not support dynamic binding.  The method to invoke is resolved statically during compile time and is fixed at compile time.  The same process in Step 1 is taken, but during run time, Java will always invoke the method defined in the compile-time type of the target, ignore the runtime type.
