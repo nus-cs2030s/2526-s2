@@ -7,7 +7,7 @@
     - explain composition as a design technique for building complex objects from simpler ones
     - distinguish HAS-A (composition) relationships from IS-A (inheritance) relationships
     - design classes that use composition to improve abstraction and encapsulation
-    - reason about aliasing and explain how shared references can lead to unintended behaviour
+    - reason about aliasing and explain how shared references can lead to unintended behavior
     - evaluate design trade-offs between sharing objects, copying objects, and immutability
 
 !!! abstract "Overview"

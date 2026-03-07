@@ -259,7 +259,7 @@ class Main {
     return new FileReader(filename);
   }
   public static void main(String[] args) {
-	openFile();
+	openFile("input.txt");
   }
 }
 ```
@@ -273,9 +273,10 @@ class Main {
 	} catch (FileNotFoundException e) {
       System.err.println("Unable to open " + filename + " " + e);
 	}
+	return null;
   }
   public static void main(String[] args) {
-	openFile();
+	openFile("input.txt");
   }
 }
 ```
@@ -288,7 +289,7 @@ class Main {
   }
   public static void main(String[] args) {
 	try {
-	  openFile();
+	  openFile("input.txt");
 	} catch (FileNotFoundException e) {
       // warn user and pop up dialog box to select another file.
 	}
@@ -305,7 +306,7 @@ class Toy {
 	return new FileReader(filename);
   }
   public static void main(String[] args) throws FileNotFoundException {
-    openFile();
+    openFile("input.txt");
   }
 }
 ```

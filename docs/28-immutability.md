@@ -14,18 +14,18 @@
 
     In earlier units, we saw how abstraction, typing, and reuse help manage software complexity. In this unit, we introduce another powerful strategy: avoiding change.
 
-    Many subtle bugs arise from mutation, especially when objects are aliased and updated through multiple references. When an object can change over time, reasoning about program behaviour becomes significantly harder.
+    Many subtle bugs arise from mutation, especially when objects are aliased and updated through multiple references. When an object can change over time, reasoning about program behavior becomes significantly harder.
 
     Immutability avoids this problem by ensuring that an object’s observable state never changes after creation[^1]. Updates instead produce new objects, eliminating aliasing bugs and enabling safe sharing without defensive copying.
 
-[^1]: Note that this is a looser definition than some other definitions of immutability.  Java tutorial, for instance, defines immutability as preventing any change to the object, including private state.  Our definition allows private state to change as long as the observable behaviour remains unchanged.
+[^1]: Note that this is a looser definition than some other definitions of immutability.  Java tutorial, for instance, defines immutability as preventing any change to the object, including private state.  Our definition allows private state to change as long as the observable behavior remains unchanged.
 
     In this unit, we learn how to design immutable classes in Java and why immutability is a key tool for writing simpler, safer, and more robust programs.
 
 
 ## Avoiding Change
 
-Another useful strategy to reduce bugs when code complexity increases is to _avoid_ change altogether.  This can be done by making our classes _immutable_. We create an instance of an immutable class, the instance _cannot have any observable changes outside its abstraction barrier_.  This means that every call to the instance's method must behave the same way throughout the lifetime of the instance.  An object can be logically immutable even if it mutates private, unobservable state, as long as its externally visible behaviour remains unchanged.
+Another useful strategy to reduce bugs when code complexity increases is to _avoid_ change altogether.  This can be done by making our classes _immutable_. We create an instance of an immutable class, the instance _cannot have any observable changes outside its abstraction barrier_.  This means that every call to the instance's method must behave the same way throughout the lifetime of the instance.  An object can be logically immutable even if it mutates private, unobservable state, as long as its externally visible behavior remains unchanged.
 
 There are many advantages to making classes immutable when possible.  To start, let's revisit a common bug due to aliasing.  Recall the following example from [Unit 9](09-composition.md),  where we create two circles `c1` and `c2` centered at the origin (0, 0).
 ```Java
@@ -222,7 +222,7 @@ final class ImmutableSeq<T> {
   @SafeVarargs
   public static <T> ImmutableSeq<T> of(T... items) {
     // We need to copy to ensure that it is truly immutable
-    @SuppressWarnings("unchecked");
+    @SuppressWarnings("unchecked")
     T[] arr = (T[]) new Object[items.length];
     for (int i = 0; i < items.length; i++) {
       arr[i] = items[i];
@@ -276,7 +276,7 @@ class ImmutableSeq<T> {
   @SafeVarargs
   public static <T> ImmutableSeq<T> of(T... items) {
     // We need to copy to ensure that it is truly immutable
-    @SuppressWarnings("unchecked");
+    @SuppressWarnings("unchecked")
     T[] arr = (T[]) new Object[items.length];
     for (int i = 0; i < items.length; i++) {
       arr[i] = items[i];

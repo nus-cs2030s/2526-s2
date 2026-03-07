@@ -94,10 +94,10 @@ will invoke the `main` method defined within the class `Hello` to kick start the
 
 The `main` method must be defined in the following way:
 ```Java
-public static final void main(String[] args) {
+public static void main(String[] args) {
 }
 ```
 
-You have learned what `public` and `static` means.  The return type `void` indicates that `main` must not return a value.  We have discussed what `final` means on a field, but are not ready to explain what `final` means on a method yet.
+You have learned what `public` and `static` means.  The return type `void` indicates that `main` must not return a value.
 
 The `main` method takes in an array (`[]`) of strings as parameters.  These are the command-line arguments that we can pass in when invoking `java`.  [`String`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) (or `java.lang.String`) is another class provided by the Java library that encapsulates a sequence of characters.

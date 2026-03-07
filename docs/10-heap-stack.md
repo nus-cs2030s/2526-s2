@@ -16,7 +16,7 @@
 
     Understanding the distinction between the stack and the heap is essential for reasoning about object creation, method calls, parameter passing, and side effects. Many common programming misconceptions, such as why changing an object inside a method affects the caller, but changing a primitive does not, can be resolved by carefully tracing how memory is allocated and shared.
 
-    This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behaviour precisely.
+    This unit introduces the JVM’s memory model at a conceptual level and develops a systematic way to draw and reason about stack–heap diagrams. These diagrams will become an important tool for explaining aliasing, debugging programs, and understanding program behavior precisely.
 
 ## Heap and Stack
 
@@ -132,12 +132,12 @@ double radius;
 radius = 8;
 center = new Point(1, 1);
 c = new Circle(center, radius);
-center.moveto(2, 2);
+center.moveTo(2, 2);
 ```
 
 In this example, we have three variables, `c`, `center`, and `radius`.  Lines 1-3 declare the variables, and as a result, we have three variables allocated on the stack.  Again, we assume that the code is in the static method `main`. 
 
-Recall that object references are initialized to `null`.  Primitive type variables (e.g., `radius`) are initialized to 0.0 because it is of type `double`.  If it is an `int`, then it will be initialized to 0 instead.
+Since these are local variables that have just been declared but not yet assigned, they are _uninitialized_ (shown with ∅ in the diagrams).  Recall from the Constructor section above that uninitialized variables cannot be used and have no value, not even `null`.
 
 === "After Lines 1-3"
     --8<-- "docs/figures/SH/005a.svg"

@@ -34,11 +34,11 @@ Let's consider the following example method, `Course::marksToGrade`, which takes
 ```Java
 void displayGrade(Course c, double marks) {
   char grade = c.marksToGrade(marks);
-  if (grade == 'A')) {
+  if (grade == 'A') {
 	System.out.println("well done");
-  else if (grade == 'B') {
+  } else if (grade == 'B') {
 	System.out.println("good");
-  else if (grade == 'C') {
+  } else if (grade == 'C') {
 	System.out.println("ok");
   } else {
 	System.out.println("retake again");
@@ -54,7 +54,7 @@ displayGrade(new CSCUCourse("GEQ1000"), 100);
 
 and suddenly `displayGrade` is displaying `retake again` even if the student is scoring 100 marks.
 
-The example above shows that we are violating the LSP unintentionally. The object `m` of type `Course` has the property: `m.marksToGrade` always returns a value in the set { `'A'`, `'B'`, `'C'`, `'F'` }, that the method `displayGrade` depends on explicitly.  The subclass `CSCUCourse` violated that and made `m.marksToGrade` return `'S'` or `'U'`, breaking the assumption made by `displayGrade` and causing it to fail.
+The example above shows that we are violating the LSP unintentionally. The object `c` of type `Course` has the property: `c.marksToGrade` always returns a value in the set { `'A'`, `'B'`, `'C'`, `'F'` }, that the method `displayGrade` depends on explicitly.  The subclass `CSCUCourse` violated that and made `c.marksToGrade` return `'S'` or `'U'`, breaking the assumption made by `displayGrade` and causing it to fail.
 
 LSP cannot be enforced by the compiler[^1].  LSP violations do not usually result in compilation errors. The program type-checks successfully, but fails to behave correctly at runtime because the compiler cannot reason about semantic properties such as “what values this method is expected to return.  
 

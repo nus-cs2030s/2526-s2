@@ -42,7 +42,7 @@ return_type function_name(param_type1 param1, param_type2 param2) {
 }
 ```
 
-Note that the return type and parameter types must be explicitly stated in Java, as they enforces the contract betwteen the caller and the function.  The caller knows what kind of inputs are allowed and what kind of results can be expected.  The function (or programmer of the function) knows what kind of assumptions can be made about the inputs and what kind of outputs must be produced.
+Note that the return type and parameter types must be explicitly stated in Java, as they enforce the contract between the caller and the function.  The caller knows what kind of inputs are allowed and what kind of results can be expected.  The function (or programmer of the function) knows what kind of assumptions can be made about the inputs and what kind of outputs must be produced.
 
 For example, the following function is named `factorial`.  It takes in a parameter `n` of type  `int` and returns a result of type `int`.
 

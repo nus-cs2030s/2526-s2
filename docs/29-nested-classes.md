@@ -14,7 +14,7 @@
 
 !!! abstract "Overview"
 
-    As programs grow is size, a class often requires several helper classes that exist solely to support its internal implementation. Declaring these helpers as top-level classes can clutter the namespace and expose unnecessary implementation details to clients.
+    As programs grow in size, a class often requires several helper classes that exist solely to support its internal implementation. Declaring these helpers as top-level classes can clutter the namespace and expose unnecessary implementation details to clients.
 
     Java allows classes to be defined within other classes or even within methods. These nested classes let us group tightly coupled components together, keep helper classes within the abstraction barrier, and express design intent more clearly. Nested classes also interact closely with Java’s access control, static and instance contexts, and scoping rules.
 

@@ -67,7 +67,7 @@ class Circle {
 }
 ```
 
-In the code above, we can categorise the accessor and mutator of each field as follows.
+In the code above, we can categorize the accessor and mutator of each field as follows.
 
 | Fields | Accessors | Mutators |
 |--------|-----------|----------|

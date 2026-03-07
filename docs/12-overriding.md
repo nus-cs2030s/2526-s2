@@ -44,7 +44,7 @@ Circle c = new Circle(new Point(0, 0), 4.0);
 String s = "Circle c is " + c;
 ```
 
-You will see that `s` now contains the string "Circle c is Circle@1ce92674 " (the seemingly unintelligible text after @ is the reference to the object so your result will be different).
+You will see that `s` now contains the string "Circle c is Circle@1ce92674" (the seemingly unintelligible text after @ is the reference to the object so your result will be different).
 
 What happened here is that the `+` operator sees that one of the operands is a string but the other is not, so it converts the one that is not a string to a string by calling its `toString()` method automatically for us.  This is equivalent to[^1]
 ```Java

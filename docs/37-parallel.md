@@ -210,7 +210,7 @@ The multiplication example above meets the three rules:
 - `(x * y) * z` equals `x * (y * z)`
 - `u * (1 * t)` equals `u * t`
 
-Let's try to understand why the `accumulator` should be associative.  In the context of a two-parameter `reduce` API, the `accumulator` is used as the `combiner` as well.  To be able to combine partial results, we need the result to be the same regardless of how we parallelize them. For example, for accumulator $f$, we need $f(f(a, b), f(c, d))$ to be the same as f(a, f(b, f(c, d)))$ and $f(f(f(a, b), c), d)$.
+Let's try to understand why the `accumulator` should be associative.  In the context of a two-parameter `reduce` API, the `accumulator` is used as the `combiner` as well.  To be able to combine partial results, we need the result to be the same regardless of how we parallelize them. For example, for accumulator $f$, we need $f(f(a, b), f(c, d))$ to be the same as $f(a, f(b, f(c, d)))$ and $f(f(f(a, b), c), d)$.
 
 Now, let's consider three-parameter version of `reduce` where a `combiner` is given. To ensure that we can combine the partial results in any order, the `combiner` must be associative.  But, in this case, it is no longer necessary that the accumulator is associative, as long as it is compatible with the combiner.  In other words, the `accumulator` being associative is a sufficient but not necessary condition for the three-parameter `reduce` to be parallelizable.  As long as the `combiner` is associative and compatible with the `accumulator`, the three-parameter `reduce` can be parallelized.
 

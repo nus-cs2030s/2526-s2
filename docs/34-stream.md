@@ -12,7 +12,7 @@
 
 !!! abstract "Overview"
 
-    In the earlier units, we built our own functional abstractions such as `Lazy`, `Maybe`, and `InfiniteList` to understand how computation can be expressed declaratively using higher-order functions and laziness. While these abstractions helped us reason about program structure and evaluation, real Java programs rely on a richer, standardised library to work with large and potentially infinite sequences of data. In this unit, we study Java’s `Stream` API, which generalises many ideas from `InfiniteList` while introducing important new constraints and capabilities, allowing us to write clearer, more expressive, and less error-prone code—when used appropriately.
+    In the earlier units, we built our own functional abstractions such as `Lazy`, `Maybe`, and `InfiniteList` to understand how computation can be expressed declaratively using higher-order functions and laziness. While these abstractions helped us reason about program structure and evaluation, real Java programs rely on a richer, standardized library to work with large and potentially infinite sequences of data. In this unit, we study Java’s `Stream` API, which generalizes many ideas from `InfiniteList` while introducing important new constraints and capabilities, allowing us to write clearer, more expressive, and less error-prone code—when used appropriately.
 
 ## Java API
 
@@ -24,7 +24,7 @@ Java provides its own version of functional interfaces that are comparable to ou
 | `Producer<T>::produce`        | [`Supplier<T>::get`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html#get&#40;&#41;)                |
 | `Consumer<T>::consume`        | [`Consumer<T>::accept`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html#accept&#40;T&#41;)         |
 | `Transformer<T, R>::transform` | [`Function<T, R>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html#apply&#40;T&#41;)         |
-| `Transformer<T, T>::transform` | [`UnaryOp<T>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/UnaryOperator.html)                        |
+| `Transformer<T, T>::transform` | [`UnaryOperator<T>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/UnaryOperator.html)                        |
 | `Combiner<S, T, R>::combine`    | [`BiFunction<S, T, R>::apply`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html#apply&#40;T,U&#41;) |
 
 Besides, some of the abstractions we have built have similar counterparts in Java as well:
@@ -225,6 +225,6 @@ We will end this unit with a note of caution.
 
 Using streams in place of loops should make our code simpler, more elegant, and less bug-prone.  One should note that not all loops can be translated into stream elegantly.  A double-nested loop, for instance, stretches the elegance of streams.  A triple-nested loop should perhaps be best written as a loop with appropriate inner components written with lambdas and streams.
 
-The goal is not to replace all loops with streams, but to recognise when streams allow us to express intent more clearly and safely.
+The goal is not to replace all loops with streams, but to recognize when streams allow us to express intent more clearly and safely.
 
 As you go through exercises in using streams, you will find more examples of the limitations of streams.
