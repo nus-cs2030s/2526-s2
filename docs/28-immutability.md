@@ -291,7 +291,7 @@ class ImmutableSeq<T> {
   }
 
   public T get(int index) {
-    if (index < this.start || this.start + index > this.end) {
+    if (index < 0 || this.start + index > this.end) {
       throw new IllegalArgumentException("Index out of bounds");
     }
     return this.array[this.start + index];
