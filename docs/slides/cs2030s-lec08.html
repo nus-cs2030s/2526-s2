@@ -25,33 +25,55 @@ class: middle, center
 
 ### 16 March 2026
 ---
-### Recap: Nested Classes
+### Recap: Immutable Classes
 
-- Inner class (non-static nested class)
+- An immutable classes have no visible changes after construction.
 
-- Static nested class
-
-- Local class
-
-- Anonymous class
+- Same target reference, same method, same arguments always gives the same result.
 
 ---
-### Recap: Variable Capture
-
-Local/anonymous classes keep a copy of:
-
-- the local variables and parameters of the enclosing method, if they are used
-
-- the `this` reference of the enclosing class
-
-Captured variables must be effectively final.
+Suppose `a` is an immutable class.  Can we optimize the code as follows? 
+.left-column[
+.small[
+```Java
+bar(a.foo(b, c));
+baz(a.foo(b, c));
+```        
+]
+]
+.right-column[
+.small[
+```Java   
+int x = a.foo(b, c);
+bar(x);
+baz(x);
+```
+]
+]
 
 ---
-class: middle, center
 
-## Unit 30
+Not necessaryly, because `a.foo(b, c)` may have side effects (e.g., print something, mutate `b` or `c`, write to a file)
 
-### Side Effect-Free Programming
+.left-column[
+.small[
+```Java
+bar(a.foo(b, c));
+baz(a.foo(b, c));
+```        
+]
+]
+.right-column[
+.small[
+```Java   
+int x = a.foo(b, c);
+bar(x);
+baz(x);
+```
+]
+]
+
+--
 
 ---
 ### Mathematical Functions
@@ -79,11 +101,11 @@ A _pure_ function:
 .smaller[
 ```Java
 int square(int i) {
-  return i * i;  // pure
+  return i * i;  
 }
 
 int add(int i, int j) {
-  return i + j;  // pure (overflow is not an error in Java)
+  return i + j;  
 }
 ```
 ]
@@ -108,6 +130,14 @@ void incrCount(int i) {
 ]
 
 ---
+### Importance of Writing Pure Functions
+
+- Easier to reason about
+- Easier to test
+- Easier to parallelize (coming soon)
+- Easier to optimize 
+
+---
 ### Functions as First-Class Citizens
 
 A programming language has _first-class functions_ when functions can be:
@@ -119,80 +149,23 @@ A programming language has _first-class functions_ when functions can be:
 - returned as values from other functions
 
 ---
-### Functions in Java: The Problem
+### Java: Interfaces with a Single Abstract Method.
 
-Java methods are not first-class.  We cannot do this:
-
-.smaller[
-```Java
-int inc(int x) {
-  return x + 1;
-}
-
-int apply(??? f, int x) {
-  return f(x);
-}
-```
-]
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
 
 ---
-### Functions in Java: Using Interfaces
+### Examples from Exercise 5
 
-We can use interfaces with a single abstract method:
-
-.smaller[
-```Java
-interface Transformer<T, R> {
-  R transform(T t);
-}
-
-Transformer<Integer, Integer> square = new Transformer<>() {
-  @Override
-  public Integer transform(Integer x) {
-    return x * x;
-  }
-};
-```
-]
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
 
 ---
 ### Functional Interface
 
 An interface with _exactly one abstract method_ is a _functional interface_.
 
-```Java
-@FunctionalInterface
-interface Transformer<T, R> {
-  R transform(T t);
-}
-```
-
-Java's `java.util.function` package provides many functional interfaces:
-`Function<T,R>`, `BiFunction<T,U,R>`, `Predicate<T>`, `Consumer<T>`, `Supplier<T>`, ...
-
----
-### Lambda Expression
-
-A _lambda expression_ is an anonymous function:
-
-.smaller[
-```Java
-// Single parameter
-Transformer<Integer, Integer> square = x -> x * x;
-
-// No parameter
-Producer<Integer> one = () -> 1;
-
-// Multiple parameters
-BiFunction<Integer, Integer, Integer> add = (x, y) -> x + y;
-
-// Multiple statements
-Transformer<Integer, Integer> abs = x -> {
-  if (x < 0) return -x;
-  return x;
-};
-```
-]
+A lambda expression is an instance of an anonymous class that implements a functional interface.
 
 ---
 ### Method Reference
@@ -201,10 +174,9 @@ We can refer to an existing method using `::`:
 
 .smaller[
 ```Java
-Box::of            // x -> Box.of(x)
 Box::new           // x -> new Box(x)
-origin::distanceTo // p -> origin.distanceTo(p)
-A::foo             // (x, y) -> x.foo(y)
+p::distanceTo      // x -> p.distanceTo(x)
+A::foo             // (a, x) -> a.foo(x) or x -> A.foo(x)
 ```
 ]
 
@@ -215,16 +187,12 @@ _Currying_: convert a function with multiple arguments into a sequence of unary 
 
 .smaller[
 ```Java
-// Two-argument function
-BiFunction<Integer, Integer, Integer> add = (x, y) -> x + y;
-
-// Curried version
+// Curried version of a two-argument function: (x, y) -> x + y;
 Transformer<Integer, Transformer<Integer, Integer>> add =
     x -> y -> (x + y);
 
 // Partial application
 Transformer<Integer, Integer> incr = add.transform(1);
-// incr.transform(5) returns 6
 ```
 ]
 
@@ -245,95 +213,17 @@ Transformer<Point, Double> dist = p -> origin.distanceTo(p);
 - A closure = function + captured environment.
 
 ---
-class: middle, center
-
-## Unit 31
-
-### Box and Maybe
-
----
 ### Lambda as a Cross-Barrier Manipulator
 
-.smaller[
-```Java
-class Box<T> {
-  private T item;
-
-  public <U> Box<U> map(Transformer<? super T, ? extends U> transformer) {
-    if (!isPresent()) {
-      return empty();
-    }
-    return Box.ofNullable(transformer.transform(this.item));
-  }
-
-  public Box<T> filter(BooleanCondition<? super T> condition) {
-    if (!isPresent() || !(condition.test(this.item))) {
-      return empty();
-    }
-    return this;
-  }
-}
-```
-]
-
----
-### Box&lt;T&gt;
-
-`Box<T>` keeps its item hidden behind an abstraction barrier.
+`Box<T>` and `Maybe<T>` keeps its item hidden behind an abstraction barrier.
 
 `map` and `filter` allow the client to operate on the hidden item via lambda expressions.
 
-The box maintains its own semantics (e.g., handling empty boxes).
-
 ---
-### The Problem with `null`
+### Example of `Box<T>` and `Maybe<T>`
 
-Consider:
-
-```Java
-Counter c = bank.findCounter();
-```
-
-If `findCounter` returns `null` when no counter is available:
-
-- `null` is not a `Counter`
-- `findCounter` maps outside its codomain
-- We must check for `null` everywhere
-- Common source of `NullPointerException`
-
----
-### Maybe&lt;T&gt;
-
-`Maybe<T>` is an _option type_: a wrapper around a value that is either present or absent.
-
-```Java
-Maybe<Counter> c = bank.findCounter();
-```
-
-- `findCounter` is now a pure function: `Bank -> Maybe<Counter>`
-- Missing value semantics are encapsulated inside `Maybe<T>`
-- No explicit `null` checks needed by the client
-
----
-### Maybe&lt;T&gt;: map and filter
-
-.smaller[
-```Java
-Maybe<String> name = maybe.filter(s -> s.length() > 3)
-                          .map(s -> s.toUpperCase());
-```
-]
-
-- If the value is absent, `map` and `filter` return an empty `Maybe<T>`.
-- No `NullPointerException` possible.
-- Client code is cleaner with no null checks.
-
----
-class: middle, center
-
-## Unit 32
-
-### Lazy Evaluation
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
 
 ---
 ### Eager vs Lazy Evaluation
@@ -356,7 +246,9 @@ interface Producer<T> {
 
 int i = 4;
 Producer<String> toStr = () -> Integer.toString(i);
-// toStr.produce() is NOT called yet
+// Integer.toString(i) is not called yet
+  :
+toStr.produce(); // Integer.toString(i) is called here
 ```
 ]
 
@@ -364,7 +256,6 @@ Lambda expressions let us defer execution until later.
 
 ---
 ### Eager Evaluation: Example
-
 .smaller[
 ```Java
 class Logger {
@@ -380,15 +271,22 @@ class Logger {
 ```
 ]
 
-```Java
-Logger.log(Logger.LogLevel.INFO,
-    "User " + System.getProperty("user.name") + " has logged in");
-// String is always computed, even if it won't be printed!
-```
+---
+### Eager Evaluation: Example
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
 
 ---
-### Lazy Evaluation: Using Producer&lt;T&gt;
+### Lazy Evaluation
 
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+class: wide
+
+### Lazy Evaluation: Using Producer&lt;T&gt;
 .smaller[
 ```Java
 static void lazyLog(LogLevel level, Producer<String> msg) {
@@ -399,22 +297,29 @@ static void lazyLog(LogLevel level, Producer<String> msg) {
 ```
 ]
 
+.smaller[
 ```Java
 Logger.lazyLog(Logger.LogLevel.INFO,
     () -> "User " + System.getProperty("user.name") + " has logged in");
-// String is only computed if it will be printed
 ```
+]
 
 ---
-### Lazy&lt;T&gt;: Memoization
+### `Lazy<T>`: Memoization
 
-_Memoization_: compute the value at most once, cache and reuse the result.
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
 
+---
 .smaller[
 ```Java
 class Lazy<T> {
   private T value;
   private Producer<T> producer;
+
+  public Lazy(Producer<T> producer) {
+    this.producer = producer;
+  }
 
   public T get() {
     if (this.producer != null) {
@@ -435,21 +340,6 @@ class Lazy<T> {
 - Never repeat: compute the value at most once (memoization).
 
 - Useful when computation is expensive or may never be needed.
-
----
-### Summary
-
-- _Pure functions_: no side effects, deterministic, referentially transparent.
-
-- _Lambda expressions_: concise anonymous functions for functional interfaces.
-
-- _Currying_: transform multi-argument functions into chains of unary functions.
-
-- _Closures_: lambdas that capture their surrounding environment.
-
-- `Maybe<T>`: encapsulates missing values to eliminate null checks.
-
-- `Lazy<T>`: defers and memoizes computation.
 
 ---
 class: bottom
