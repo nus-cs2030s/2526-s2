@@ -27,7 +27,7 @@ class: middle, center
 ---
 ### Recap: Immutable Classes
 
-- An immutable classes have no visible changes after construction.
+- An immutable class has no visible changes after construction.
 
 - Same target reference, same method, same arguments always gives the same result.
 
@@ -53,7 +53,7 @@ baz(x);
 
 ---
 
-Not necessaryly, because `a.foo(b, c)` may have side effects (e.g., print something, mutate `b` or `c`, write to a file)
+Not necessarily, because `a.foo(b, c)` may have side effects (e.g., print something, mutate `b` or `c`, write to a file)
 
 .left-column[
 .small[
@@ -149,16 +149,9 @@ A programming language has _first-class functions_ when functions can be:
 - returned as values from other functions
 
 ---
-### Java: Interfaces with a Single Abstract Method.
+### `Comparator<T>` 
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
----
-### Examples from Exercise 5
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Comparator.html" width="100%" height="80%">
 
 ---
 ### Functional Interface
@@ -168,33 +161,20 @@ An interface with _exactly one abstract method_ is a _functional interface_.
 A lambda expression is an instance of an anonymous class that implements a functional interface.
 
 ---
-### Method Reference
+### Lambda Expression
 
-We can refer to an existing method using `::`:
-
-.smaller[
-```Java
-Box::new           // x -> new Box(x)
-p::distanceTo      // x -> p.distanceTo(x)
-A::foo             // (a, x) -> a.foo(x) or x -> A.foo(x)
-```
-]
+---
+### Examples from Exercise 5
 
 ---
 ### Curried Functions
 
 _Currying_: convert a function with multiple arguments into a sequence of unary functions.
 
-.smaller[
-```Java
-// Curried version of a two-argument function: (x, y) -> x + y;
-Transformer<Integer, Transformer<Integer, Integer>> add =
-    x -> y -> (x + y);
+Note: Named after Haskell Curry, not the food.
 
-// Partial application
-Transformer<Integer, Integer> incr = add.transform(1);
-```
-]
+---
+### Curried Functions
 
 ---
 ### Lambda as Closure
@@ -208,22 +188,32 @@ Transformer<Point, Double> dist = p -> origin.distanceTo(p);
 ```
 ]
 
-- `origin` is captured by the lambda expression.
-- Captured variables must be effectively final.
+- Captured variables must be final or effectively final.
 - A closure = function + captured environment.
+
+---
+### Method Reference
+
+We can refer to an existing method using `::`
+
+.smaller[
+```Java
+Box::new           // x -> new Box(x)
+p::distanceTo      // x -> p.distanceTo(x)
+A::foo             // (a, x) -> a.foo(x) or x -> A.foo(x)
+```
+]
 
 ---
 ### Lambda as a Cross-Barrier Manipulator
 
 `Box<T>` and `Maybe<T>` keeps its item hidden behind an abstraction barrier.
 
-`map` and `filter` allow the client to operate on the hidden item via lambda expressions.
+`map`, `filter`, and `flatMap` allow the client to operate on the hidden item via lambda expressions.
 
 ---
 ### Example of `Box<T>` and `Maybe<T>`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Eager vs Lazy Evaluation
@@ -274,18 +264,18 @@ class Logger {
 ---
 ### Eager Evaluation: Example
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Lazy Evaluation
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 class: wide
+### Lazy Evaluation: Using Producer&lt;T&gt;
 
+
+---
+class: wide
 ### Lazy Evaluation: Using Producer&lt;T&gt;
 .smaller[
 ```Java
@@ -304,29 +294,30 @@ Logger.lazyLog(Logger.LogLevel.INFO,
 ```
 ]
 
+
 ---
 ### `Lazy<T>`: Memoization
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 .smaller[
 ```Java
 class Lazy<T> {
   private T value;
+  private boolean evaluated;
   private Producer<T> producer;
 
   public Lazy(Producer<T> producer) {
+    evaluated = false;
+    value = null;
     this.producer = producer;
   }
 
   public T get() {
-    if (this.producer != null) {
-      this.value = producer.produce();
-      this.producer = null;
+    if (!evaluated) {
+      value = producer.produce();
+      evaluated = true;
     }
-    return this.value;
+    return value;
   }
 }
 ```
@@ -361,9 +352,6 @@ Last Updated: Sun Mar 16 00:00:00 +08 2026
 <script src="javascripts/counter.js">
 </script>
 
-<script src="https://www.comp.nus.edu.sg/~adi-yoga/plugins/qanvas/init.js" type="text/javascript">
-</script>
-	
 <script>
 remark.macros.scale = function (percentage) {
 	var url = this;
