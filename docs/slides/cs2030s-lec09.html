@@ -72,7 +72,7 @@
   box-shadow: none;
 }
 .reveal pre code {
-  font-size: 0.8em;
+  font-size: 1em;
   max-height: none;
   border-radius: 14px;
 }
@@ -115,14 +115,6 @@
 .fifty      { flex: 50%; }
 .left-column  { width: 46%; float: left; }
 .right-column { width: 46%; float: right; }
-/* Bottom version text */
-.bottom-info {
-  position: fixed;
-  bottom: 1.5em;
-  left: 1.5em;
-  font-size: 50%;
-  color: #aaa;
-}
 /* Ensure images fit the slide */
 .reveal section img {
   max-width: 100%;
@@ -136,434 +128,403 @@
 <body>
 <div class="reveal">
   <div class="slides">
+    <section data-markdown data-separator="^---$" data-separator-notes="^Note:">
+<textarea data-template>
+### Announcements
 
-    <!-- Slide: Announcements -->
-    <section>
-      <h3>Announcements</h3>
-      <p>This week:</p>
-      <ul>
-        <li>PE2 Information is available on Canvas</li>
-        <li>Next week's lecture will be from 10 AM to 12 PM.</li>
-        <li>Exercise 7 will be released this Thursday</li>
-        <li>The deadline for the quiz in the next week is extended.</li>
-      </ul>
-    </section>
+This week:
+- PE2 Information is available on Canvas
+- Next week's lecture will be from 10 AM to 12 PM.
+- Exercise 7 will be released this Thursday
+- The deadline for the quiz in the next week is extended.
 
-    <!-- Slide: Title -->
-    <section style="text-align: center;">
-      <h2>CS2030<sub>s</sub></h2>
-      <h3>Programming Methodology II</h3>
-    </section>
+---
+<!-- .slide: style="text-align: center;" -->
 
-    <!-- Slide: Lecture 9 date -->
-    <section style="text-align: center;">
-      <h2>Lecture 9</h2>
-      <h3>24 March 2025</h3>
-    </section>
+## CS2030<sub>s</sub>
 
-    <!-- Slide: EagerList<T> definition -->
-    <section>
-      <h3><code>EagerList&lt;T&gt;</code></h3>
-      <pre><code class="language-java" data-trim>
-class EagerList&lt;T&gt; {
+### Programming Methodology II
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+## Lecture 9
+
+### 24 March 2025
+
+---
+
+### `EagerList<T>`
+
+```java
+class EagerList<T> {
   private T head;
-  private EagerList&lt;T&gt; tail;
+  private EagerList<T> tail;
    :
 }
-      </code></pre>
-    </section>
+```
 
-    <!-- Slide: EagerList diagram -->
-    <section>
-      <img src="img/09_List_01.png" style="width: 100%;">
-    </section>
+---
 
-    <!-- Slide: EagerList usage example -->
-    <section>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-EagerList&lt;Integer&gt; l = EagerList
-    .iterate(1, i -&gt; i &lt; 10, i -&gt; i + 1)
-    .filter(i -&gt; i % 3 == 0)
-    .map(i -&gt; i * 2);
+![](img/09_List_01.png)
+
+---
+
+```java
+EagerList<Integer> l = EagerList
+    .iterate(1, i -> i < 10, i -> i + 1)
+    .filter(i -> i % 3 == 0)
+    .map(i -> i * 2);
 l.head();
 l.tail().head();
 l.tail().tail().head();
-        </code></pre>
-      </div>
-    </section>
+```
+<!-- .element: class="small" -->
 
-    <!-- Slide: InfiniteList<T> definition -->
-    <section>
-      <h3><code>InfiniteList&lt;T&gt;</code></h3>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-class InfiniteList&lt;T&gt; {
-  private Producer&lt;T&gt; head;
-  private Producer&lt;InfiniteList&lt;T&gt;&gt; tail;
+---
+
+### `InfiniteList<T>`
+
+```java
+class InfiniteList<T> {
+  private Producer<T> head;
+  private Producer<InfiniteList<T>> tail;
    :
 }
-        </code></pre>
-      </div>
-    </section>
+```
+<!-- .element: class="small" -->
 
-    <!-- Slide: InfiniteList chained map example -->
-    <section>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2)  // 0, 2, 4, ...
-            .map(x -&gt; x + 1)         // 1, 3, 5, ...
-            .map(x -&gt; x * 2)         // 2, 6, 10, ...
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2)  // 0, 2, 4, ...
+            .map(x -> x + 1)         // 1, 3, 5, ...
+            .map(x -> x * 2)         // 2, 6, 10, ...
             .head();                 // 2
-        </code></pre>
-      </div>
-    </section>
+```
+<!-- .element: class="small" -->
 
-    <!-- Slide: InfiniteList step-by-step example -->
-    <section>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-InfiniteList&lt;Integer&gt; evens =
-               InfiniteList.iterate(0, x -&gt; x + 2);
+---
+
+```java
+InfiniteList<Integer> evens =
+               InfiniteList.iterate(0, x -> x + 2);
   // 0, 2, 4, ...
-InfiniteList&lt;Integer&gt; odds = evens.map(x -&gt; x + 1);
+InfiniteList<Integer> odds = evens.map(x -> x + 1);
   // 1, 3, 5, ...
-InfiniteList&lt;Integer&gt; altEvens = odds.map(x -&gt; x * 2);
+InfiniteList<Integer> altEvens = odds.map(x -> x * 2);
   // 2, 6, 10, ...
 altEvens.head();
   // returns 2
-        </code></pre>
-      </div>
-    </section>
+```
+<!-- .element: class="small" -->
 
-    <!-- Slide: Diagram 01 - evens -->
-    <section>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-IL&lt;Integer&gt; evens = IL.iterate(0, x -&gt; x + 2);
-        </code></pre>
-      </div>
-      <img src="img/09_Diagram_01.png" style="width: 100%;">
-    </section>
+---
 
-    <!-- Slide: Diagram 02 - odds -->
-    <section>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-InfiniteList&lt;Integer&gt; odds = evens.map(x -&gt; x + 1);
-        </code></pre>
-      </div>
-      <img src="img/09_Diagram_02.png" style="width: 100%;">
-    </section>
+```java
+IL<Integer> evens = IL.iterate(0, x -> x + 2);
+```
+<!-- .element: class="small" -->
 
-    <!-- Slide: Diagram 03 - altEvens -->
-    <section>
-      <div class="small">
-        <pre><code class="language-java" data-trim>
-InfiniteList&lt;Integer&gt; altEvens = odds.map(x -&gt; x * 2);
-        </code></pre>
-      </div>
-      <img src="img/09_Diagram_03.png" style="width: 100%;">
-    </section>
+![](img/09_Diagram_01.png)
 
-    <!-- Slides: Head tracing 01-20 -->
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_01.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_02.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList<Integer> odds = evens.map(x -> x + 1);
+```
+<!-- .element: class="small" -->
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_03.png" style="width: 100%;">
-    </section>
+![](img/09_Diagram_02.png)
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_04.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_05.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList<Integer> altEvens = odds.map(x -> x * 2);
+```
+<!-- .element: class="small" -->
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_06.png" style="width: 100%;">
-    </section>
+![](img/09_Diagram_03.png)
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_07.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_08.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_09.png" style="width: 100%;">
-    </section>
+![](img/09_Head_01.png)
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_10.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_11.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_12.png" style="width: 100%;">
-    </section>
+![](img/09_Head_02.png)
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_13.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_14.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_15.png" style="width: 100%;">
-    </section>
+![](img/09_Head_03.png)
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_16.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_17.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_18.png" style="width: 100%;">
-    </section>
+![](img/09_Head_04.png)
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_19.png" style="width: 100%;">
-    </section>
+---
 
-    <section>
-      <div class="tiny">
-        <pre><code class="language-java" data-trim>
-InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
-        </code></pre>
-      </div>
-      <img src="img/09_Head_20.png" style="width: 100%;">
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <!-- Slide: CS2030S vs java.util.function table -->
-    <section>
-      <div class="small">
-        <table>
-          <thead>
-            <tr><th>CS2030S</th><th>java.util.function</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code>BooleanCondition&lt;T&gt;::test</code></td><td><code>Predicate&lt;T&gt;::test</code></td></tr>
-            <tr><td><code>Producer&lt;T&gt;::produce</code></td><td><code>Supplier&lt;T&gt;::get</code></td></tr>
-            <tr><td><code>Transformer&lt;T,R&gt;::transform</code></td><td><code>Function&lt;T,R&gt;::apply</code></td></tr>
-            <tr><td><code>Transformer&lt;T,T&gt;::transform</code></td><td><code>UnaryOp&lt;T&gt;::apply</code></td></tr>
-            <tr><td><code>Combiner&lt;S,T,R&gt;::combine</code></td><td><code>BiFunction&lt;S,T,R&gt;::apply</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+![](img/09_Head_05.png)
 
-    <!-- Slide: CS2030S vs Java version table -->
-    <section>
-      <div class="small">
-        <table>
-          <thead>
-            <tr><th>CS2030S</th><th>Java version</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code>Maybe&lt;T&gt;</code></td><td><code>java.util.Optional&lt;T&gt;</code></td></tr>
-            <tr><td><code>Lazy&lt;T&gt;</code></td><td>N/A</td></tr>
-            <tr><td><code>InfiniteList&lt;T&gt;</code></td><td><code>java.util.stream.Stream&lt;T&gt;</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+---
 
-    <!-- Slide: Streams title -->
-    <section style="text-align: center;">
-      <h1>Streams</h1>
-      <p>(in Java)</p>
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <!-- Slide: Stream pipeline description -->
-    <section style="text-align: center;">
-      <h3>A stream pipeline starts with a <em>data source</em>, then <em>intermediate operations</em>, and finally a <em>terminal operation</em>.</h3>
-    </section>
+![](img/09_Head_06.png)
 
-    <!-- Slide: Data sources -->
-    <section>
-      <h2>Data sources</h2>
-      <ul>
-        <li>Static factory methods <code>of</code>, <code>generate</code>, <code>iterate</code></li>
-        <li>Convert an array into a Stream using <code>Arrays::stream</code></li>
-        <li>Convert a List instance into a Stream using <code>List::stream</code></li>
-      </ul>
-    </section>
+---
 
-    <!-- Slide: Terminal Operations -->
-    <section>
-      <h2>Terminal Operations</h2>
-      <ul>
-        <li><code>forEach</code></li>
-      </ul>
-    </section>
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
 
-    <!-- Slide: Intermediate Operations -->
-    <section>
-      <h2>Intermediate Operations</h2>
-      <ul>
-        <li><code>filter</code>, <code>map</code></li>
-        <li><code>flatMap</code></li>
-        <li><code>limit</code>, <code>takeWhile</code></li>
-      </ul>
-      <p>Let's look at some examples...</p>
-    </section>
+![](img/09_Head_07.png)
 
-    <!-- Slide: Stateful operations -->
-    <section>
-      <h2>Some operations are <em>stateful</em></h2>
-      <ul>
-        <li><code>sorted</code></li>
-        <li><code>distinct</code></li>
-      </ul>
-    </section>
+---
 
-    <!-- Slide: peek example -->
-    <section>
-      <h2>Peeking into our <code>Stream</code></h2>
-      <pre><code class="language-java" data-trim>
-Stream.iterate(0, x -&gt; x + 1)
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_08.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_09.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_10.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_11.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_12.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_13.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_14.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_15.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_16.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_17.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_18.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_19.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_20.png)
+
+---
+
+| CS2030S | java.util.function |
+|---------|-------------------|
+| `BooleanCondition<T>::test` | `Predicate<T>::test` |
+| `Producer<T>::produce` | `Supplier<T>::get` |
+| `Transformer<T,R>::transform` | `Function<T,R>::apply` |
+| `Transformer<T,T>::transform` | `UnaryOp<T>::apply` |
+| `Combiner<S,T,R>::combine` | `BiFunction<S,T,R>::apply` |
+<!-- .element: class="small" -->
+
+---
+
+| CS2030S | Java version |
+|---------|-------------|
+| `Maybe<T>` | `java.util.Optional<T>` |
+| `Lazy<T>` | N/A |
+| `InfiniteList<T>` | `java.util.stream.Stream<T>` |
+<!-- .element: class="small" -->
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+# Streams
+
+(in Java)
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+### A stream pipeline starts with a *data source*, then *intermediate operations*, and finally a *terminal operation*.
+
+---
+
+## Data sources
+
+- Static factory methods `of`, `generate`, `iterate`
+- Convert an array into a Stream using `Arrays::stream`
+- Convert a List instance into a Stream using `List::stream`
+
+---
+
+## Terminal Operations
+
+- `forEach`
+
+---
+
+## Intermediate Operations
+
+- `filter`, `map`
+- `flatMap`
+- `limit`, `takeWhile`
+
+Let's look at some examples...
+
+---
+
+## Some operations are *stateful*
+
+- `sorted`
+- `distinct`
+
+---
+
+## Peeking into our `Stream`
+
+```java
+Stream.iterate(0, x -> x + 1)
       .peek(System.out::println)
-      .takeWhile(x &lt; 5)
-      .forEach(x -&gt; {});
-      </code></pre>
-    </section>
+      .takeWhile(x -> x < 5)
+      .forEach(x -> {});
+```
 
-    <!-- Slide: More Terminal Operations -->
-    <section>
-      <h2>More Terminal Operations</h2>
-      <ul>
-        <li><code>reduce</code></li>
-        <li><code>noneMatch</code>, <code>allMatch</code>, <code>anyMatch</code></li>
-        <li><code>count</code></li>
-      </ul>
-      <p>Let's look at some examples...</p>
-    </section>
+---
 
-    <!-- Slide: Version info -->
-    <section>
-      <div class="bottom-info">
-        Version: v1.0<br>
-        Last Updated: Mon Mar 24 07:00:00 +08 2025
-      </div>
-    </section>
+## More Terminal Operations
 
+- `reduce`
+- `noneMatch`, `allMatch`, `anyMatch`
+- `count`
+
+Let's look at some examples...
+
+---
+
+<div style="font-size: 50%; color: #aaa;">
+Version: v1.0
+
+Last Updated: Mon Mar 24 07:00:00 +08 2025
+</div>
+
+</textarea>
+    </section>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/markdown/markdown.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/highlight.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/notes/notes.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
@@ -583,7 +544,7 @@ Stream.iterate(0, x -&gt; x + 1)
     margin: 0.04,
     transition: 'none',
     backgroundTransition: 'none',
-    plugins: [ RevealHighlight, RevealNotes ]
+    plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
   });
 
   MathJax.Hub.Config({
