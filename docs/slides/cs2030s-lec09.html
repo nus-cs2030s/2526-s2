@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2030S AY25/26 S2 Lecture 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/theme/black.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/monokai.min.css">
+<style>
+/* Match remark dark.css / cs1010.css styling */
+:root {
+  --r-background-color: #272822;
+  --r-main-color: #ddd;
+  --r-heading-color: #ddd;
+  --r-link-color: #ddf;
+  --r-link-color-hover: #eef;
+  --r-main-font: 'Roboto', sans-serif;
+  --r-heading-font: 'Roboto', sans-serif;
+  --r-code-font: 'Roboto Mono', monospace;
+  --r-main-font-size: 30pt;
+}
+.reveal {
+  font-family: 'Roboto', sans-serif;
+  font-size: 30pt;
+  color: #ddd;
+  background-color: #272822;
+}
+.reveal .slides {
+  text-align: left;
+}
+.reveal h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  color: #ddd;
+  text-transform: none;
+}
+.reveal h2 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2em;
+  font-weight: 700;
+  color: #ddd;
+  text-transform: none;
+}
+.reveal h3 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #ddd;
+  text-transform: none;
+}
+.reveal a {
+  color: #ddf;
+}
+.reveal a:hover {
+  color: #eef;
+}
+.reveal em {
+  color: #fdd;
+  font-style: italic;
+}
+.reveal code {
+  font-family: 'Roboto Mono', monospace;
+}
+.reveal pre {
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 14px;
+  width: 100%;
+  box-shadow: none;
+}
+.reveal pre code {
+  font-size: 0.8em;
+  max-height: none;
+  border-radius: 14px;
+}
+/* Inline code */
+.reveal :not(pre) > code {
+  background-color: #181818;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 85%;
+  padding: .1em .4em;
+  border-radius: 10px;
+  margin: 0;
+  color: #ddd;
+}
+/* Utility size classes matching remark */
+.small  { font-size: 80%; }
+.smaller { font-size: 60%; }
+.tiny   { font-size: 50%; }
+.large  { font-size: 150%; }
+.larger { font-size: 200%; }
+/* Table styling matching remark */
+.reveal table td,
+.reveal table th {
+  padding: 20px;
+  border-bottom: 1px solid rgba(33, 173, 168, 0.6);
+}
+.reveal table thead {
+  background-color: rgba(33, 173, 168, 0.1);
+}
+/* Slide number */
+.reveal .slide-number {
+  font-size: 12pt;
+  color: #ddd;
+  background-color: transparent;
+  right: 1em;
+  bottom: 0.5em;
+  font-family: 'Roboto', sans-serif;
+}
+/* Column layouts */
+.cols       { display: flex; }
+.fifty      { flex: 50%; }
+.left-column  { width: 46%; float: left; }
+.right-column { width: 46%; float: right; }
+/* Bottom version text */
+.bottom-info {
+  position: fixed;
+  bottom: 1.5em;
+  left: 1.5em;
+  font-size: 50%;
+  color: #aaa;
+}
+/* Ensure images fit the slide */
+.reveal section img {
+  max-width: 100%;
+  height: auto;
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+</style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- Slide: Announcements -->
+    <section>
+      <h3>Announcements</h3>
+      <p>This week:</p>
+      <ul>
+        <li>PE2 Information is available on Canvas</li>
+        <li>Next week's lecture will be from 10 AM to 12 PM.</li>
+        <li>Exercise 7 will be released this Thursday</li>
+        <li>The deadline for the quiz in the next week is extended.</li>
+      </ul>
+    </section>
+
+    <!-- Slide: Title -->
+    <section style="text-align: center;">
+      <h2>CS2030<sub>s</sub></h2>
+      <h3>Programming Methodology II</h3>
+    </section>
+
+    <!-- Slide: Lecture 9 date -->
+    <section style="text-align: center;">
+      <h2>Lecture 9</h2>
+      <h3>24 March 2025</h3>
+    </section>
+
+    <!-- Slide: EagerList<T> definition -->
+    <section>
+      <h3><code>EagerList&lt;T&gt;</code></h3>
+      <pre><code class="language-java" data-trim>
+class EagerList&lt;T&gt; {
+  private T head;
+  private EagerList&lt;T&gt; tail;
+   :
+}
+      </code></pre>
+    </section>
+
+    <!-- Slide: EagerList diagram -->
+    <section>
+      <img src="img/09_List_01.png" style="width: 100%;">
+    </section>
+
+    <!-- Slide: EagerList usage example -->
+    <section>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+EagerList&lt;Integer&gt; l = EagerList
+    .iterate(1, i -&gt; i &lt; 10, i -&gt; i + 1)
+    .filter(i -&gt; i % 3 == 0)
+    .map(i -&gt; i * 2);
+l.head();
+l.tail().head();
+l.tail().tail().head();
+        </code></pre>
+      </div>
+    </section>
+
+    <!-- Slide: InfiniteList<T> definition -->
+    <section>
+      <h3><code>InfiniteList&lt;T&gt;</code></h3>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+class InfiniteList&lt;T&gt; {
+  private Producer&lt;T&gt; head;
+  private Producer&lt;InfiniteList&lt;T&gt;&gt; tail;
+   :
+}
+        </code></pre>
+      </div>
+    </section>
+
+    <!-- Slide: InfiniteList chained map example -->
+    <section>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2)  // 0, 2, 4, ...
+            .map(x -&gt; x + 1)         // 1, 3, 5, ...
+            .map(x -&gt; x * 2)         // 2, 6, 10, ...
+            .head();                 // 2
+        </code></pre>
+      </div>
+    </section>
+
+    <!-- Slide: InfiniteList step-by-step example -->
+    <section>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+InfiniteList&lt;Integer&gt; evens =
+               InfiniteList.iterate(0, x -&gt; x + 2);
+  // 0, 2, 4, ...
+InfiniteList&lt;Integer&gt; odds = evens.map(x -&gt; x + 1);
+  // 1, 3, 5, ...
+InfiniteList&lt;Integer&gt; altEvens = odds.map(x -&gt; x * 2);
+  // 2, 6, 10, ...
+altEvens.head();
+  // returns 2
+        </code></pre>
+      </div>
+    </section>
+
+    <!-- Slide: Diagram 01 - evens -->
+    <section>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+IL&lt;Integer&gt; evens = IL.iterate(0, x -&gt; x + 2);
+        </code></pre>
+      </div>
+      <img src="img/09_Diagram_01.png" style="width: 100%;">
+    </section>
+
+    <!-- Slide: Diagram 02 - odds -->
+    <section>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+InfiniteList&lt;Integer&gt; odds = evens.map(x -&gt; x + 1);
+        </code></pre>
+      </div>
+      <img src="img/09_Diagram_02.png" style="width: 100%;">
+    </section>
+
+    <!-- Slide: Diagram 03 - altEvens -->
+    <section>
+      <div class="small">
+        <pre><code class="language-java" data-trim>
+InfiniteList&lt;Integer&gt; altEvens = odds.map(x -&gt; x * 2);
+        </code></pre>
+      </div>
+      <img src="img/09_Diagram_03.png" style="width: 100%;">
+    </section>
+
+    <!-- Slides: Head tracing 01-20 -->
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_01.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_02.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_03.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_04.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_05.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_06.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_07.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_08.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_09.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_10.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_11.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_12.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_13.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_14.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_15.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_16.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_17.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_18.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_19.png" style="width: 100%;">
+    </section>
+
+    <section>
+      <div class="tiny">
+        <pre><code class="language-java" data-trim>
+InfiniteList.iterate(0, x -&gt; x + 2).map(x -&gt; x + 1).map(x -&gt; x * 2).head();
+        </code></pre>
+      </div>
+      <img src="img/09_Head_20.png" style="width: 100%;">
+    </section>
+
+    <!-- Slide: CS2030S vs java.util.function table -->
+    <section>
+      <div class="small">
+        <table>
+          <thead>
+            <tr><th>CS2030S</th><th>java.util.function</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>BooleanCondition&lt;T&gt;::test</code></td><td><code>Predicate&lt;T&gt;::test</code></td></tr>
+            <tr><td><code>Producer&lt;T&gt;::produce</code></td><td><code>Supplier&lt;T&gt;::get</code></td></tr>
+            <tr><td><code>Transformer&lt;T,R&gt;::transform</code></td><td><code>Function&lt;T,R&gt;::apply</code></td></tr>
+            <tr><td><code>Transformer&lt;T,T&gt;::transform</code></td><td><code>UnaryOp&lt;T&gt;::apply</code></td></tr>
+            <tr><td><code>Combiner&lt;S,T,R&gt;::combine</code></td><td><code>BiFunction&lt;S,T,R&gt;::apply</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Slide: CS2030S vs Java version table -->
+    <section>
+      <div class="small">
+        <table>
+          <thead>
+            <tr><th>CS2030S</th><th>Java version</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Maybe&lt;T&gt;</code></td><td><code>java.util.Optional&lt;T&gt;</code></td></tr>
+            <tr><td><code>Lazy&lt;T&gt;</code></td><td>N/A</td></tr>
+            <tr><td><code>InfiniteList&lt;T&gt;</code></td><td><code>java.util.stream.Stream&lt;T&gt;</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Slide: Streams title -->
+    <section style="text-align: center;">
+      <h1>Streams</h1>
+      <p>(in Java)</p>
+    </section>
+
+    <!-- Slide: Stream pipeline description -->
+    <section style="text-align: center;">
+      <h3>A stream pipeline starts with a <em>data source</em>, then <em>intermediate operations</em>, and finally a <em>terminal operation</em>.</h3>
+    </section>
+
+    <!-- Slide: Data sources -->
+    <section>
+      <h2>Data sources</h2>
+      <ul>
+        <li>Static factory methods <code>of</code>, <code>generate</code>, <code>iterate</code></li>
+        <li>Convert an array into a Stream using <code>Arrays::stream</code></li>
+        <li>Convert a List instance into a Stream using <code>List::stream</code></li>
+      </ul>
+    </section>
+
+    <!-- Slide: Terminal Operations -->
+    <section>
+      <h2>Terminal Operations</h2>
+      <ul>
+        <li><code>forEach</code></li>
+      </ul>
+    </section>
+
+    <!-- Slide: Intermediate Operations -->
+    <section>
+      <h2>Intermediate Operations</h2>
+      <ul>
+        <li><code>filter</code>, <code>map</code></li>
+        <li><code>flatMap</code></li>
+        <li><code>limit</code>, <code>takeWhile</code></li>
+      </ul>
+      <p>Let's look at some examples...</p>
+    </section>
+
+    <!-- Slide: Stateful operations -->
+    <section>
+      <h2>Some operations are <em>stateful</em></h2>
+      <ul>
+        <li><code>sorted</code></li>
+        <li><code>distinct</code></li>
+      </ul>
+    </section>
+
+    <!-- Slide: peek example -->
+    <section>
+      <h2>Peeking into our <code>Stream</code></h2>
+      <pre><code class="language-java" data-trim>
+Stream.iterate(0, x -&gt; x + 1)
+      .peek(System.out::println)
+      .takeWhile(x &lt; 5)
+      .forEach(x -&gt; {});
+      </code></pre>
+    </section>
+
+    <!-- Slide: More Terminal Operations -->
+    <section>
+      <h2>More Terminal Operations</h2>
+      <ul>
+        <li><code>reduce</code></li>
+        <li><code>noneMatch</code>, <code>allMatch</code>, <code>anyMatch</code></li>
+        <li><code>count</code></li>
+      </ul>
+      <p>Let's look at some examples...</p>
+    </section>
+
+    <!-- Slide: Version info -->
+    <section>
+      <div class="bottom-info">
+        Version: v1.0<br>
+        Last Updated: Mon Mar 24 07:00:00 +08 2025
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/notes/notes.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script>
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    center: true,
+    hash: true,
+    slideNumber: function(slide) {
+      var indices = Reveal.getIndices(slide);
+      var total = Reveal.getTotalSlides();
+      return [ 'CS2030S AY25/26 S2\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0' + (indices.h + 1) + ' / ' + total ];
+    },
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    transition: 'none',
+    backgroundTransition: 'none',
+    plugins: [ RevealHighlight, RevealNotes ]
+  });
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      skipTags: ['script', 'noscript', 'style', 'pre']
+    }
+  });
+</script>
+</body>
+</html>
