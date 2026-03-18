@@ -1,0 +1,353 @@
+.!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 7</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+### Reminders
+
+- Exercise 4 on `Box<T>` is due tomorrow at noon.	
+
+- Exercise 5 to be released tomorrow.
+
+---
+### Midterm Marking
+
+- To be released on SoftMark (today or tomorrow).  Watch out for the announcement.
+
+- Average is ~50 out of 70.
+
+---
+class: wide
+
+### Midterm Marking
+
+- Marking scheme to be released on Canvas.
+
+- Check the marking scheme and file a ticket if there is _**an error in grading**_.
+
+- We cannot and will _**not change the marking scheme**_.
+
+- Fill in the ticket information correctly or it may not get processed.
+
+---
+class: wide
+
+### `submit.sh` for PE1
+
+.small[
+- You will have up to three copies of code in your directory:
+
+  - Under `task1`: the copy created after `submit.sh task1` 
+
+  - Under `task2`: the copy created after `submit.sh task2`
+
+  - Under `$HOME`: we can't tell if this is for Task 1 or Task 2.
+]
+
+---
+class: wide
+### `submit.sh` for PE1
+
+.small[
+- We will grade the code in `$HOME` as follows: 
+
+  - Grade as if it is for Task 1. Use this copy if it scores higher than the copy under `task1`.
+
+  - Grade as if it is for Task 2. Use this copy if it scores higher than the copy under `task2`.
+]
+
+---
+class: middle, center
+
+## Lecture 7
+
+### 9 March 2026
+---
+### Problem with aliasing
+
+---
+### Solution I: Don't Share
+
+
+---
+### Solution II: Don't Update
+
+
+---
+
+### Immutable Classes
+
+- A class is _immutable_ if it does not have visible changes outside its abstraction barrier.
+
+- Calling the same method with the same arguments on the same object will always produce the same result.
+
+---
+### Avoid Changes to "Visible" Fields 
+
+
+---
+### Avoid Composing with Mutable Objects
+
+
+---
+### Prevent Inheritance
+
+
+---
+### Easy to Understanding and Reason About
+
+.smaller[
+```Java
+Circle c = new Circle(new Point(0, 0), 1);
+foo(c);
+```
+]
+
+`c` will always be the unit circle at (0, 0)
+
+---
+### Enable Safe Sharing of Internals
+
+.smaller[
+```Java
+Point p = new Point(0, 0);
+Circle c1 = new Circle(p, 1);
+Circle c2 = new Circle(p, 4);
+c1 = c1.moveTo(1, 1);
+// c2 is unchanged
+```
+]
+
+---
+### Example: Read-only Sequence
+
+
+---
+### Enabling Reuse of Instances
+
+.smaller[
+```Java
+Box<Integer> box1 = Box.empty();
+Box<Integer> box2 = Box.empty();
+box1 == box2 // true
+```
+]
+
+---
+### Enabling Reuse of Instances
+
+---
+### Advantages of Immutability
+
+- Easier to Understand and Reason
+
+- Can Share Internals
+
+- Can Reuse Instances
+
+- Safe Concurrent Execution <small>(Coming Soon)</small>
+
+---
+### Classes
+
+- Encapsulating data (field) and functions (methods) together.
+
+- Information hiding hides details from outside the abstraction barrier.
+
+- "Tell, don't ask" tell the object do the work for you.
+
+---
+### Inner Class (Class Within a Class)
+
+
+---
+### Access Private Fields of Enclosing Class
+
+
+---
+### Qualified `this`
+
+
+---
+### Can be Static or Non-Static
+
+
+---
+### Can be Private or Public
+
+
+---
+### Inner Class Usage I
+
+If a class is huge, consider encapsulating methods and fields within the class into inner classes.
+
+Example: a `Node` class for a linked list can be an inner class of the `LinkedList` class.
+
+---
+### Inner Class Usage II
+
+If a class is only used within another class, consider making it a inner class.
+
+Example: `Event` and its subclasses are only used within the simulator.
+
+---
+### Inner Class Usage III
+
+We can compartmentalise internal logic of a class into inner classes.
+
+Example: Empty vs Non-empty `Box<T>`
+
+---
+### `Box<T>`
+
+
+---
+### Local Class (Class Within a Method)
+
+If a class is only used within another method, consider making it a local class.
+
+A local class can access the variables in the call frame of the method where it is defined, and the `this` reference of the class where it is defined.
+
+---
+### `Comparator<T>`
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Comparator.html" width="100%" height="80%">
+</iframe>
+
+---
+### List::sort
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html#sort(java.util.Comparator)" width="100%" height="80%">
+</iframe>
+
+---
+### Sorting a List<T>
+
+
+---
+.tiny[
+```Java
+interface Fooable { 
+  void foo(); 
+}
+  
+class A {
+  int x = 1;
+  
+  Fooable createB() {
+    int y = 1;
+    
+    class B implements Fooable {
+      public void foo() {
+        A.this.x = y; // accessing x and y is OK.
+      }
+    }
+   
+    B b = new B();
+    return b;
+  }
+}
+```
+]
+---
+### How to execute `foo()`?
+
+.smaller[
+```Java
+A a = new A();
+Fooable b = a.createB();
+b.foo(); // set A.this.x = y;
+```
+]
+
+---
+### Variable Capture
+
+Local classes keep a copy of:
+
+- the local variables and parameters of the enclosing method, if they are used
+
+- the `this` reference of the enclosing class
+
+The fields of the enclosing class are not captured.
+
+---
+### Local Classes Can be Anonymous
+
+
+---
+### Captured variables can be assigned once
+
+
+---
+class: bottom
+
+.tiny[
+Version: v2.0
+
+Last Updated: Sun Mar  2 14:00:00 +08 2025
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+
+<!-- <script src="ttps://thisisadi.yoga/remark/js/remark.js">
+</script>  -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+
+<script src="https://www.comp.nus.edu.sg/~adi-yoga/plugins/qanvas/init.js" type="text/javascript">
+</script>
+	
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    qanvas: {
+	    layout: 'horizontal'
+    	},
+    slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown
