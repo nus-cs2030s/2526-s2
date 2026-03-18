@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2030S AY25/26 S2 Lecture 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/theme/black.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/monokai.min.css">
+<style>
+/* Match remark dark.css / cs1010.css styling */
+:root {
+  --r-background-color: #272822;
+  --r-main-color: #ddd;
+  --r-heading-color: #ddd;
+  --r-link-color: #ddf;
+  --r-link-color-hover: #eef;
+  --r-main-font: 'Roboto', sans-serif;
+  --r-heading-font: 'Roboto', sans-serif;
+  --r-code-font: 'Roboto Mono', monospace;
+  --r-main-font-size: 30pt;
+}
+.reveal {
+  font-family: 'Roboto', sans-serif;
+  font-size: 30pt;
+  color: #ddd;
+  background-color: #272822;
+}
+.reveal .slides {
+  text-align: left;
+}
+.reveal h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  color: #ddd;
+  text-transform: none;
+}
+.reveal h2 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2em;
+  font-weight: 700;
+  color: #ddd;
+  text-transform: none;
+}
+.reveal h3 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #ddd;
+  text-transform: none;
+}
+.reveal a {
+  color: #ddf;
+}
+.reveal a:hover {
+  color: #eef;
+}
+.reveal em {
+  color: #fdd;
+  font-style: italic;
+}
+.reveal code {
+  font-family: 'Roboto Mono', monospace;
+}
+.reveal pre {
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 14px;
+  width: 100%;
+  box-shadow: none;
+}
+.reveal pre code {
+  font-size: 1em;
+  max-height: none;
+  border-radius: 14px;
+}
+/* Inline code */
+.reveal :not(pre) > code {
+  background-color: #181818;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 85%;
+  padding: .1em .4em;
+  border-radius: 10px;
+  margin: 0;
+  color: #ddd;
+}
+/* Utility size classes matching remark */
+.small  { font-size: 80%; }
+.smaller { font-size: 60%; }
+.tiny   { font-size: 50%; }
+.large  { font-size: 150%; }
+.larger { font-size: 200%; }
+/* Table styling matching remark */
+.reveal table td,
+.reveal table th {
+  padding: 20px;
+  border-bottom: 1px solid rgba(33, 173, 168, 0.6);
+}
+.reveal table thead {
+  background-color: rgba(33, 173, 168, 0.1);
+}
+/* Slide number */
+.reveal .slide-number {
+  font-size: 12pt;
+  color: #ddd;
+  background-color: transparent;
+  right: 1em;
+  bottom: 0.5em;
+  font-family: 'Roboto', sans-serif;
+}
+/* Column layouts */
+.cols       { display: flex; }
+.fifty      { flex: 50%; }
+.left-column  { width: 46%; float: left; }
+.right-column { width: 46%; float: right; }
+/* Ensure images fit the slide */
+.reveal section img {
+  max-width: 100%;
+  height: auto;
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+</style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+    <section data-markdown data-separator="^---$" data-separator-notes="^Note:">
+<textarea data-template>
+### Announcements
+
+This week:
+- PE2 Information is available on Canvas
+- Next week's lecture will be from 10 AM to 12 PM.
+- Exercise 7 will be released this Thursday
+- The deadline for the quiz in the next week is extended.
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+## Lecture 9
+
+### 24 March 2025
+
+---
+
+### `EagerList<T>`
+
+```java
+class EagerList<T> {
+  private T head;
+  private EagerList<T> tail;
+   :
+}
+```
+
+---
+
+![](img/09_List_01.png)
+
+---
+
+```java
+EagerList<Integer> l = EagerList
+    .iterate(1, i -> i < 10, i -> i + 1)
+    .filter(i -> i % 3 == 0)
+    .map(i -> i * 2);
+l.head();
+l.tail().head();
+l.tail().tail().head();
+```
+<!-- .element: class="small" -->
+
+---
+
+### `InfiniteList<T>`
+
+```java
+class InfiniteList<T> {
+  private Producer<T> head;
+  private Producer<InfiniteList<T>> tail;
+   :
+}
+```
+<!-- .element: class="small" -->
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2)  // 0, 2, 4, ...
+            .map(x -> x + 1)         // 1, 3, 5, ...
+            .map(x -> x * 2)         // 2, 6, 10, ...
+            .head();                 // 2
+```
+<!-- .element: class="small" -->
+
+---
+
+```java
+InfiniteList<Integer> evens =
+               InfiniteList.iterate(0, x -> x + 2);
+  // 0, 2, 4, ...
+InfiniteList<Integer> odds = evens.map(x -> x + 1);
+  // 1, 3, 5, ...
+InfiniteList<Integer> altEvens = odds.map(x -> x * 2);
+  // 2, 6, 10, ...
+altEvens.head();
+  // returns 2
+```
+<!-- .element: class="small" -->
+
+---
+
+```java
+IL<Integer> evens = IL.iterate(0, x -> x + 2);
+```
+<!-- .element: class="small" -->
+
+![](img/09_Diagram_01.png)
+
+---
+
+```java
+InfiniteList<Integer> odds = evens.map(x -> x + 1);
+```
+<!-- .element: class="small" -->
+
+![](img/09_Diagram_02.png)
+
+---
+
+```java
+InfiniteList<Integer> altEvens = odds.map(x -> x * 2);
+```
+<!-- .element: class="small" -->
+
+![](img/09_Diagram_03.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_01.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_02.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_03.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_04.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_05.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_06.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_07.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_08.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_09.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_10.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_11.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_12.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_13.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_14.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_15.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_16.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_17.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_18.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_19.png)
+
+---
+
+```java
+InfiniteList.iterate(0, x -> x + 2).map(x -> x + 1).map(x -> x * 2).head();
+```
+<!-- .element: class="tiny" -->
+
+![](img/09_Head_20.png)
+
+---
+
+| CS2030S | java.util.function |
+|---------|-------------------|
+| `BooleanCondition<T>::test` | `Predicate<T>::test` |
+| `Producer<T>::produce` | `Supplier<T>::get` |
+| `Transformer<T,R>::transform` | `Function<T,R>::apply` |
+| `Transformer<T,T>::transform` | `UnaryOp<T>::apply` |
+| `Combiner<S,T,R>::combine` | `BiFunction<S,T,R>::apply` |
+<!-- .element: class="small" -->
+
+---
+
+| CS2030S | Java version |
+|---------|-------------|
+| `Maybe<T>` | `java.util.Optional<T>` |
+| `Lazy<T>` | N/A |
+| `InfiniteList<T>` | `java.util.stream.Stream<T>` |
+<!-- .element: class="small" -->
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+# Streams
+
+(in Java)
+
+---
+<!-- .slide: style="text-align: center;" -->
+
+### A stream pipeline starts with a *data source*, then *intermediate operations*, and finally a *terminal operation*.
+
+---
+
+## Data sources
+
+- Static factory methods `of`, `generate`, `iterate`
+- Convert an array into a Stream using `Arrays::stream`
+- Convert a List instance into a Stream using `List::stream`
+
+---
+
+## Terminal Operations
+
+- `forEach`
+
+---
+
+## Intermediate Operations
+
+- `filter`, `map`
+- `flatMap`
+- `limit`, `takeWhile`
+
+Let's look at some examples...
+
+---
+
+## Some operations are *stateful*
+
+- `sorted`
+- `distinct`
+
+---
+
+## Peeking into our `Stream`
+
+```java
+Stream.iterate(0, x -> x + 1)
+      .peek(System.out::println)
+      .takeWhile(x -> x < 5)
+      .forEach(x -> {});
+```
+
+---
+
+## More Terminal Operations
+
+- `reduce`
+- `noneMatch`, `allMatch`, `anyMatch`
+- `count`
+
+Let's look at some examples...
+
+---
+
+<div style="font-size: 50%; color: #aaa;">
+Version: v1.0
+
+Last Updated: Mon Mar 24 07:00:00 +08 2025
+</div>
+
+</textarea>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/markdown/markdown.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/notes/notes.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script>
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    center: true,
+    hash: true,
+    slideNumber: function(slide) {
+      var indices = Reveal.getIndices(slide);
+      var total = Reveal.getTotalSlides();
+      return [ 'CS2030S AY25/26 S2\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0' + (indices.h + 1) + ' / ' + total ];
+    },
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    transition: 'none',
+    backgroundTransition: 'none',
+    plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+  });
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      skipTags: ['script', 'noscript', 'style', 'pre']
+    }
+  });
+</script>
+</body>
+</html>
