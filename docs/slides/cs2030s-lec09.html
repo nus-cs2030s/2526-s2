@@ -12,21 +12,22 @@
 </head>
 <body>
 <textarea id="source">
-### Announcements
-
-- PE2 Information is available on Canvas
-
-- Past Year PE2 Papers are published
- 
-- File a ticket if you have a clash with PE2 before this Saturday, **28 March, 11:59pm**
-
-- Catch-up III this coming Saturday, **28 March, SR8, 10-12pm**
-
----
 class: middle, center
 ## CS2030<sub>s</sub>
 
 ### Programming Methodology II
+
+---
+
+### Announcements
+
+- Past year PE2 papers have been published
+
+- PE2 Information is available on Canvas
+ 
+- File a ticket if you have a clash with PE2 before this Saturday, **28 March, 11:59pm**
+
+- Catch-up III this coming Saturday, **28 March, SR8, 10-12pm**
 
 ---
 class: middle, center
@@ -52,26 +53,18 @@ class EagerList<T> {
 ---
 ### `head`, `tail`, `get`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### `iterate` and `generate`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### `map`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### `filter`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
   
   
 ---
@@ -102,30 +95,36 @@ class InfiniteList<T> {
 ---
 ### `head`, `tail`, `get`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### `iterate` and `generate`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### `map`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 class: wide
 
-.small[
+.smaller[
 ```java
 InfiniteList.iterate(0, x -> x + 2)  // 0, 2, 4, ...
             .map(x -> x + 1)         // 1, 3, 5, ...
             .map(x -> x * 2)         // 2, 6, 10, ... 
             .head();                 // 2
+```
+]
+
+--
+
+.smaller[
+```java
+InfiniteList<Integer> evens, odds, altEvens;
+evens = InfiniteList.iterate(0, x -> x + 2); // 0, 2, 4, ...
+odds = evens.map(x -> x + 1);                // 1, 3, 5, ...
+altEvens = odds.map(x -> x * 2);             // 2, 6, 10, ...
+altEvens.head();                             // 2
 ```
 ]
 
@@ -240,8 +239,6 @@ EagerList
 ---
 ### `filter`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 ### Types of methods in `InfiniteList`
@@ -292,6 +289,17 @@ class: middle center
 # Streams
 
 (in Java)
+
+---
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html" width="100%" height="80%">
+</iframe>
+
+---
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" width="100%" height="80%">
+</iframe>
+
 
 ---
 ### Data sources
@@ -576,8 +584,6 @@ They require the stream to keep track of the elements seen so far.
 Stateful operations must operate on a bounded stream.
 ]
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 
 ---
@@ -585,8 +591,6 @@ Stateful operations must operate on a bounded stream.
 Each `Stream` can be consumed once
 ]
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 class: bottom
