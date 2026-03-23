@@ -15,7 +15,12 @@
 ### Announcements
 
 - PE2 Information is available on Canvas
-- Catch-up III this coming Saturday
+
+- Past Year PE2 Papers are published
+ 
+- File a ticket if you have a clash with PE2 before this Saturday, **28 March, 11:59pm**
+
+- Catch-up III this coming Saturday, **28 March, SR8, 10-12pm**
 
 ---
 class: middle, center
@@ -205,6 +210,32 @@ altEvens.head();
 
 ![:scale 100%](figures/cs2030s-lec09/cs2030s-lec09.005.png)
 
+---
+class: wide
+
+.left-column[
+.tiny[
+```java
+InfiniteList
+  .iterate(0, x -> x + 2)
+  .map(x -> x + 1)
+  .map(x -> x * 2)
+  .head();       
+```
+]
+]
+
+.right-column[
+.tiny[
+```java
+EagerList
+  .iterate(0, x -> x < 10, x -> x + 2)  
+  .map(x -> x + 1)
+  .map(x -> x * 2)
+  .head();
+```
+]
+]
 
 ---
 ### `filter`
@@ -271,27 +302,34 @@ class: middle center
 
 - Collections (e.g., `List::stream`)
 
-- Other APIs (BuferredReader::lines, Random::ints, ...)
+- Other APIs (`BufferedReader::lines`, `Random::ints`, ...)
 
 ---
 ### Intermediate Operations 
 
-- select what we need: `filter`
-- transforming each element: `map`, `flatMap`
-- truncating a stream: `takeWhile`, `limit`
-- sorting the stream: `sorted`
-- removing duplicates: `distinct`
-- peeking into the stream: `peek`
-
+.tiny[
+| what for | methods |
+|----------|---------|
+| select what we need | `filter` |
+| transform each element | `map`, `flatMap` |
+| truncate a stream | `takeWhile`, `limit` |
+| sort the stream | `sorted` |
+| remove duplicates | `distinct` |
+| peek into the stream | `peek` |
+]
 ---
 ### Terminal Operations 
 
-- act on each element: `forEach`
-- combine elements into a value: `reduce`
-- check for global properties: `noneMatch`, `allMatch`, `anyMatch`
-- count how many elements: `count`
-- retrieve the first: `findFirst`
-- collect elements into a list/an array: `toList`, `toArray`
+.tiny[
+| what for | methods |
+|----------|---------|
+| act on each element | `forEach` |
+| combine elements into a value | `reduce` |
+| check for global properties | `noneMatch`, `allMatch`, `anyMatch` |
+| count how many elements | `count` |
+| retrieve the first | `findFirst` |
+| turn into a list/an array | `toList`, `toArray` |
+]
 
 ---
 class: wide
@@ -311,6 +349,8 @@ boolean isPrime(int x) {
 ```
 ]
 ]
+
+--
 
 .right-column[
 .tiny[
@@ -379,10 +419,12 @@ void fiveHundredPrime() {
 ]
 ]
 
+--
+
 .right-column[
 .tiny[
 ```Java
-boolean fiveHundredPrime() {
+void fiveHundredPrime() {
   IntStream
       .iterate(2, x -> x + 1)
       .filter(x -> isPrime(x))
@@ -399,8 +441,9 @@ boolean fiveHundredPrime() {
 .small[
 ```Java
 T result = id;
-for (T element : this stream)
+for (T element : this stream) {
   result = acc.apply(result, element)
+}
 return result;
 ```
 ]
@@ -423,6 +466,8 @@ int totalLength(List<String> list) {
 ]
 ]
 
+--
+
 .right-column[
 .tiny[
 ```Java
@@ -437,7 +482,7 @@ int totalLength(List<String> list) {
 
 ---
 class: wide
-### Total length of strings without repetition
+### Total length of strings _without repetition_
 
 .left-column[
 .tiny[
@@ -458,6 +503,8 @@ int totalLength(List<String> list) {
 ]
 ]
 
+--
+
 .right-column[
 .tiny[
 ```Java
@@ -474,7 +521,7 @@ int totalLength(List<String> list) {
 
 ---
 class: wide
-### Total length of strings without repetition in parallel
+### Total length of strings without repetition _in parallel_
 
 .left-column[
 .tiny[
@@ -491,10 +538,16 @@ int totalLength(List<String> list) {
 
 
 
+
+
+
+
 }
 ```
 ]
 ]
+
+--
 
 .right-column[
 .tiny[
@@ -507,34 +560,39 @@ int totalLength(List<String> list) {
       .reduce(0, (a, b) -> a + b);
 }
 ```
+More about parallel streams in the Week 12 lecture.
 ]
 ]
 
 ---
 ### Stateful Operations
 
-`distinct` and `sorted` are _stateful_ operations. They require the stream to keep track of the elements seen so far.
+`distinct` and `sorted` are _stateful_ operations. 
 
-Stateful operations must operate on a bounded stream.
+They require the stream to keep track of the elements seen so far.
 
 ---
-### Each `Stream` can be consumed once
-
 .small[
-```Java
-Stream<Integer> a = Stream.of(1, 2, 3);
-a.count(); // 3
-a.count(); // error
-```
+Stateful operations must operate on a bounded stream.
 ]
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+
+---
+.small[
+Each `Stream` can be consumed once
+]
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
 
 ---
 class: bottom
 
 .tiny[
-Version: v1.0
-
-Last Updated: Mon Mar 24 07:00:00 +08 2024
+Last Updated: Mon 23 Mar 2026 10:03:26 +08
 ]
 </textarea>
 
