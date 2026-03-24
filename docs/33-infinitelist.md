@@ -305,7 +305,14 @@ Let's look at what gets created on the heap when we run
 InfiniteList<Integer> evens = InfiniteList.iterate(0, x -> x + 2); // 0, 2, 4, 6, ...
 ```
 
-![evens](figures/infinitelist/infinitelist.001.png)
+=== "Old Figure"
+
+    ![evens](figures/infinitelist/infinitelist.001.png)
+
+=== "New Figure"
+
+    ![evens](slides/figures/cs2030s-lec09/cs2030s-lec09.003.png#only-dark)
+    ![evens](slides/figures/cs2030s-lec09-light/cs2030s-lec09-light.003.png#only-light)
 
 The figure above shows the objects created.  `evens` is an instance of `InfiniteList`, with two fields, `head` and `tail`, each pointing to an instance of `Producer<T>`.  The two instances of `Producer<T>` capture the variable `init`.  The `tail` additionally captures the variable `next`, which itself is an instance of `Transformer<T, T>`. 
 
@@ -315,7 +322,16 @@ Next, let's look at what gets created on the heap when we run
 InfiniteList<Integer> odds = evens.map(x -> x + 1); // 1, 3, 5, ...
 ```
 
-![odds](figures/infinitelist/infinitelist.002.png)
+
+=== "Old Figure"
+
+    ![odds](figures/infinitelist/infinitelist.002.png)
+
+=== "New Figure"
+
+    ![odds](slides/figures/cs2030s-lec09/cs2030s-lec09.004.png#only-dark)
+    ![odds](slides/figures/cs2030s-lec09-light/cs2030s-lec09-light.004.png#only-light)
+
 
 The figure above shows the objects added.  `odds` is an instance of `InfiniteList`, with two fields, `head` and `tail`, each pointing to an instance of `Producer<T>`.  The two instances of `Producer<T>` capture the local variables, `this` and `mapper`, of the method `map`.  `mapper` refers to an instance of `Transformer<T, T>`.  Since the method `map` of `evens` is called, the `this` reference refers to the object `evens`. 
 
@@ -326,11 +342,25 @@ InfiniteList<Integer> altEvens = odds.map(x -> x * 2); // 2, 6, 10, ..
 
 We have the following objects set up.
 
-![altEvens](figures/infinitelist/infinitelist.003.png)
+=== "Old Figure"
+
+    ![odds](figures/infinitelist/infinitelist.003.png)
+
+=== "New Figure"
+
+    ![odds](slides/figures/cs2030s-lec09/cs2030s-lec09.005.png#only-dark)
+    ![odds](slides/figures/cs2030s-lec09-light/cs2030s-lec09-light.005.png#only-light)
 
 Let's now trace through what happens when we call `altEvens.head()`.  This method leads to the call `this.head.produce()`, where `this` refers to `altEvens`.  The call to `produce` invoked `mapper.transform(this.head.produce())` of the producer labeled 1 in the figure below.  This leads to `this.head.produce()` of this producer being called.  Within this producer, `this` refers to `odds`, and so `this.head.produce()` invoked `mapper.transform(this.head.produce())` of the producer labelled 2.   Now, `this` refers to `evens`, and `this.head.produce()` causes the producer `() -> `init` (labeled 3) to produce 0.
 
-![altEvens](figures/infinitelist/infinitelist.004.png)
+=== "Old Figure"
+
+    ![altEvens](figures/infinitelist/infinitelist.004.png)
+
+=== "New Figure"
+
+    ![altEvens](slides/figures/cs2030s-lec09/cs2030s-lec09.006.png#only-dark)
+    ![altEvens](slides/figures/cs2030s-lec09-light/cs2030s-lec09-light.006.png#only-light)
 
 The execution now returns to the invocation of `mapper.transform(this.head.produce())` and call `mapper.transform(0)` (labeled 4).  This returns the value 1, which we pass into the `mapper.transform(1)` (labeled 5).  The `mapper` is `x -> x * 2` so we have the result 2, which we return from `altEvens.head()`.
 
