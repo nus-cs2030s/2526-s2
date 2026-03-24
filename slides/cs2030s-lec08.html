@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 8</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+class: middle, center
+
+## Lecture 8
+
+### 16 March 2026
+---
+### Recap: Immutable Classes
+
+- An immutable class has no visible changes after construction.
+
+- Same target reference, same method, same arguments always gives the same result.
+
+---
+Suppose `a` is an immutable class.  Can we optimize the code as follows? 
+.left-column[
+.small[
+```Java
+bar(a.foo(b, c));
+baz(a.foo(b, c));
+```        
+]
+]
+.right-column[
+.small[
+```Java   
+int x = a.foo(b, c);
+bar(x);
+baz(x);
+```
+]
+]
+
+---
+
+Not necessarily, because `a.foo(b, c)` may have side effects (e.g., print something, mutate `b` or `c`, write to a file)
+
+.left-column[
+.small[
+```Java
+bar(a.foo(b, c));
+baz(a.foo(b, c));
+```        
+]
+]
+.right-column[
+.small[
+```Java   
+int x = a.foo(b, c);
+bar(x);
+baz(x);
+```
+]
+]
+
+--
+
+---
+### Mathematical Functions
+
+- A function $f: X \rightarrow Y$ maps each element in the domain $X$ to exactly one element in the codomain $Y$.
+
+- Applying $f$ to $x$ does not change $x$ or any other value &mdash; no side effects.
+
+- _Referential transparency_: if $f(x) = a$, we can replace $f(x)$ with $a$ anywhere.
+
+---
+### Pure Functions
+
+A _pure_ function:
+
+- returns a value based only on its input
+
+- has no side effects (no printing, no file writing, no exceptions, no field mutations)
+
+- is deterministic: same input always gives same output
+
+---
+### Pure Functions: Examples
+
+.smaller[
+```Java
+int square(int i) {
+  return i * i;  
+}
+
+int add(int i, int j) {
+  return i + j;  
+}
+```
+]
+
+---
+### Non-Pure Functions: Examples
+
+.smaller[
+```Java
+int div(int i, int j) {
+  return i / j;  // may throw an exception
+}
+
+int incrCount(int i) {
+  return this.count + i;  // depends on mutable field
+}
+
+void incrCount(int i) {
+  this.count += i;  // has side effects
+}
+```
+]
+
+---
+### Importance of Writing Pure Functions
+
+- Easier to reason about
+- Easier to test
+- Easier to parallelize (coming soon)
+- Easier to optimize 
+
+---
+### Functions as First-Class Citizens
+
+A programming language has _first-class functions_ when functions can be:
+
+- assigned to variables
+
+- passed as arguments to other functions
+
+- returned as values from other functions
+
+---
+### `Comparator<T>` 
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Comparator.html" width="100%" height="80%">
+
+---
+### Functional Interface
+
+An interface with _exactly one abstract method_ is a _functional interface_.
+
+A lambda expression is an instance of an anonymous class that implements a functional interface.
+
+---
+### Lambda Expression
+
+---
+### Examples from Exercise 5
+
+---
+### Curried Functions
+
+_Currying_: convert a function with multiple arguments into a sequence of unary functions.
+
+Note: Named after Haskell Curry, not the food.
+
+---
+### Curried Functions
+
+---
+### Lambda as Closure
+
+A lambda expression can capture variables from its enclosing scope:
+
+.smaller[
+```Java
+Point origin = new Point(0, 0);
+Transformer<Point, Double> dist = p -> origin.distanceTo(p);
+```
+]
+
+- Captured variables must be final or effectively final.
+- A closure = function + captured environment.
+
+---
+### Method Reference
+
+We can refer to an existing method using `::`
+
+.smaller[
+```Java
+Box::new           // x -> new Box(x)
+p::distanceTo      // x -> p.distanceTo(x)
+A::foo             // (a, x) -> a.foo(x) or x -> A.foo(x)
+```
+]
+
+---
+### Lambda as a Cross-Barrier Manipulator
+
+`Box<T>` and `Maybe<T>` keeps its item hidden behind an abstraction barrier.
+
+`map`, `filter`, and `flatMap` allow the client to operate on the hidden item via lambda expressions.
+
+---
+### Example of `Box<T>` and `Maybe<T>`
+
+
+---
+### Eager vs Lazy Evaluation
+
+_Eager evaluation_: expressions are evaluated immediately when encountered.
+
+_Lazy evaluation_: expressions are evaluated only when their value is needed.
+
+Java uses eager evaluation by default.
+
+---
+### Lambda as Delayed Computation
+
+.smaller[
+```Java
+@FunctionalInterface
+interface Producer<T> {
+  T produce();
+}
+
+int i = 4;
+Producer<String> toStr = () -> Integer.toString(i);
+// Integer.toString(i) is not called yet
+  :
+toStr.produce(); // Integer.toString(i) is called here
+```
+]
+
+Lambda expressions let us defer execution until later.
+
+---
+### Eager Evaluation: Example
+.smaller[
+```Java
+class Logger {
+  enum LogLevel { INFO, WARNING, ERROR };
+  public static LogLevel currLogLevel = LogLevel.WARNING;
+
+  static void log(LogLevel level, String msg) {
+    if (level.compareTo(Logger.currLogLevel) >= 0) {
+      System.out.println(" [" + level + "] " + msg);
+    }
+  }
+}
+```
+]
+
+---
+### Eager Evaluation: Example
+
+
+---
+### Lazy Evaluation
+
+
+---
+class: wide
+### Lazy Evaluation: Using Producer&lt;T&gt;
+
+
+---
+class: wide
+### Lazy Evaluation: Using Producer&lt;T&gt;
+.smaller[
+```Java
+static void lazyLog(LogLevel level, Producer<String> msg) {
+  if (level.compareTo(Logger.currLogLevel) >= 0) {
+    System.out.println(" [" + level + "] " + msg.produce());
+  }
+}
+```
+]
+
+.smaller[
+```Java
+Logger.lazyLog(Logger.LogLevel.INFO,
+    () -> "User " + System.getProperty("user.name") + " has logged in");
+```
+]
+
+
+---
+### `Lazy<T>`: Memoization
+
+---
+.smaller[
+```Java
+class Lazy<T> {
+  private T value;
+  private boolean evaluated;
+  private Producer<T> producer;
+
+  public Lazy(Producer<T> producer) {
+    evaluated = false;
+    value = null;
+    this.producer = producer;
+  }
+
+  public T get() {
+    if (!evaluated) {
+      value = producer.produce();
+      evaluated = true;
+    }
+    return value;
+  }
+}
+```
+]
+
+---
+### Lazy&lt;T&gt;: Benefits
+
+- Procrastinate: defer computation until the value is needed.
+
+- Never repeat: compute the value at most once (memoization).
+
+- Useful when computation is expensive or may never be needed.
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Sun Mar 16 00:00:00 +08 2026
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+
+<!-- <script src="ttps://thisisadi.yoga/remark/js/remark.js">
+</script>  -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    qanvas: {
+	    layout: 'horizontal'
+    	},
+    slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown
