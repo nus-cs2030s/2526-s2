@@ -94,8 +94,8 @@ class: wide
 | Box<T>      | 1             | None              |
 | Maybe<T>    | 0 or 1        | Is there a value? |
 | Lazy<T>     | 1             | Has the value been evaluated? |
-| InfiniteList<T> | At least 1  | Has the values been evaluated? |
-| Stream<T>       | At least 0  | Has the values been evaluated? |
+| InfiniteList<T> | At least 1  | Have the values been evaluated? |
+| Stream<T>       | At least 0  | Have the values been evaluated? |
 ]
 
 ---
@@ -105,7 +105,7 @@ class: wide
 
 - Support `of` and `flatMap`
 
-- Adhere to identify and associative laws
+- Adhere to identity and associative laws
 
 ---
 .small[
@@ -203,8 +203,8 @@ But we need to implement `xWithLog` for every method `x`.
 | Box<T>      | 1             | None              |
 | Maybe<T>    | 0 or 1          | Is there a value? |
 | Lazy<T>     | 1               | Has the value been evaluated? |
-| InfiniteList<T> | At least 1  | Has the values been evaluated? |
-| Stream<T>       | At least 0  | Has the values been evaluated? |
+| InfiniteList<T> | At least 1  | Have the values been evaluated? |
+| Stream<T>       | At least 0  | Have the values been evaluated? |
 | Loggable<T>     | 1           | Log of operations |
 ]
 
@@ -259,7 +259,7 @@ return Maybe.of(db.get(studentName)               ).flatMap(s -> s
 
 - Support `of` and `flatMap`
 
-- Adhere to identify and associative laws
+- Adhere to identity and associative laws
 
 ---
 ### Left Identity Law
@@ -468,8 +468,8 @@ list.parallelStream()
 .small[
 ```Java
 Stream.of(1,2,3,4).reduce(1,   // identity
-   (x, y) -> x * y,            // combiner
-   (x, y) -> x * y);           // accumulator
+   (x, y) -> x * y,            // accumulator
+   (x, y) -> x * y);           // combiner
 ```
 ]
 
@@ -498,7 +498,7 @@ must be equal to
 
 - Unordered source: `set.stream()`, `generate` 
 
-- `limit`, `distinct`, `sorted`, `map`, preserves the order
+- `limit`, `distinct`, `sorted`, `map` preserve the order
 
 ---
 ### Parallelising Ordered vs. Unordered Streams
