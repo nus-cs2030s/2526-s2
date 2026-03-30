@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="299" viewBox="0 0 900 299" role="img" aria-label="Parallel flow graph (editable)">
+  <style>
+    /* ---- easy-to-edit styling ---- */
+    :root{
+      --edge: var(--svg-stroke, currentColor);
+      --edge-w: 2.2;
+      --node-stroke: #333;
+      --node-fill: none;
+      --node-w: 1.6;
+      --sep: var(--svg-stroke, currentColor);
+      --sep-w: 1.2;
+      --sep-dash: 4 6;
+    }
+
+    .separators line{
+      stroke: var(--sep);
+      stroke-width: var(--sep-w);
+      stroke-dasharray: var(--sep-dash);
+      stroke-linecap: round;
+      opacity: 0.75;
+    }
+
+    .edges path, .edges line{
+      stroke: var(--edge);
+      stroke-width: var(--edge-w);
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      marker-end: url(#arrow);
+    }
+
+    .nodes circle{
+      fill: var(--node-fill);
+      stroke: var(--svg-stroke, currentColor);
+      stroke-width: var(--node-w);
+    }
+  </style>
+
+  <defs>
+    <!-- arrowhead inherits stroke color -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="9.2" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- Transparent background: no rect on purpose -->
+
+  <!-- vertical dashed separators -->
+  <g class="separators" id="separators">
+    <line x1="85"  y1="0" x2="85"  y2="299"/>
+    <line x1="200" y1="0" x2="200" y2="299"/> 
+    <line x1="315" y1="0" x2="315" y2="299"/>
+    <line x1="430" y1="0" x2="430" y2="299"/>
+    <line x1="545" y1="0" x2="545" y2="299"/>
+    <line x1="660" y1="0" x2="660" y2="299"/>
+    <line x1="775" y1="0" x2="775" y2="299"/>
+  </g>
+
+  <!-- edges (endpoints are shortened to touch circle borders) -->
+  <g class="edges" id="edges">
+    <!-- from start -->
+    <path id="e-start-mid1" d="M60 150 L118 150"/>
+    <path id="e-start-mid1" d="M175 150 L233 150"/>
+    <path id="e-start-mid1" d="M290 150 L348 150"/>
+    <path id="e-start-mid1" d="M405 150 L463 150"/>
+    <path id="e-start-mid1" d="M520 150 L578 150"/>
+    <path id="e-start-mid1" d="M635 150 L693 150"/>
+    <path id="e-merge-end" d="M750 150 L807 150"/>
+  </g>
+
+  <!-- nodes -->
+  <g class="nodes" id="nodes">
+    <!-- radius shared for easy editing -->
+    <g id="node-set" data-r="28">
+      <circle id="n-start" cx="31"  cy="150" r="28"/>
+      <circle id="n-top1"  cx="146" cy="150"  r="28"/>
+      <circle id="n-top3"  cx="491" cy="150"  r="28"/>
+
+      <circle id="n-mid1"  cx="261" cy="150" r="28"/>
+
+      <circle id="n-bot1"  cx="376" cy="150" r="28"/>
+      <circle id="n-bot3"  cx="606" cy="150" r="28"/>
+
+      <circle id="n-merge"  cx="721" cy="150" r="28"/>
+      <circle id="n-end"    cx="836" cy="150" r="28"/>
+    </g>
+  </g>
+</svg>

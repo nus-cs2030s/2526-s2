@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 9</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+
+---
+
+### Announcements
+
+- Past year PE2 papers have been published
+
+- PE2 Information is available on Canvas
+ 
+- File a ticket if you have a clash with PE2 before this Saturday, **28 March, 11:59pm**
+
+- Catch-up III this coming Saturday, **28 March, SR8, 10-12pm**
+
+---
+class: middle, center
+
+## Lecture 9
+
+### 23 March 2026
+
+---
+### `EagerList<T>`
+
+```Java
+class EagerList<T> {
+  private T head;
+  private EagerList<T> tail;
+   :
+}
+```
+---
+
+![:scale 100%](figures/cs2030s-lec09/cs2030s-lec09.001.png)
+
+---
+### `head`, `tail`, `get`
+
+
+---
+### `iterate` and `generate`
+
+
+---
+### `map`
+
+
+---
+### `filter`
+
+  
+  
+---
+.small[
+```java
+EagerList<Integer> l = EagerList
+    .iterate(1, i -> i < 10, i -> i + 1) 
+    .filter(i -> i % 3 == 0)  
+    .map(i -> i * 2);  
+l.head();        
+l.tail().head(); 
+l.tail().tail().head();
+```
+]
+---
+### `InfiniteList<T>`
+
+.small[
+```java
+class InfiniteList<T> {
+  private Producer<T> head;
+  private Producer<InfiniteList<T>> tail;
+   :
+}
+```
+]
+
+---
+### `head`, `tail`, `get`
+
+
+---
+### `iterate` and `generate`
+
+
+---
+### `map`
+
+
+---
+class: wide
+
+.smaller[
+```java
+InfiniteList.iterate(0, x -> x + 2)  // 0, 2, 4, ...
+            .map(x -> x + 1)         // 1, 3, 5, ...
+            .map(x -> x * 2)         // 2, 6, 10, ... 
+            .head();                 // 2
+```
+]
+
+--
+
+.smaller[
+```java
+InfiniteList<Integer> evens, odds, altEvens;
+evens = InfiniteList.iterate(0, x -> x + 2); // 0, 2, 4, ...
+odds = evens.map(x -> x + 1);                // 1, 3, 5, ...
+altEvens = odds.map(x -> x * 2);             // 2, 6, 10, ...
+altEvens.head();                             // 2
+```
+]
+
+---
+.smaller[
+```java
+InfiniteList<Integer> evens;
+evens = InfiniteList.iterate(0, x -> x + 2); // 0, 2, 4, ...
+```
+]
+
+.smaller[
+```Java
+public static <T> InfiniteList<T> iterate(
+    T init, 
+	Transformer<T, T> next) {
+  return new InfiniteList<T>(
+      () -> init,
+	  () -> iterate(next.transform(init), next));
+}
+```
+]
+
+---
+
+![:scale 100%](figures/cs2030s-lec09/cs2030s-lec09.003.png)
+
+---
+.smaller[
+```java
+InfiniteList<Integer> evens, odds;
+evens = InfiniteList.iterate(0, x -> x + 2); // 0, 2, 4, ...
+odds = evens.map(x -> x + 1);                // 1, 3, 5, ...
+```
+]
+
+.smaller[
+```Java
+public <R> InfiniteList<R> map(
+    Transformer<? super T, ? extends R> mapper) {
+  return new InfiniteList<>(
+      () -> mapper.transform(this.head()),
+      () -> this.tail().map(mapper));
+}
+```
+]
+---
+
+![:scale 100%](figures/cs2030s-lec09/cs2030s-lec09.004.png)
+
+---
+.smaller[
+```java
+InfiniteList<Integer> evens, odds, altEvens;
+evens = InfiniteList.iterate(0, x -> x + 2); // 0, 2, 4, ...
+odds = evens.map(x -> x + 1);                // 1, 3, 5, ...
+altEvens = odds.map(x -> x * 2);             // 2, 6, 10, ...
+```
+]
+
+.smaller[
+```Java
+public <R> InfiniteList<R> map(
+    Transformer<? super T, ? extends R> mapper) {
+  return new InfiniteList<>(
+      () -> mapper.transform(this.head()),
+      () -> this.tail().map(mapper));
+}
+```
+]
+
+---
+
+![:scale 100%](figures/cs2030s-lec09/cs2030s-lec09.005.png)
+
+---
+.tiny[
+```Java
+altEvens.head();
+```
+]
+
+![:scale 100%](figures/cs2030s-lec09/cs2030s-lec09.005.png)
+
+---
+class: wide
+
+.left-column[
+.tiny[
+```java
+InfiniteList
+  .iterate(0, x -> x + 2)
+  .map(x -> x + 1)
+  .map(x -> x * 2)
+  .head();       
+```
+]
+]
+
+.right-column[
+.tiny[
+```java
+EagerList
+  .iterate(0, x -> x < 10, x -> x + 2)  
+  .map(x -> x + 1)
+  .map(x -> x * 2)
+  .head();
+```
+]
+]
+
+---
+### `filter`
+
+
+---
+### Types of methods in `InfiniteList`
+.smaller[
+|data source | intermediate ops | terminal ops |
+|------------|------------------|--------------|
+|`generate`  | `map`            | `head`       |
+|`iterate`   | `filter`         | `tail`       |
+|            |                  | `get`        |
+]
+  
+---
+### Exercise 7
+.smaller[
+|data source | intermediate ops | terminal ops |
+|------------|------------------|--------------|
+|`generate`  | `map`            | `head`       |
+|`iterate`   | `filter`         | `tail`       |
+|            | `limit`          | `get`        |
+|            | `takeWhile`      | `reduce`     |
+|            |                  | `toList`     |
+|            |                  | `count`      |
+]
+  
+---
+.small[
+|CS2030S | java.util.function |
+|--------|-------------------|
+|`BooleanCondition<T>::test` | `Predicate<T>::test` |
+|`Producer<T>::produce`      | `Supplier<T>::get`   |
+|`Transformer<T,R>::transform` | `Function<T,R>::apply` |
+|`Transformer<T,T>::transform` | `UnaryOperator<T>::apply` |
+|`Combiner<S,T,R>::combine` | `BiFunction<S,T,R>::apply` |
+|`Consumer<T>::consume` | `Consumer<T>::accept` |
+]
+
+---
+.small[
+| CS2030S               | Java version      |
+|-----------------------|-------------------|
+|`Maybe<T>`             | `java.util.Optional<T>`      |
+|`Lazy<T>`              | N/A                          |
+|`InfiniteList<T>`      | `java.util.stream.Stream<T>` |
+]
+---
+class: middle center
+
+# Streams
+
+(in Java)
+
+---
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html" width="100%" height="80%">
+</iframe>
+
+---
+
+<iframe src="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" width="100%" height="80%">
+</iframe>
+
+
+---
+### Data sources
+
+- Static factory methods `of`, `generate`, `iterate`
+
+- Arrays (through `Arrays::stream`)
+
+- Collections (e.g., `List::stream`)
+
+- Other APIs (`BufferedReader::lines`, `Random::ints`, ...)
+
+---
+### Intermediate Operations 
+
+.tiny[
+| what for | methods |
+|----------|---------|
+| select what we need | `filter` |
+| transform each element | `map`, `flatMap` |
+| truncate a stream | `takeWhile`, `limit` |
+| sort the stream | `sorted` |
+| remove duplicates | `distinct` |
+| peek into the stream | `peek` |
+]
+---
+### Terminal Operations 
+
+.tiny[
+| what for | methods |
+|----------|---------|
+| act on each element | `forEach` |
+| combine elements into a value | `reduce` |
+| check for global properties | `noneMatch`, `allMatch`, `anyMatch` |
+| count how many elements | `count` |
+| retrieve the first | `findFirst` |
+| turn into a list/an array | `toList`, `toArray` |
+]
+
+---
+class: wide
+### Is it prime?
+
+.left-column[
+.tiny[
+```Java
+boolean isPrime(int x) {
+  for (int i = 2; i < x; i++) {
+    if (x % i == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+```
+]
+]
+
+--
+
+.right-column[
+.tiny[
+```Java
+boolean isPrime(int x) {
+  return Stream
+      .iterate(2, i -> i + 1)
+      .takeWhile(i -> i < x)
+      .noneMatch(i -> x % i == 0);
+}
+```
+]
+]
+
+---
+class: wide
+### Is it prime?
+
+.left-column[
+.tiny[
+```Java
+boolean isPrime(int x) {
+  for (int i = 2; i < x; i++) {
+    if (x % i == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+```
+]
+]
+
+.right-column[
+.tiny[
+```Java
+boolean isPrime(int x) {
+  return IntStream
+      .range(2, x)
+      .noneMatch(i -> x % i == 0);
+}
+```
+`IntStream`, `LongStream`, and `DoubleStream` are primitive specializations of `Stream`.
+]
+]
+
+---
+class: wide
+### First 500 Primes
+
+.left-column[
+.tiny[
+```Java
+void fiveHundredPrime() {
+  int count = 0;
+  int i = 2;
+  while (count < 500) {
+    if (isPrime(i)) {
+      System.out.println(i);
+      count++;
+    }
+    i++;
+  }
+}
+```
+]
+]
+
+--
+
+.right-column[
+.tiny[
+```Java
+void fiveHundredPrime() {
+  IntStream
+      .iterate(2, x -> x + 1)
+      .filter(x -> isPrime(x))
+      .limit(500)
+      .forEach(System.out::println);
+}
+```
+]
+]
+
+---
+### `reduce(id, acc)`
+
+.small[
+```Java
+T result = id;
+for (T element : this stream) {
+  result = acc.apply(result, element);
+}
+return result;
+```
+]
+
+---
+class: wide
+### Total length of strings
+
+.left-column[
+.tiny[
+```Java
+int totalLength(List<String> list) {
+  int count = 0;
+  for (String s : list) {
+    count += s.length();
+  }
+  return count;
+}
+```
+]
+]
+
+--
+
+.right-column[
+.tiny[
+```Java
+int totalLength(List<String> list) {
+  return list.stream()
+      .map(s -> s.length())
+      .reduce(0, (a, b) -> a + b);
+}
+```
+]
+]
+
+---
+class: wide
+### Total length of strings _without repetition_
+
+.left-column[
+.tiny[
+```Java
+int totalLength(List<String> list) {
+  int count = 0;
+  List<String> seen;
+  seen = new ArrayList<>();
+  for (String s : list) {
+    if (!seen.contains(s)) {
+      count += s.length();
+      seen.add(s);
+    }
+  }
+  return count;
+}
+```
+]
+]
+
+--
+
+.right-column[
+.tiny[
+```Java
+int totalLength(List<String> list) {
+  return list.stream()
+      .distinct()
+      .map(s -> s.length())
+      .reduce(0, (a, b) -> a + b);
+}
+```
+]
+]
+
+
+---
+class: wide
+### Total length of strings without repetition _in parallel_
+
+.left-column[
+.tiny[
+```Java
+int totalLength(List<String> list) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+```
+]
+]
+
+--
+
+.right-column[
+.tiny[
+```Java
+int totalLength(List<String> list) {
+  return list.stream()
+      .distinct()
+      .parallel()
+      .map(s -> s.length())
+      .reduce(0, (a, b) -> a + b);
+}
+```
+More about parallel streams in the Week 12 lecture.
+]
+]
+
+---
+### Stateful Operations
+
+`distinct` and `sorted` are _stateful_ operations. 
+
+They require the stream to keep track of the elements seen so far.
+
+---
+.small[
+Stateful operations must operate on a bounded stream.
+]
+
+
+
+---
+.small[
+Each `Stream` can be consumed once
+]
+
+
+---
+class: bottom
+
+.tiny[
+Last Updated: Mon 23 Mar 2026 10:03:26 +08
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 100%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown
