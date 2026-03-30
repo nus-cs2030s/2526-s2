@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY24/25 S2 Lecture 10</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+---
+class: middle, center
+
+## Lecture 10
+
+### 30 March 2026
+---
+### Announcements
+
+- No recitations and labs this week
+
+- PE2 session allocation is out
+
+- CS2030S feedback is now open: https://blue.nus.edu.sg/blue/
+
+---
+### PE1 Grading
+
+- PE1 grading is coming out this week
+
+- We will moderate the marks across the sessions for fairness
+
+---
+class: wide
+
+### `submit.sh` for PE1
+
+.small[
+- You will have up to three copies of code in your directory:
+
+  - Under `task1`: the copy created after `submit.sh task1` 
+
+  - Under `task2`: the copy created after `submit.sh task2`
+
+  - Under `$HOME`: we can't tell if this is for Task 1 or Task 2.
+]
+
+---
+class: wide
+
+### `submit.sh` for PE1
+
+.small[
+- We will grade the code in `$HOME` as follows: 
+
+  - Grade as if it is for Task 1. Use this copy if it scores higher than the copy under `task1`.
+
+  - Grade as if it is for Task 2. Use this copy if it scores higher than the copy under `task2`.
+]
+
+---
+### Functional Abstractions
+
+- `Box<T>`
+- `Maybe<T>`
+- `Lazy<T>`
+- `InfiniteList<T>`
+- `Stream<T>`
+
+---
+### Functional Abstractions
+
+- Support operations such as `of`, `map`, `filter`, `flatMap`
+
+- New idiom: compute by composing a pipeline
+
+- Each encapsulates some values and a "context"
+
+---
+### "Context"
+
+.tiny[
+| Abstraction | Num of Values | Context $c$       |
+|-------------|---------------|-------------------|
+| Box<T>      | 1             | None              |
+| Maybe<T>    | 0 or 1        | Is there a value? |
+| Lazy<T>     | 1             | Has the value been evaluated? |
+| InfiniteList<T> | At least 1  | Has the values been evaluated? |
+| Stream<T>       | At least 0  | Has the values been evaluated? |
+]
+
+---
+### Monad
+
+- Encapsulates values and context
+
+- Support `of` and `flatMap`
+
+- Adhere to identify and associative laws
+
+---
+.small[
+```Java
+int incr(int x) {
+	return x + 1;
+}
+  
+int abs(int x) {
+	return x > 0 ? x : -x;
+}
+```
+]
+
+---
+### The methods are composable
+
+.small[
+```Java
+incr(4);
+abs(incr(5));
+incr(abs(incr(incr(-5))));
+```
+]
+
+
+---
+.small[
+```Java
+Pair<Integer,String> incrWithLog(int x) {
+  return Pair.of(incr(x), "incr " + x);
+}
+  
+Pair<Integer,String> absWithLog(int x) {
+  return Pair.of(abs(x), "abs " + x);
+}
+```
+]
+
+---
+### The methods are no longer composable
+
+.small[
+```Java
+absWithLog(incrWithLog(5));
+```
+]
+
+---
+.tiny[
+```Java
+Pair<Integer,String> incrWithLog(Pair<Integer,String> p) {
+  return Pair.of(incr(p.first), p.second + " incr " + p.first);
+}
+  
+Pair<Integer,String> absWithLog(Pair<Integer,String> p) {
+  return Pair.of(abs(p.first), p.second + " abs " + p.first);
+}
+```
+]
+---
+### The methods are composable again
+
+.small[
+```Java
+absWithLog(incrWithLog(5));
+```
+]
+
+But we need to implement `xWithLog` for every method `x`.
+
+---
+`Loggable`: Replacing `Pair`
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+`Loggable`: `map`
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+`Loggable`: `flatMap`
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+
+.tiny[
+| Abstraction | Num of Values | Context $c$       |
+|-------------|---------------|-------------------|
+| Box<T>      | 1             | None              |
+| Maybe<T>    | 0 or 1          | Is there a value? |
+| Lazy<T>     | 1               | Has the value been evaluated? |
+| InfiniteList<T> | At least 1  | Has the values been evaluated? |
+| Stream<T>       | At least 0  | Has the values been evaluated? |
+| Loggable<T>     | 1           | Log of operations |
+]
+
+---
+
+`of` initializes the context
+
+`map` operates on the values only
+
+`flatMap` operates on the values and the context.
+
+---
+class: middle, center
+![of](figures/cs2030s-lec10/cs2030s-lec10.001.png)
+
+---
+class: middle,center
+
+![map](figures/cs2030s-lec10/cs2030s-lec10.002.png)
+
+---
+class: middle,center
+
+![map](figures/cs2030s-lec10/cs2030s-lec10.003.png)
+
+---
+class: wide
+.tiny[
+```Java
+return Maybe.of(db.get(studentName))
+    .flatMap(s -> s.getCourse(courseName))
+    .flatMap(c -> c.getAssessment(assessmentName))
+    .flatMap(a -> a.getGrade())
+    .orElse("No such entry");
+```
+]
+---
+class: wide
+.tiny[
+```Java
+return Maybe.of(db.get(studentName)               ).flatMap(s -> s
+                  .getCourse(courseName)          ).flatMap(c -> c
+                  .getAssessment(assessmentName)  ).flatMap(a -> a
+                  .getGrade()                     ).orElse("No such entry");
+```
+]
+
+---
+### Monad
+
+- Encapsulates values and context
+
+- Support `of` and `flatMap`
+
+- Adhere to identify and associative laws
+
+---
+### Left Identity Law
+
+`Monad.of(x).flatMap(y -> f(y))` 
+
+is equivalent to `f(x)`
+
+e.g., the following statements are the same:
+.small[
+```Java
+Loggable.of(5).flatMap(x -> incrWithLog(x)));
+incrWithLog(5);
+```
+]
+---
+class: center,middle
+### Left Identity Law
+
+![left](figures/cs2030s-lec10/cs2030s-lec10.004.png)
+
+---
+### Right Identity Law
+
+`monad.flatMap(y -> Monad.of(y))` 
+
+is equivalent to `monad`
+
+e.g., the following statements are the same:
+.small[
+```Java
+incrWithLog(5).flatMap(x -> Loggable.of(x)));
+incrWithLog(5);
+```
+]
+
+---
+class: middle,center
+
+![left](figures/cs2030s-lec10/cs2030s-lec10.005.png)
+
+---
+class: middle,center,wide
+
+### Associative Law
+
+`monad.flatMap(x -> f(x)).flatMap(x -> g(x))`
+
+is equivalent to
+
+`monad.flatMap(x -> f(x).flatMap(x -> g(x)))`
+
+---
+class: wide
+### Example of Associative Law
+
+.tiny[
+.left-column[
+```Java
+return Maybe.of(db.get(sName))
+  .flatMap(s -> s.getCourse(cName))
+  .flatMap(c -> c.getExercise(eName))
+  .flatMap(a -> a.getGrade())
+  .orElse("No such entry");
+```
+]]
+
+.tiny[
+.right-column[
+```Java
+Maybe<String> getExGrade(String name) {
+  return this.getExercise(name)
+      .flatMap(a -> a.getGrade());
+}
+```
+
+```Java
+return Maybe.of(db.get(sName))
+  .flatMap(s -> s.getCourse(cName))
+  .flatMap(c -> c.getExGrade(eName))
+  .orElse("No such entry");
+```
+]
+]
+
+---
+class: middle,center
+
+![associative](figures/cs2030s-lec10/cs2030s-lec10.006.png)
+
+---
+class: middle,center
+
+![associative](figures/cs2030s-lec10/cs2030s-lec10.007.png)
+
+---
+A functor has two methods `of` and `map` and obeys two laws.
+
+---
+`functor.map(x -> x)` 
+
+is just 
+
+`functor`
+
+---
+`functor.map(x -> f(x)).map(x -> g(x))` 
+
+is just 
+
+`functor.map(x -> g(f(x)))`
+
+---
+class: middle
+
+## Parallel Streams
+
+---
+### Sequential Execution
+
+- Executing the tasks one after another
+
+---
+### Concurrent Execution
+
+- Breaking a task down into subtasks, and executing the subtasks within the same time window with some overlapping time
+
+- Can be run with a single processor, but switching between the subtasks
+
+---
+### Parallel Execution
+
+- Breaking a task down into subtasks, and executing the subtasks at the same time
+
+- Requires hardware support (multicore, multiprocessor, etc)
+
+
+---
+### Examples
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+### Interference
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+class: middle
+
+### Considerations:
+
+- Interference
+- Stateful vs. Stateless
+- Side Effects
+
+---
+class: middle
+
+### Interference
+
+.tiny[
+```Java
+List<String> list = new ArrayList<>(List.of("Luke", "Leia", "Han"));
+	list.stream()
+		.peek(name -> {
+			 if (name.equals("Han")) {
+			   list.add("Chewie"); // they belong together
+			 }
+		  })
+		.forEach(i -> {});
+```
+]
+
+---
+### Stateful vs. Stateless
+
+.small[
+```Java
+Stream.generate(scanner::nextInt)
+    .map(i -> i + scanner.nextInt())
+    .forEach(System.out::println)
+```
+]
+---
+### Side Effects
+
+.tiny[
+```Java
+List<Integer> list = List.of(1,3,5,7,9,11,13,15,17,19);
+List<Integer> result = new ArrayList<>();
+list.parallelStream()
+    .filter(x -> isPrime(x))
+    .forEach(x -> result.add(x));
+```
+]
+
+---
+### Parallelising Reduce
+
+---
+### Parallelising Reduce
+
+.small[
+```Java
+Stream.of(1,2,3,4).reduce(1,   // identity
+   (x, y) -> x * y,            // combiner
+   (x, y) -> x * y);           // accumulator
+```
+]
+
+---
+### Parallelising Reduce with 3 Args
+
+- `combiner.apply(identity, i)` must be equal to `i`.
+
+- The `combiner` must be associative
+
+- The `combiner` and the `accumulator` must be compatible
+
+---
+### Compatibility of Combiner and Accumulator
+
+`combiner.apply(u, accumulator.apply(identity, t))`
+
+must be equal to
+
+`accumulator.apply(u, t)`
+
+---
+### Ordered vs Unordered Streams
+
+- Ordered source: `list.stream()`, `iterate`, `of`, 
+
+- Unordered source: `set.stream()`, `generate` 
+
+- `limit`, `distinct`, `sorted`, `map`, preserves the order
+
+---
+### Parallelising Ordered vs. Unordered Streams
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+---
+# Performance of Parallel Streams
+
+<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
+</iframe>
+
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Fri Mar 31 07:30:00 +08 2025
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    slideNumberFormat: 'CS2030S AY24/25 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown
