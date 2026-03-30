@@ -37,6 +37,8 @@ class: middle, center
 
 - PE1 grading is coming out this week
 
+- You will receive a grading report as well as getting back your code
+
 - We will moderate the marks across the sessions for fairness
 
 ---
@@ -45,7 +47,7 @@ class: wide
 ### `submit.sh` for PE1
 
 .small[
-- You will have up to three copies of code in your directory:
+-  We have up to three copies of code in your directory:
 
   - Under `task1`: the copy created after `submit.sh task1` 
 
@@ -60,7 +62,7 @@ class: wide
 ### `submit.sh` for PE1
 
 .small[
-- We will grade the code in `$HOME` as follows: 
+- We graded the code in `$HOME` as follows: 
 
   - Grade as if it is for Task 1. Use this copy if it scores higher than the copy under `task1`.
 
@@ -158,11 +160,15 @@ absWithLog(incrWithLog(5));
 .tiny[
 ```Java
 Pair<Integer, String> incrWithLog(Pair<Integer, String> p) {
-  return Pair.of(incr(p.first), p.second + " incr " + p.first);
+  return Pair.of(
+      incr(p.first), 
+      p.second + " incr " + p.first);
 }
   
 Pair<Integer, String> absWithLog(Pair<Integer, String> p) {
-  return Pair.of(abs(p.first), p.second + " abs " + p.first);
+  return Pair.of(
+      abs(p.first), 
+      p.second + " abs " + p.first);
 }
 ```
 ]
@@ -180,20 +186,12 @@ But we need to implement `xWithLog` for every method `x`.
 ---
 `Loggable`: Replacing `Pair`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 `Loggable`: `map`
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
 ---
 `Loggable`: `flatMap`
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 
@@ -218,17 +216,17 @@ But we need to implement `xWithLog` for every method `x`.
 
 ---
 class: middle, center
-![of](figures/cs2030s-lec10/cs2030s-lec10.001.png)
+.fit[![of](figures/cs2030s-lec10/cs2030s-lec10.000.png)]
 
 ---
 class: middle,center
 
-![map](figures/cs2030s-lec10/cs2030s-lec10.002.png)
+.fit[![map](figures/cs2030s-lec10/cs2030s-lec10.001.png)]
 
 ---
 class: middle,center
 
-![map](figures/cs2030s-lec10/cs2030s-lec10.003.png)
+.fit[![map](figures/cs2030s-lec10/cs2030s-lec10.002.png)]
 
 ---
 class: wide
@@ -262,6 +260,19 @@ return Maybe.of(db.get(studentName)               ).flatMap(s -> s
 - Adhere to identity and associative laws
 
 ---
+class: wide
+
+### Recap: Identity and Associativity
+
+.small[
+$i$ is the left identity of $\oplus$ if _$\forall x$, $i \oplus x = x$_.
+
+$i$ is the right identity of $\oplus$ if _$\forall x$, $x \oplus i = x$_.
+
+$\oplus$ is associative if $\forall x$, $y$, and $z$, _$(x \oplus y) \oplus z = x \oplus (y \oplus z)$_.
+]
+
+---
 ### Left Identity Law
 
 `Monad.of(x).flatMap(y -> f(y))` 
@@ -277,9 +288,8 @@ incrWithLog(5);
 ]
 ---
 class: center,middle
-### Left Identity Law
 
-![left](figures/cs2030s-lec10/cs2030s-lec10.004.png)
+.fit[![left](figures/cs2030s-lec10/cs2030s-lec10.003.png)]
 
 ---
 ### Right Identity Law
@@ -299,7 +309,7 @@ incrWithLog(5);
 ---
 class: middle,center
 
-![left](figures/cs2030s-lec10/cs2030s-lec10.005.png)
+.fit[![left](figures/cs2030s-lec10/cs2030s-lec10.004.png)]
 
 ---
 class: middle,center,wide
@@ -348,17 +358,32 @@ return Maybe.of(db.get(sName))
 ---
 class: middle,center
 
-![associative](figures/cs2030s-lec10/cs2030s-lec10.006.png)
+.fit[![associative](figures/cs2030s-lec10/cs2030s-lec10.005.png)]
 
 ---
 class: middle,center
 
-![associative](figures/cs2030s-lec10/cs2030s-lec10.007.png)
+.fit[![associative](figures/cs2030s-lec10/cs2030s-lec10.006.png)]
 
 ---
-A functor has two methods `of` and `map` and obeys two laws.
+For our abstraction to be well-behaved, 
+
+- `of` needs to initialize our class with identity context (e.g., `""`)
+
+- `flatMap` need to compose the context in an associative manner (e.g., `+`)
 
 ---
+### Functor
+
+- Encapsulates values 
+
+- Support `of` and `map`
+
+- Adhere to identity and composition laws
+
+---
+### Identity 
+
 `functor.map(x -> x)` 
 
 is just 
@@ -366,6 +391,8 @@ is just
 `functor`
 
 ---
+### Composition
+
 `functor.map(x -> f(x)).map(x -> g(x))` 
 
 is just 
@@ -373,7 +400,7 @@ is just
 `functor.map(x -> g(f(x)))`
 
 ---
-class: middle
+class: center,middle
 
 ## Parallel Streams
 
@@ -398,33 +425,6 @@ class: middle
 
 
 ---
-### Examples
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
----
-### Interference
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
----
-class: middle
-
-### Considerations:
-
-- Interference
-- Stateful vs. Stateless
-- Side Effects
-
----
-### Interference
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
----
 ### Interference
 .tiny[
 ```Java
@@ -442,10 +442,6 @@ List<String> list = new ArrayList<>(List.of("Luke", "Leia", "Han"));
 ---
 ### Stateful vs. Stateless
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
----
 .small[
 ```Java
 Stream.generate(scanner::nextInt)
@@ -456,10 +452,6 @@ Stream.generate(scanner::nextInt)
 ---
 ### Side Effects
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
-
----
 .tiny[
 ```Java
 List<Integer> list = List.of(1,3,5,7,9,11,13,15,17,19);
@@ -512,16 +504,11 @@ must be equal to
 - `limit`, `distinct`, `sorted`, `map` preserve the order
 
 ---
-### Parallelising Ordered vs. Unordered Streams
+### Ordered vs. Unordered Streams
 
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 ---
 # Performance of Parallel Streams
-
-<iframe src="http://localhost:7681?fontSize=18&disableReconnect=false&closeOnDisconnect=false" width="100%" height="80%">
-</iframe>
 
 
 ---
@@ -530,7 +517,7 @@ class: bottom
 .tiny[
 Version: v1.0
 
-Last Updated: Fri Mar 31 07:30:00 +08 2026
+Last Updated: Mon 30 Mar 2026 11:41:58 +08
 ]
 </textarea>
 
