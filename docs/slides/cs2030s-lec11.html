@@ -24,17 +24,19 @@ class: middle, center
 
 ### 6 April 2026
 ---
+class: middle, wide
+
 ### Announcements
 
-- PE2 is coming up soon — check the schedule on Canvas
+- Lab and Recitations this week
+- PE2 Timings/Allocations released
+- Past years final papers out today
+- Compilable code is important!
 
 ---
-class: center, middle
+class: middle, wide
 
-## Threads
-
----
-### Synchronous Programming
+### Reminder: Synchronous Programming
 
 - When we invoke a method, the method **blocks** until it returns
 
@@ -43,13 +45,19 @@ class: center, middle
 - Not efficient when methods block for a long period (expensive computations, remote calls)
 
 ---
-### Threads
+class: center, middle
 
-- A **thread** is a single flow of execution in a program
+## Threads
 
-- Java provides `java.lang.Thread` to run a function in a separate thread
+---
+class: center, middle
 
-.small[
+## `Thread`
+
+---
+### `Thread`
+
+.tiny[
 ```Java
 new Thread(() -> {
   for (int i = 1; i < 100; i += 1) {
@@ -77,86 +85,46 @@ new Thread(() -> {
 ---
 ### Thread Scheduling
 
-- Two threads now run in two separate sequences of execution
-
-- The OS scheduler decides which threads run when, and on which core
+- The OS scheduler decides when and which threads run.
 
 - You may see different interleaving of executions each time
 
-- We can control the order in which threads _start_, but not the order in which they _run_
+We can control the order in which threads _start_, but not the order in which they _run_
 
 ---
-### Thread Names
+class: middle, wide
 
-- Every thread in Java has a name
+### Thread Names
 
 - Use `getName()` to find a thread's name
 
 - Use `Thread.currentThread()` to get a reference to the currently running thread
 
-.small[
+.tiny[
 ```Java
 System.out.println(Thread.currentThread().getName());
 new Thread(() -> {
   System.out.print(Thread.currentThread().getName());
   for (int i = 1; i < 100; i += 1) {
-    System.out.print("_");
+    System.out.print("_"); 
   }
 }).start();
 ```
 ]
 
 ---
-### Parallel Streams and Threads
+class: middle, wide
 
-.small[
-```Java
-Stream.of(1, 2, 3, 4)
-      .parallel()
-      .reduce(0, (x, y) -> {
-        System.out.println(Thread.currentThread().getName());
-        return x + y;
-      });
-```
-]
-
-```
-main
-ForkJoinPool.commonPool-worker-5
-ForkJoinPool.commonPool-worker-9
-ForkJoinPool.commonPool-worker-3
-```
-
----
 ### `Thread.sleep`
 
 - `Thread.sleep(ms)` causes the current thread to pause for the given number of milliseconds
 
 - After the timer expires, the thread is ready to be scheduled again
 
-.small[
-```Java
-Thread findPrime = new Thread(() -> {
-  System.out.println(
-    Stream.iterate(2, i -> i + 1)
-          .filter(i -> isPrime(i))
-          .limit(1_000_000L)
-          .reduce((x, y) -> y)
-          .orElse(null));
-});
-findPrime.start();
-while (findPrime.isAlive()) {
-  try {
-    Thread.sleep(1000);
-    System.out.print(".");
-  } catch (InterruptedException e) {
-    System.out.print("interrupted");
-  }
-}
-```
-]
 
 ---
+class: middle, wide
+
 ### `isAlive`
 
 - `isAlive()` checks whether a thread is still running
@@ -169,57 +137,94 @@ class: center, middle
 ## Asynchronous Programming
 
 ---
+class: middle, wide
 ### Limitations of `Thread`
 
-- No way to return a value from a thread — must use shared variables
+- No rasy way to return a value from a thread.
 
-- No built-in mechanism to express execution order and dependencies
+- No built-in mechanism to express execution order and dependencies.
 
-- Thread creation has overhead — ideally we reuse threads
+- Thread creation has overhead, ideally we should reuse threads.
 
-- Complex exception handling across threads
+- Complex exception handling across threads.
 
 ---
-### Higher-Level Abstraction
+class: middle wide
 
-.small[
+.tiny[
 ```Java
 int foo(int x) {
-  int a = taskA(x);
-  int b = taskB(a);
-  int c = taskC(a);
-  int d = taskD(a);
-  int e = taskE(b, c);
-  return e;
+    int a = taskA(x);
+    int b = taskB(a);
+    int c = taskC(a);
+    int d = taskD(a);
+    int e = taskE(b, c)
+    return e;
 }
 ```
 ]
 
-- We want to run independent tasks (B, C, D) **concurrently**
+---
+class: middle wide
+
+.tiny[
+```Java
+Maybe<Integer> foo(int x) {
+    Maybe<Integer> a = Maybe.of(taskA(x));
+    Maybe<Integer> b = a.flatMap(i -> taskB(i));
+    Maybe<Integer> c = a.flatMap(i -> taskC(i));
+    Maybe<Integer> d = a.flatMap(i -> taskD(i));
+    Maybe<Integer> e = b.combine(c, (i, j) -> taskE(i, j));
+    return e;
+}
+```
+]
 
 ---
+class: middle wide
+
+.tiny[
+```Java
+Lazy<Integer> foo(int x) {
+    Lazy<Integer> a = Lazy.of(taskA(x));
+    Lazy<Integer> b = a.flatMap(i -> taskB(i));
+    Lazy<Integer> c = a.flatMap(i -> taskC(i));
+    Lazy<Integer> d = a.flatMap(i -> taskD(i));
+    Lazy<Integer> e = b.combine(c, (i, j) -> taskE(i, j));
+    return e;
+}
+```
+]
+---
+class: middle, wide
+
+.tiny[
+```Java
+CompletableFuture<Integer> foo(int x) {
+    CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
+    CompletableFuture<Integer> b = a.thenComposeAsync(i -> taskB(i));
+    CompletableFuture<Integer> c = a.thenComposeAsync(i -> taskC(i));
+    CompletableFuture<Integer> d = a.thenComposeAsync(i -> taskD(i));
+    CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
+    return e;
+}
+```
+]
+
+---
+class: middle, wide
+
 ### `CompletableFuture`
 
 - `java.util.concurrent.CompletableFuture` is a monad for concurrent computation
 
 - Encapsulates a value that is either there or **not there yet** (a _promise_)
 
-.small[
-```Java
-CompletableFuture<Integer> foo(int x) {
-  CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
-  CompletableFuture<Integer> b = a.thenComposeAsync(i -> taskB(i));
-  CompletableFuture<Integer> c = a.thenComposeAsync(i -> taskC(i));
-  CompletableFuture<Integer> d = a.thenComposeAsync(i -> taskD(i));
-  CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
-  return e;
-}
-```
-]
-
 ---
+class: middle, wide
 ### Creating a `CompletableFuture`
 
+.small[
 - `completedFuture(v)` — already completed with value `v`
 
 - `runAsync(Runnable)` — runs a `Runnable`; returns `CompletableFuture<Void>`
@@ -229,27 +234,40 @@ CompletableFuture<Integer> foo(int x) {
 - `allOf(cf1, cf2, ...)` — completes when **all** given futures complete
 
 - `anyOf(cf1, cf2, ...)` — completes when **any** one of the given futures completes
+]
 
 ---
+class: middle, wide
 ### Chaining `CompletableFuture`
 
-- `thenApply` — analogous to `map`
+.small[
+- `thenApply` is analogous to `map`
 
-- `thenCompose` — analogous to `flatMap`
+- `thenCompose` is analogous to `flatMap`
 
-- `thenCombine` — analogous to `combine`
+- `thenCombine` is analogous to `combine`
+]
 
 ---
+class: center, middle
+
+## CFDemo1.java
+
+---
+class: middle, wide
 ### Synchronous vs. Asynchronous Chaining
 
+.small[
 - `thenApply`, `thenCompose`, `thenCombine` — run in the **same thread** as the caller
 
 - `thenApplyAsync`, `thenComposeAsync`, `thenCombineAsync` — may run in a **different thread**
+]
 
 ---
+class: middle, wide
 ### Branching
 
-.small[
+.tiny[
 ```Java
 CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
 CompletableFuture<Integer> b = a.thenComposeAsync(i -> taskB(i));
@@ -262,9 +280,10 @@ CompletableFuture<Integer> c = a.thenComposeAsync(i -> taskC(i));
 - With `thenComposeAsync`, `b` and `c` can run **concurrently**
 
 ---
+class: middle, wide
 ### Merging
 
-.small[
+.tiny[
 ```Java
 CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
 ```
@@ -272,7 +291,7 @@ CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
 
 - Merges `b` and `c` once both complete
 
-.small[
+.tiny[
 ```Java
 CompletableFuture<Void> all = CompletableFuture.allOf(b, c);
 ```
@@ -281,6 +300,7 @@ CompletableFuture<Void> all = CompletableFuture.allOf(b, c);
 - Completes when both `b` and `c` complete (return type is `CompletableFuture<Void>`)
 
 ---
+class: middle, wide
 ### Getting the Result
 
 - `get()` — blocks until the `CompletableFuture` completes; throws checked exceptions
@@ -290,9 +310,10 @@ CompletableFuture<Void> all = CompletableFuture.allOf(b, c);
 - Call `get()` / `join()` as the **final step** to maximise concurrency
 
 ---
-### Example
+class: middle, wide
+### Prime Example
 
-.small[
+.tiny[
 ```Java
 CompletableFuture<Integer> ith =
     CompletableFuture.supplyAsync(() -> findIthPrime(i));
@@ -308,24 +329,51 @@ diff.join();
 - `thenCombine` specifies what to do once both results are ready
 
 ---
-### `Runnable`-Based Methods
+class: center, middle
 
-- `thenRun(Runnable)` — runs after the current stage completes
-
-- `runAfterBoth(cf, Runnable)` — runs after **both** this and `cf` complete
-
-- `runAfterEither(cf, Runnable)` — runs after **either** this or `cf` completes
-
-- All return `CompletableFuture<Void>`; all have async variants
+## CFDemo2.java
 
 ---
+class: middle, wide
+
+We want to send the same request to multiple servers or regions and use the fastest response to reduce latency.
+
+### `applyToEither` 
+
+- Runs both futures (connections) in parallel
+- Uses the result of whichever completes first
+- Applies a function to that result
+
+---
+class: middle, wide
+
+.tiny[
+```java
+CompletableFuture<String> primary =
+    CompletableFuture.supplyAsync(() -> fetchFromPrimary());
+
+CompletableFuture<String> backup =
+    CompletableFuture.supplyAsync(() -> fetchFromBackup());
+
+String result = primary
+    .applyToEither(backup, data -> "Winner: " + data)
+    .join();
+```
+]
+---
+class: center, middle
+
+## CFDemo3.java
+
+---
+class: middle, wide
 ### Handling Exceptions
 
 - Exceptions are stored and passed down the chain until `join()` is called
 
 - `join()` throws `CompletionException` containing the original exception
 
-.small[
+.tiny[
 ```Java
 CompletableFuture.<Integer>supplyAsync(() -> null)
                  .thenApply(x -> x + 1)
@@ -334,18 +382,33 @@ CompletableFuture.<Integer>supplyAsync(() -> null)
 ]
 
 ---
+class: middle, wide
 ### `handle`
 
-- `handle(BiFunction<T, Throwable, U>)` — handles the value or the exception
+- `handle(BiFunction<T, Throwable, U>)` handles the value or the exception
 
 - Exactly one of the two parameters is non-null
 
-.small[
+.tiny[
 ```Java
 cf.thenApply(x -> x + 1)
   .handle((t, e) -> (e == null) ? t : 0)
   .join();
 ```
+]
+
+---
+class: middle, wide
+### `Runnable`-Based Methods
+
+.small[
+- `thenRun(Runnable)` — runs after the current stage completes
+
+- `runAfterBoth(cf, Runnable)` — runs after **both** this and `cf` complete
+
+- `runAfterEither(cf, Runnable)` — runs after **either** this or `cf` completes
+
+- All return `CompletableFuture<Void>`; all have async variants
 ]
 
 ---
