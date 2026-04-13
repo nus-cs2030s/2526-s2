@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 12</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+---
+### Announcements 
+
+- No Self-Diagnostic Quiz
+
+- Labs and recitations as usual
+
+- Exercise 8 is out
+
+- Updated office hours for reading/exam weeks
+
+---
+### Announcements 
+
+- Revised PE1 results to be released before the end of tomorrow
+
+- Feedback: https://blue.nus.edu.sg/blue/
+
+- Catch-Up Session IV on 18 April 2026, 10 AM - 12 PM.
+
+---
+### Final Exam
+
+- 29 April 2026, 1 - 3 PM @ MPSH1 (A and B)
+
+- Scope: Everything
+
+- Mode: 2 Hours, Pen/Pencil on Paper
+
+- Closed book, but ONE double-sided A4 cheat sheet is allowed
+
+---
+class: middle, center
+
+## Lecture 12
+
+### 13 April 2026
+
+
+---
+class: middle,center
+
+![:scale 100%](figures/cs2030s-lec01/cs2030s-lec01.001.png)
+
+---
+class: middle
+
+Real-world software is complex, evolves continuously, and is a product of teamwork. 
+
+
+---
+class: middle
+
+_“Controlling complexity is the essence of computer programming.”_ -- Brian Kernighan
+
+---
+class: center
+
+.fit[![meme](figures/memes/endgame-realword-software.jpg)]
+
+---
+CS2030S teaches you how to write better code, where "better" means:
+
+- easier to read, understand, and reason about
+- easier to change and maintain
+- fewer crashes and surprises
+
+through programming paradigms, idioms, and language design.
+
+---
+### The Abstraction Principle
+
+"Each significant piece of functionality in a program should be implemented in just one place in the source code. Where similar functions are carried out by distinct pieces of code, it is generally beneficial to combine them into one by abstracting out the varying parts." 
+
+-- _Benjamin C. Pierce_
+
+---
+.smaller[
+```Java
+    String lastName = user.getLastName();
+    if (lastName == null) {
+      lastName = "";
+    } 
+    show(lastName.toUpperCase());
+
+    String firstName = user.getFirstName();
+    if (firstName == null) {
+      firstName = "";
+    }
+    show(firstName.toUpperCase());
+```
+]
+---
+.smaller[
+```Java
+  void handleName(String name) {
+    if (name == null) {
+      name = "";
+    } 
+    show(name.toUpperCase());
+  }
+
+  handleName(user.getLastName());
+  handleName(user.getFirstName());
+```
+]
+---
+.smaller[
+```Java
+    PhoneNumber phoneNumber = user.getOfficeNumber();
+    if (phoneNumber == null) {
+      phoneNumber = user.getMainLineNumber();
+    }
+    save(phoneNumber.toString());
+
+    PhoneNumber mobileNumber = user.getMobileNumber();
+    if (mobileNumber == null) {
+      mobileNumber = user.getMainLineNumber();
+    }
+    save(mobileNumber.toString());
+```
+]
+
+---
+.smaller[
+```Java
+  void handlePhoneNumber(User user, PhoneNumber num) {
+    if (num == null) {
+      num = user.getMainLineNumber();
+    } 
+    save(num.toString());
+  }
+
+  handlePhoneNumber(user, user.getOfficeNumber());
+  handlePhoneNumber(user, user.getMobileNumber());
+```
+]
+---
+.smaller[
+```Java
+  void handlePhoneNumber(User user, PhoneNumber num) {
+    if (num == null) {
+      num = user.getMainLineNumber();
+    } 
+    save(num.toString());
+  }
+
+  void handleName(String name) {
+    if (name == null) {
+      name = "";
+    } 
+    show(name.toUpperCase());
+  }
+```
+]
+
+---
+.tiny[
+```Java
+  public static <T> void handle(T item, 
+      Producer<T> p, 
+      Transformer<T,String> t, 
+      Consumer<String> c) {
+    if (item == null) {
+      item = p.produce();
+    } 
+    c.consume(t.transform(item));
+  }
+```
+]
+
+---
+.tiny[
+```Java
+  public static void handleName(String name) {
+    handle(name, 
+        () -> "",
+        x -> x.toUpperCase(),
+        x -> show(x));
+  }
+
+  public static void handlePhoneNumber(User user, PhoneNumber number) {
+    handle(number, 
+        () -> user.getMainLineNumber(),
+        x -> x.toString(),
+        x -> save(x));
+  }
+```
+]
+---
+.smaller[
+```Java
+  int code;
+  Address addr = user.getAddress();
+  if (addr != null && addr.getCountry().equals("Singapore")) {
+    code = addr.getPostalCode();
+  } else {
+    code = 0;
+  }
+```
+]
+---
+.tiny[
+```Java
+public static <T,R> R get(
+    T item, 
+    BooleanCondition<T> bc, 
+    Transformer<T,R> t, 
+    Producer<R> p) {
+  if (item != null && bc.test(item)) {
+	  return t.transform(item);
+  }
+  return p.produce();
+}
+```
+]
+
+---
+.smaller[
+```Java
+  Address addr = user.getAddress();
+  int code = get(addr,  
+      a -> a.getCountry().equals("Singapore"), 
+      a -> a.getPostalCode(), 
+      () -> 0);
+```
+]
+
+--
+
+Can we avoid custom methods such as `get` and `handle`?
+
+---
+.tiny[
+```Java
+  public static void handleName(String name) {
+    Maybe.of(name)
+      .or(() -> Maybe.of(""))
+      .map(s -> s.toUpperCase())
+      .ifPresent(s -> show(s));
+  }
+
+  public static void handlePhoneNumber(User user, PhoneNumber number) {
+    Maybe.of(number)
+      .or(() -> Maybe.of(user.getMainLineNumber()))
+      .map(p -> p.toString())
+      .ifPresent(s -> save(s));
+  }
+```
+]
+
+---
+.smaller[
+```Java
+  int code = Maybe.of(addr)
+      .filter(a -> a.getCountry().equals("Singapore"))
+      .map(a -> a.getPostalCode())
+      .orElse(0);
+```
+]
+
+---
+### Abstracting out:
+
+- varying values as method parameters
+- varying types as type parameters 
+- varying computations as lambdas
+
+---
+The abstraction principle makes our code better:
+
+- easier to read, understand, and reason about
+- easier to change and maintain
+
+---
+class: center
+
+.fit[![:scale 60%](figures/memes/spongebob-oop-in-java.jpeg)]
+
+---
+class: wide
+### The Object-Oriented Principles
+
+- **Encapsulation:** bundling of methods and data together
+
+- **Inheritance:** extending behavior of existing classes
+
+- **Polymorphism:** the ability of objects to take on many forms
+
+- **Abstraction:** hiding the details and modeling only the essentials
+
+---
+### Other Principles
+
+- **Composition:** building complex objects from simpler ones
+
+- **Information Hiding:** hide the internal state and implementation, only interact through an object's methods
+
+- **Tell, Don't Ask:** telling objects what to do, not asking for their state
+
+---
+### Abstraction Barrier
+
+- Software is a product of teamwork.  
+
+- Two roles: client and implementer
+
+- Abstraction barrier is hierarchical: classes, packages, modules.
+
+---
+OO principles make our code better:
+
+- easier to read
+- easier to change and maintain
+
+---
+### Liskov Substitution Principle (LSP)
+
+If $S$ is a subclass of $T$, then an object of type $T$ can be replaced by that of type $S$ without changing the _desirable property_ of the program.
+
+---
+LSP makes our code better:
+
+- easier to reason about
+- fewer surprises 
+
+---
+
+![meme](figures/memes/types-types-everywhere.jpg)
+
+---
+### Type Systems
+
+Java is a strongly and statically typed language
+
+Every variable has a 
+
+- compile-time type (declared and fixed)
+- runtime type (the type of the value it holds)
+
+Type communicates what a variable is for and what it can do
+
+---
+### Subtyping
+
+A type $S$ is a subtype of type $T$ (written $S <: T$) if any value of type $S$ can be used in a context where a value of type $T$ is expected.
+
+RTT(v) $<:$ CTT(v) must hold during execution, at all times.
+
+---
+.right-column[
+The compiler checks our code for type errors (and other errors).  _Fail early_ if our code is not type safe.
+]
+
+.left-column[
+![:scale 100%](figures/memes/drake-runtime-vs-compile-time.jpg)
+]
+
+---
+### Type casting
+
+We can override compiler checks with casts, but only if we know what we are doing.
+
+- Widening conversion: from subtype to supertype, always safe, implicit
+
+- Narrowing conversion: from supertype to subtype, not always safe, explicit
+    - requires a runtime check
+
+---
+Strong and static typing makes our code better:
+
+- easier to read, understand, and reason about
+- fewer crashes
+
+---
+### Exceptions
+
+- A language construct to handle errors and other exceptional events
+
+- Short circuit the execution flow when error occurs -- avoid passing error values to caller
+
+---
+
+Using exceptions makes our code better:
+
+- easier to read, understand, and reason about
+- easier to change and maintain
+- fewer crashes and surprises
+
+---
+### Generics 
+
+- Abstract out types common to a family of classes or methods into type parameters. 
+
+- Avoid explicit casts
+
+---
+### Variance of Types
+
+- If $S <: T$, then is $C(S)$ <: $C(T)$  (Covariance)
+- If $S <: T$, then is $C(T)$ <: $C(S)$  (Contravariance)
+
+- Invariance: neither covariance nor contravariance
+
+---
+### Loop hole in the type system
+
+- Java arrays are covariance
+
+- Possible to have compilable code that leads to runtime errors.
+
+---
+### Rethinking Variance of Generics
+
+- Java generics are invariant
+
+- To allow flexibility, Java introduces wildcards with upper and lower bounds.
+
+- PECS: producer extends, consumer super
+
+---
+### Type Erasure
+
+- Type parameters are not available at runtime.
+
+- Not all type casts can be checked at runtime, leading to "unchecked" warnings.
+
+---
+Generics makes our code better:
+
+- easier to change and maintain
+- fewer crashes
+
+---
+class:center
+
+![:scale 40%](figures/memes/bike-fall-raw-types.jpg)
+
+---
+### Type Inference
+
+- Compiler can infer the type from the context
+
+- Avoid writing redundant type arguments
+
+---
+### Generic Methods
+
+Write
+
+.smaller[
+```Java
+Maybe.of("Hello").map(s -> s.length());
+```
+]
+
+instead of
+
+.smaller[
+```Java
+Maybe.<String>of("Hello").<Integer>map(s -> s.length());
+```
+]
+
+---
+### Diamond Operator
+
+.smaller[
+```Java
+Pair<String, Integer> p = new Pair<>("Hello", 42);
+```
+]
+
+---
+Type inference makes our code better:
+
+- easier to read and understand
+
+---
+### Minimizing Moving Parts
+
+- Immutability
+- Pure functions
+
+---
+### Immutability 
+
+- An instance does not have any visible changes outside the abstraction barrier
+
+- Same instance, same method, same arguments -> same result
+
+- Return a new instance with the new state instead of mutating the existing instance
+
+---
+### Pure Functions
+
+- Always return the same output given the same input. 
+
+- With no side effects
+
+- Referential transparency: method call can be replaced by its result without changing the program behavior
+
+---
+class: middle,center
+
+.fit[![:scale 40%](figures/memes/side-effects.jpg)]
+
+---
+Immutability and pure functions make our code better:
+
+- easier to reason about
+- easier to change and maintain
+- fewer surprises
+
+---
+### Chaining
+
+- Fluent-style Programming: chaining method calls to express a sequence of computations
+
+.smaller[
+```Java
+Maybe.of(x).map(f).filter(p).orElse(y);
+
+BubbleTea.of(MILK_TEA)
+    .addPearls(10)
+    .addIce(0)
+    .addSugar(0.5)
+    .serve();
+```
+]
+
+---
+Fluent-style programming makes our code better:
+
+- easier to read
+- easier to change and maintain
+
+---
+class: middle, center
+
+_“Any fool can write code that a computer can understand. Good programmers write code that humans can understand.”_ — Martin Fowler.
+
+---
+### Closures
+
+- A lambda expression that captures the variables in its lexical scope, to be used later.
+
+- Captured variables must be final or effectively final
+
+- Reduce the need to pass the contextual parameters around 
+
+---
+Closures make our code better:
+
+- easier to read, understand, and reason about
+
+---
+### Encapsulating Items and its Context
+
+- `Box<T>`: just an item in a box
+- `Maybe<T>`: item might be missing
+- `Lazy<T>`: item is evaluated lazily
+- `Stream<T>`: items are evaluated lazily
+- `InfiniteList<T>`: items are evaluated lazily
+- `Loggable<T>`: item is logged
+- `CompletableFuture<T>`: item is available in the future
+
+---
+### `Maybe<T>`
+
+- Reduce the possibility of `NullPointerException`
+
+- Internalize `null` checks and default values
+
+.tiny[
+Also known as `Option` or `Optional` in other languages
+]
+
+---
+### Lazy Evaluation
+
+- `Lazy<T>`
+- `InfiniteList<T>`
+
+Only compute when the result is needed.  
+
+Memoize the result to avoid repeated computation.
+
+Other functional languages are lazy by default
+
+---
+### `Stream<T>`
+
+- API provided by Java for processing sequences of elements
+
+- Support parallel processing
+
+---
+### Monads
+
+Allow chaining of computations on values with context
+
+- `of` initializes the context with identity
+
+- `flatMap` combines the context associatively
+
+---
+### Monads
+
+- Hide complexity and control flows -- we focus on the business logic
+
+- Predictable code and behavior across team members
+
+---
+class: middle, center
+
+_“The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise.”_ — Edsger Dijkstra
+
+---
+Monads make our code better:
+
+- easier to read, understand, and reason about
+- easier to change and maintain
+- fewer crashes and surprises
+
+---
+class: center
+
+![:scale 40%](figures/memes/two-buttons-oop-vs-fp.jpg)
+
+---
+### OOP or FP?
+
+- We are not telling you "OOP is better" or "FP is better"
+
+- "Here are different ways you can write your code.  Pick one that is best for you."
+
+- Core strength of OOP: easy to extend
+
+- Core strength of FP: easy to reason about
+
+---
+class: middle, center
+
+_"OO programming is good, when you know what it is.  Functional programming is good, when you know what it is.  And functional OO programming is also good, once you know what it is"_ - Uncle Bob.
+
+---
+class: center
+
+![:scale 40%](figures/memes/both-buttons-oop-vs-fp.jpg)
+
+
+---
+
+<iframe width="100%" height="100%" src="https://en.wikipedia.org/wiki/List_of_programming_languages">
+</iframe>
+
+---
+class: center
+
+![:scale 60%](figures/memes/three-headed-dragon-java.jpg)
+
+---
+### If you have to use Java, consider other libraries with immutability collections and other monadic constructs
+
+- JOOL, Vavr, Fugue
+- Google Guava
+- Apache Commons
+- etc
+
+---
+### If you have other languages to choose from:
+
+- *Parallel/Concurrent*: Erlang, Go, etc
+- *Functional*: Haskell, Erlang, OCaml, F#, etc
+- *OO Functional*: JS, Kotlin, Scala, Groovy, Swift, etc, 
+
+---
+class: middle, center
+
+### What's Next After CS2030S?
+
+---
+### CS2103T Intro to Software Engineering
+
+(and other Software Engineering courses)
+
+--
+- work in teams
+- version control
+- program analysis
+-  :
+
+---
+### CS2104 Concepts of Programming Languages
+
+(and other Programming Language courses)
+
+--
+- pure functional languages
+- how to build a compiler
+- how to implement a language
+-   :
+
+---
+### CS3210 Parallel Computing
+### CS3211 Concurrent Programming
+
+(and CS2106 Operating Systems before that)
+
+--
+- designing, programming, debugging multi-threaded programs
+- parallelization with GPU/CUDA
+-   :
+
+---
+### CS2111 Human-Centered Computing
+
+- Think beyond "correctness" and "efficiency"
+- Build software that is human-friendly
+
+(and other HCI courses after that)
+
+---
+CS2030S _has taught_ you how to write better code, where "better" means:
+
+- easier to read, understand, and reason about
+- easier to change and maintain
+- fewer crashes and surprises
+
+---
+class: middle, center
+### It takes a village to teach CS2030S!
+
+---
+class: wide
+
+.small[
+Achmad Firdaus Assabil, Aloysius Goo Shao Quan, Ananya Jain, Benedict Aurelius Tjia, Cheneil Gallardo Lee, Clement Aditya Chendra, Daniel Loo Kang Le, Gao Ze, Gary Axel Muliyono, Gong Yiqian, Jerome Goh Yue En, Jess Kwek Zhi Chen, Joel Wong Zhenyang, Jordan Low Jin Yi, Kacey Isaiah Yonathan, Kimberly Chieng Yi Jia, Kosolpattanadurong Thitiwat, Kumar Prabhat, Kyal Sin Min Thet, Lee Jia Qing, Leifsen Law, Lim De Wei Isaac, Lim Ming You, Lim Tze Shaun, Mani Kumar Prateek, Mattheus Cheong Chi En, Meng Shuo, Muhammad Zaidan bin Sani, Ng Jun Hao, Ng Mun Hin, Ngo Hoang Nhat Minh, Nguyen Hoang Nam, Nguyen Quang Minh, Obula Saravanakumar Sahishnu Kumaar, Phinehas Faithful Tan, Shane Arkar Kyaw, Tan Chee Hin, Tan Hiok Kuek, Tan Hong Jun, Tan Jay, Tan Wei Jun, Tey Yee Siang, Theresia, Tran Gia Huy, Tse Bo Heng, Wang Weijie, William Jeffrey Liow, Win Paing Oo, Wong Yik Leong, Yen Chong Wenjie, Yeo Kai Bin, Yu Letian
+]
+
+---
+#### Recitation Tutors
+
+Ashish Deepak Dandekar,
+Boyd Anderson,
+Cheong Sze Kai, Brian,
+Enzio Kam Hai Hong,
+Ma Yuan
+
+---
+#### Course Admin Manager
+
+Enzio Kam Hai Hong
+
+---
+### Tech Support
+
+Tan Hsiao Wei,
+Lai Zit Seng,
+Musa B Hashim,
+Chong Peng Kong,
+Chan Tim Fook,
+Dennis Sin,
+Chow Chin Meng,
+Leow Lay Hoon,
+
+and many more unnamed heroes behind the scenes
+
+---
+class: middle,center
+## You
+
+---
+class: middle,center
+
+## The End
+
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Sun 12 Apr 2026 14:14:40 +08
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+
+# vim:filetype=markdown
