@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="stylesheets/cs1010.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/dark.css">
+
+<!-- CHANGE TITLE -->
+<title>CS2030S AY25/26 S2 Lecture 11</title>
+<meta charset="utf-8">
+</head>
+<body>
+<textarea id="source">
+class: middle, center
+
+## CS2030<sub>s</sub>
+
+### Programming Methodology II
+---
+class: middle, center
+
+## Lecture 11
+
+### 6 April 2026
+---
+class: middle, wide
+
+### Announcements
+
+- Lab and Recitations this week
+- PE2 Timings/Allocations released
+- PE2 past year paper sample code is out
+- Past years final papers out today, solutions in reading week
+- Compilable code is important!
+
+---
+class: middle, wide
+
+### Reminder: Synchronous Programming
+
+- When we invoke a method, the method **blocks** until it returns
+
+- Execution stalls, waiting for the method to complete
+
+- Not efficient when methods block for a long period (expensive computations, remote calls)
+
+---
+class: center, middle
+
+## Threads
+
+---
+class: center, middle
+
+## `Thread`
+
+---
+### `Thread`
+
+.tiny[
+```Java
+new Thread(() -> {
+  for (int i = 1; i < 100; i += 1) {
+    System.out.print("_");
+  }
+}).start();
+
+new Thread(() -> {
+  for (int i = 2; i < 100; i += 1) {
+    System.out.print("*");
+  }
+}).start();
+```
+]
+
+---
+### Threads
+
+- `Thread` constructor takes a `Runnable` (functional interface with `run()`)
+
+- `start()` returns immediately without waiting for the lambda to complete
+
+- This is **asynchronous** execution
+
+---
+### Thread Scheduling
+
+- The OS scheduler decides when and which threads run.
+
+- You may see different interleaving of executions each time
+
+We can control the order in which threads _start_, but not the order in which they _run_
+
+---
+class: middle, wide
+
+### Thread Names
+
+- Use `getName()` to find a thread's name
+
+- Use `Thread.currentThread()` to get a reference to the currently running thread
+
+.tiny[
+```Java
+System.out.println(Thread.currentThread().getName());
+new Thread(() -> {
+  System.out.print(Thread.currentThread().getName());
+  for (int i = 1; i < 100; i += 1) {
+    System.out.print("_"); 
+  }
+}).start();
+```
+]
+
+---
+class: middle, wide
+
+### `Thread.sleep`
+
+- `Thread.sleep(ms)` causes the current thread to pause for the given number of milliseconds
+
+- After the timer expires, the thread is ready to be scheduled again
+
+
+---
+class: middle, wide
+
+### `isAlive`
+
+- `isAlive()` checks whether a thread is still running
+
+- Program exits only after all threads run to completion
+
+---
+class: center, middle
+
+## Asynchronous Programming
+
+---
+class: middle, wide
+### Limitations of `Thread`
+
+- No easy way to return a value from a thread.
+
+- No built-in mechanism to express execution order and dependencies.
+
+- Thread creation has overhead, ideally we should reuse threads.
+
+- Complex exception handling across threads.
+
+---
+class: middle wide
+
+.tiny[
+```Java
+int foo(int x) {
+    int a = taskA(x);
+    int b = taskB(a);
+    int c = taskC(a);
+    int d = taskD(a);
+    int e = taskE(b, c)
+    return e;
+}
+```
+]
+
+---
+class: middle wide
+
+.tiny[
+```Java
+Maybe<Integer> foo(int x) {
+    Maybe<Integer> a = Maybe.of(taskA(x));
+    Maybe<Integer> b = a.flatMap(i -> taskB(i));
+    Maybe<Integer> c = a.flatMap(i -> taskC(i));
+    Maybe<Integer> d = a.flatMap(i -> taskD(i));
+    Maybe<Integer> e = b.combine(c, (i, j) -> taskE(i, j));
+    return e;
+}
+```
+]
+
+---
+class: middle wide
+
+.tiny[
+```Java
+Lazy<Integer> foo(int x) {
+    Lazy<Integer> a = Lazy.of(taskA(x));
+    Lazy<Integer> b = a.flatMap(i -> taskB(i));
+    Lazy<Integer> c = a.flatMap(i -> taskC(i));
+    Lazy<Integer> d = a.flatMap(i -> taskD(i));
+    Lazy<Integer> e = b.combine(c, (i, j) -> taskE(i, j));
+    return e;
+}
+```
+]
+---
+class: middle, wide
+
+.tiny[
+```Java
+CompletableFuture<Integer> foo(int x) {
+    CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
+    CompletableFuture<Integer> b = a.thenComposeAsync(i -> taskB(i));
+    CompletableFuture<Integer> c = a.thenComposeAsync(i -> taskC(i));
+    CompletableFuture<Integer> d = a.thenComposeAsync(i -> taskD(i));
+    CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
+    return e;
+}
+```
+]
+
+---
+class: middle, wide
+
+### `CompletableFuture`
+
+- `java.util.concurrent.CompletableFuture` is a monad for concurrent computation
+
+- Encapsulates a value that is either there or **not there yet** (a _promise_)
+
+---
+class: middle, wide
+### Creating a `CompletableFuture`
+
+.small[
+- `completedFuture(v)` — already completed with value `v`
+
+- `runAsync(Runnable)` — runs a `Runnable`; returns `CompletableFuture<Void>`
+
+- `supplyAsync(Supplier<T>)` — runs a supplier; returns `CompletableFuture<T>`
+
+- `allOf(cf1, cf2, ...)` — completes when **all** given futures complete
+
+- `anyOf(cf1, cf2, ...)` — completes when **any** one of the given futures completes
+]
+
+---
+class: middle, wide
+### Chaining `CompletableFuture`
+
+.small[
+- `thenApply` is analogous to `map`
+
+- `thenCompose` is analogous to `flatMap`
+
+- `thenCombine` is analogous to `combine`
+]
+
+---
+class: center, middle
+
+## CFDemo1.java
+
+---
+class: middle, wide
+### Synchronous vs. Asynchronous Chaining
+
+.small[
+- `thenApply`, `thenCompose`, `thenCombine` — run in the **same thread** as the caller
+
+- `thenApplyAsync`, `thenComposeAsync`, `thenCombineAsync` — may run in a **different thread**
+]
+
+---
+class: middle, wide
+### Branching
+
+.tiny[
+```Java
+CompletableFuture<Integer> a = CompletableFuture.completedFuture(taskA(x));
+CompletableFuture<Integer> b = a.thenComposeAsync(i -> taskB(i));
+CompletableFuture<Integer> c = a.thenComposeAsync(i -> taskC(i));
+```
+]
+
+- `b` and `c` both depend on `a`, but are independent of each other
+
+- With `thenComposeAsync`, `b` and `c` can run **concurrently**
+
+---
+class: middle, wide
+### Merging
+
+.tiny[
+```Java
+CompletableFuture<Integer> e = b.thenCombineAsync(c, (i, j) -> taskE(i, j));
+```
+]
+
+- Merges `b` and `c` once both complete
+
+.tiny[
+```Java
+CompletableFuture<Void> all = CompletableFuture.allOf(b, c);
+```
+]
+
+- Completes when both `b` and `c` complete (return type is `CompletableFuture<Void>`)
+
+---
+class: middle, wide
+### Getting the Result
+
+- `get()` — blocks until the `CompletableFuture` completes; throws checked exceptions
+
+- `join()` — behaves like `get()` but throws unchecked exceptions only
+
+- Call `get()` / `join()` as the **final step** to maximise concurrency
+
+---
+class: middle, wide
+### Prime Example
+
+.tiny[
+```Java
+CompletableFuture<Integer> ith =
+    CompletableFuture.supplyAsync(() -> findIthPrime(i));
+CompletableFuture<Integer> jth =
+    CompletableFuture.supplyAsync(() -> findIthPrime(j));
+CompletableFuture<Integer> diff = ith.thenCombine(jth, (x, y) -> x - y);
+diff.join();
+```
+]
+
+- `supplyAsync` returns immediately; two threads find primes concurrently
+
+- `thenCombine` specifies what to do once both results are ready
+
+---
+class: center, middle
+
+## CFDemo2.java
+
+---
+class: middle, wide
+
+We want to send the same request to multiple servers or regions and use the fastest response to reduce latency.
+
+### `applyToEither` 
+
+- Runs both futures (connections) in parallel
+- Uses the result of whichever completes first
+- Applies a function to that result
+
+---
+class: middle, wide
+
+.tiny[
+```java
+CompletableFuture<String> primary =
+    CompletableFuture.supplyAsync(() -> fetchFromPrimary());
+
+CompletableFuture<String> backup =
+    CompletableFuture.supplyAsync(() -> fetchFromBackup());
+
+String result = primary
+    .applyToEither(backup, data -> "Winner: " + data)
+    .join();
+```
+]
+---
+class: center, middle
+
+## CFDemo3.java
+
+---
+class: middle, wide
+### Handling Exceptions
+
+- Exceptions are stored and passed down the chain until `join()` is called
+
+- `join()` throws `CompletionException` containing the original exception
+
+.tiny[
+```Java
+CompletableFuture.<Integer>supplyAsync(() -> null)
+                 .thenApply(x -> x + 1)
+                 .join(); // throws CompletionException (NullPointerException)
+```
+]
+
+---
+class: middle, wide
+### `handle`
+
+- `handle(BiFunction<T, Throwable, U>)` handles the value or the exception
+
+- Exactly one of the two parameters is non-null
+
+.tiny[
+```Java
+cf.thenApply(x -> x + 1)
+  .handle((t, e) -> (e == null) ? t : 0)
+  .join();
+```
+]
+
+---
+class: middle, wide
+### `Runnable`-Based Methods
+
+.small[
+- `thenRun(Runnable)` — runs after the current stage completes
+
+- `runAfterBoth(cf, Runnable)` — runs after **both** this and `cf` complete
+
+- `runAfterEither(cf, Runnable)` — runs after **either** this or `cf` completes
+
+- All return `CompletableFuture<Void>`; all have async variants
+]
+
+---
+class: bottom
+
+.tiny[
+Version: v1.0
+
+Last Updated: Mon 6 Apr 2026 00:00:00 +08
+]
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script src="javascripts/counter.js">
+</script>
+<script>
+remark.macros.scale = function (percentage) {
+	var url = this;
+	return '<img src="' + url + '" style="width: ' + percentage + '" />';
+};
+// ![:scale 50%](image.jpg)
+
+var slideshow = remark.create({
+    navigation: {
+	    scroll: false
+	},
+	ratio: '16:9',
+	highlightStyle: 'ir-black',
+    slideNumberFormat: 'CS2030S AY25/26 S2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%current% / %total%',
+});
+ // Setup MathJax
+  MathJax.Hub.Config({
+	  tex2jax: {
+		inlineMath: [['$', '$']],
+		// inlineMath: [['$', '$'], ['\\(', '\\)']],
+		displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+		skipTags: ['script', 'noscript', 'style', 'pre']
+	  }
+  });
+
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
+# vim:filetype=markdown
